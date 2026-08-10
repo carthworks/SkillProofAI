@@ -1,0 +1,98 @@
+[
+  {
+    "title": "Trie Autocomplete",
+    "slug": "ai-trie-autocomplete-1785819080269",
+    "tier": "Builder",
+    "domain": "cse",
+    "reward": 150,
+    "description": "## Challenge: Trie Autocomplete\n\n**Domain**: Computer Science / Systems Engineering | **Tier**: Builder | **Reward**: 150 XP\n\n### Problem Statement\nYou are building a high-performance component for **Trie Autocomplete**. Design an optimal algorithmic solution that handles concurrent requests efficiently under real-world load conditions.\n\n### Requirements\n- Implement the core logic for **Trie Autocomplete** from scratch\n- Must support concurrent operation without race conditions\n- Time complexity: O(log N) or better for all operations\n- Space complexity: O(N) maximum\n\n### Input Format\nFirst line: integer `N` — number of operations\nEach of the next `N` lines contains: `operation_type args...`\n\n### Output Format\nFor each query operation, print the result on a new line.\nPrint `null` if the key/resource does not exist.\n\n### Constraints\n- 1 ≤ N ≤ 10^5\n- All string keys have length ≤ 100\n- All integer values fit in 32-bit signed integer\n\n### Example\n```\nInput:\n5\nPUT key1 100\nPUT key2 200\nGET key1\nDELETE key1\nGET key1\n\nOutput:\n100\nnull\n```",
+    "publicTestCases": [
+      {
+        "input": "3\nPUT k1 10\nGET k1\nGET k2",
+        "expected": "10\nnull"
+      },
+      {
+        "input": "4\nPUT a 1\nPUT b 2\nDELETE a\nGET a",
+        "expected": "null"
+      }
+    ],
+    "hiddenTestCases": [
+      {
+        "input": "1\nGET missing",
+        "expected": "null"
+      },
+      {
+        "input": "2\nPUT x 999\nGET x",
+        "expected": "999"
+      },
+      {
+        "input": "5\nPUT a 1\nPUT b 2\nPUT a 3\nGET a\nGET b",
+        "expected": "3\n2"
+      }
+    ]
+  },
+  {
+    "title": "Trie Autocomplete",
+    "slug": "ai-trie-autocomplete-1785836531352",
+    "tier": "Builder",
+    "domain": "cse",
+    "reward": 150,
+    "description": "## Challenge: Trie Autocomplete\n\n**Domain**: Computer Science / Systems Engineering | **Tier**: Builder | **Reward**: 150 XP\n\n### Problem Statement\nYou are building a high-performance component for **Trie Autocomplete**. Design an optimal algorithmic solution that handles concurrent requests efficiently under real-world load conditions.\n\n### Requirements\n- Implement the core logic for **Trie Autocomplete** from scratch\n- Must support concurrent operation without race conditions\n- Time complexity: O(log N) or better for all operations\n- Space complexity: O(N) maximum\n\n### Input Format\nFirst line: integer `N` — number of operations\nEach of the next `N` lines contains: `operation_type args...`\n\n### Output Format\nFor each query operation, print the result on a new line.\nPrint `null` if the key/resource does not exist.\n\n### Constraints\n- 1 ≤ N ≤ 10^5\n- All string keys have length ≤ 100\n- All integer values fit in 32-bit signed integer\n\n### Example\n```\nInput:\n5\nPUT key1 100\nPUT key2 200\nGET key1\nDELETE key1\nGET key1\n\nOutput:\n100\nnull\n```",
+    "publicTestCases": [
+      {
+        "input": "3\nPUT k1 10\nGET k1\nGET k2",
+        "expected": "10\nnull"
+      },
+      {
+        "input": "4\nPUT a 1\nPUT b 2\nDELETE a\nGET a",
+        "expected": "null"
+      }
+    ],
+    "hiddenTestCases": [
+      {
+        "input": "1\nGET missing",
+        "expected": "null"
+      },
+      {
+        "input": "2\nPUT x 999\nGET x",
+        "expected": "999"
+      },
+      {
+        "input": "5\nPUT a 1\nPUT b 2\nPUT a 3\nGET a\nGET b",
+        "expected": "3\n2"
+      }
+    ]
+  },
+  {
+    "title": "Consistent Hashing Ring",
+    "slug": "ai-consistent-hashing-ring-1785837107095",
+    "tier": "Builder",
+    "domain": "cse",
+    "reward": 150,
+    "description": "## Challenge: Consistent Hashing Ring\n\n**Domain**: Computer Science / Systems Engineering | **Tier**: Builder | **Reward**: 150 XP\n\n### Problem Statement\nYou are building a high-performance component for **Consistent Hashing Ring**. Design an optimal algorithmic solution that handles concurrent requests efficiently under real-world load conditions.\n\n### Requirements\n- Implement the core logic for **Consistent Hashing Ring** from scratch\n- Must support concurrent operation without race conditions\n- Time complexity: O(log N) or better for all operations\n- Space complexity: O(N) maximum\n\n### Input Format\nFirst line: integer `N` — number of operations\nEach of the next `N` lines contains: `operation_type args...`\n\n### Output Format\nFor each query operation, print the result on a new line.\nPrint `null` if the key/resource does not exist.\n\n### Constraints\n- 1 ≤ N ≤ 10^5\n- All string keys have length ≤ 100\n- All integer values fit in 32-bit signed integer\n\n### Example\n```\nInput:\n5\nPUT key1 100\nPUT key2 200\nGET key1\nDELETE key1\nGET key1\n\nOutput:\n100\nnull\n```",
+    "publicTestCases": [
+      {
+        "input": "3\nPUT k1 10\nGET k1\nGET k2",
+        "expected": "10\nnull"
+      },
+      {
+        "input": "4\nPUT a 1\nPUT b 2\nDELETE a\nGET a",
+        "expected": "null"
+      }
+    ],
+    "hiddenTestCases": [
+      {
+        "input": "1\nGET missing",
+        "expected": "null"
+      },
+      {
+        "input": "2\nPUT x 999\nGET x",
+        "expected": "999"
+      },
+      {
+        "input": "5\nPUT a 1\nPUT b 2\nPUT a 3\nGET a\nGET b",
+        "expected": "3\n2"
+      }
+    ]
+  }
+]

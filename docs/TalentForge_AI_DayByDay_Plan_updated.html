@@ -1,0 +1,490 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>TalentForge AI — Day-by-Day Plan (Jul 13 → Aug 14, 2026)</title>
+<style>
+  :root{
+    --navy:#1f3a63; --navy-dark:#16294a; --week-blue:#1a6fb5;
+    --day-bg:#eaf1f9; --row-alt:#f7fafd; --border:#c9d6e6;
+    --ink:#20262e; --muted:#5a6673;
+    --done:#7a4c9e;
+    --chip-red:#c0392b; --chip-green:#1e8e5a; --chip-amber:#b26a00; --chip-purple:#6b3fa0;
+  }
+  *{box-sizing:border-box}
+  body{font-family:"Segoe UI",Calibri,Arial,sans-serif;color:var(--ink);margin:0;padding:28px 34px;background:#fff;font-size:13px;line-height:1.42}
+  h1{color:var(--navy);font-size:22px;margin:0 0 2px}
+  .sub{color:var(--muted);margin:0 0 16px;font-size:13px}
+  .scope{margin:0 0 20px;padding:10px 14px;border-left:4px solid var(--week-blue);background:var(--day-bg);font-size:12.5px;color:var(--navy)}
+  .legend{margin:0 0 20px;display:flex;gap:14px;flex-wrap:wrap;font-size:12px;align-items:center}
+  .legend span{display:inline-flex;align-items:center;gap:6px}
+  .dot{width:10px;height:10px;border-radius:2px;display:inline-block}
+  h2.week{color:var(--week-blue);font-size:16.5px;margin:30px 0 8px;font-weight:700}
+  h2.week .tag{font-size:11px;font-weight:700;color:#fff;background:var(--chip-amber);border-radius:3px;padding:2px 7px;vertical-align:2px;margin-left:8px;letter-spacing:.3px}
+  table{width:100%;border-collapse:collapse;table-layout:fixed;margin-bottom:6px}
+  th,td{border:1px solid var(--border);vertical-align:top;padding:9px 11px;word-wrap:break-word}
+  thead th{background:var(--navy);color:#fff;font-size:13px;text-align:left;font-weight:700;border-color:var(--navy-dark)}
+  col.c-day{width:8%} col.c-rohan{width:34%} col.c-karthik{width:34%} col.c-done{width:24%}
+  td.day{background:var(--day-bg);color:var(--navy);font-weight:700;font-size:13px}
+  td.day .date{display:block;font-weight:600;color:var(--muted);font-size:11px;margin-top:3px}
+  tbody tr:nth-child(even) td:not(.day){background:var(--row-alt)}
+  ul{margin:0;padding-left:15px}
+  li{margin:0 0 5px}
+  li:last-child{margin-bottom:0}
+  code{font-family:Consolas,Menlo,monospace;font-size:11.5px;background:#eef2f7;border:1px solid #dbe4ee;border-radius:3px;padding:0 3px;color:#153a5e}
+  td.done{color:#3c2a55}
+  td.done ul{padding-left:14px}
+  td.done li::marker{color:var(--done)}
+  .chip{display:inline-block;font-size:10.5px;font-weight:700;color:#fff;border-radius:3px;padding:1px 6px;letter-spacing:.3px}
+  .chip.red{background:var(--chip-red)} .chip.green{background:var(--chip-green)} .chip.amber{background:var(--chip-amber)} .chip.purple{background:var(--chip-purple)}
+  .step{display:inline-block;font-size:10.5px;font-weight:700;color:var(--navy);background:#dbe7f5;border-radius:3px;padding:1px 6px}
+  .joint{background:#fff6d9 !important}
+  .footer-note{margin-top:26px;padding:12px 14px;border-left:4px solid var(--navy);background:var(--day-bg);color:var(--navy);font-size:12.5px}
+  @media print{
+    body{padding:12px}
+    h2.week{page-break-after:avoid}
+    table{page-break-inside:auto}
+    tr{page-break-inside:avoid}
+  }
+</style>
+</head>
+<body>
+
+<h1>TalentForge AI — Day-by-Day Execution Plan (AI-Powered Student Journey)</h1>
+<p class="sub"><strong>Team:</strong> Rohan (Backend · Sandbox · AI Services · Infra) &nbsp;·&nbsp; Karthikeyan (Frontend · Tools · AI UX · Deploy) &nbsp;&nbsp;|&nbsp;&nbsp; <strong>Start:</strong> Mon Jul 13, 2026 &nbsp;→&nbsp; <strong>Launch:</strong> Fri Aug 14, 2026</p>
+
+<div class="scope">
+  <strong>Workflow coverage (14 journey steps):</strong> Register <span class="step">S1</span> · Profile <span class="step">S2</span> · Domain <span class="step">S3</span> · Baseline assessment + re-assess loop <span class="step">S4</span> · AI learning path <span class="step">S5</span> · Training modules <span class="step">S6</span> · Challenges &amp; work <span class="step">S7–S8</span> · Recognition <span class="step">S9</span> · Mentor feedback <span class="step">S10–S11</span> · Talent profile <span class="step">S12</span> · Recruiter visibility &amp; shortlist <span class="step">S13–S14</span>.
+  <strong>AI stack:</strong> LLM API via backend proxy (provider-configurable) + <code>pgvector</code> embeddings in Postgres (no separate Pinecone).
+  <strong>Deferred post-launch:</strong> XGBoost ranking, adaptive learning loop, mock video interviews (Video SDK), payment gateway, ECE domain.
+</div>
+
+<div class="legend">
+  <span><span class="dot" style="background:var(--navy)"></span>Header</span>
+  <span><span class="dot" style="background:var(--day-bg);border:1px solid var(--border)"></span>Day cell</span>
+  <span><span class="dot" style="background:#fff6d9;border:1px solid var(--border)"></span>Joint session</span>
+  <span><span class="chip red">P0</span> critical path</span>
+  <span><span class="chip purple">AI</span> LLM / embedding feature</span>
+  <span><span class="chip amber">STRETCH</span> skippable</span>
+  <span><span class="chip green">EXIT</span> weekly gate</span>
+</div>
+
+<!-- ================= WEEK 1 ================= -->
+<h2 class="week">WEEK 1 — Foundation, Onboarding &amp; Domain Selection (Jul 13–17)</h2>
+<table>
+<colgroup><col class="c-day"><col class="c-rohan"><col class="c-karthik"><col class="c-done"></colgroup>
+<thead><tr><th>Day</th><th>Rohan — Backend / AI Services / Infra</th><th>Karthikeyan — Frontend / AI UX</th><th>Done When</th></tr></thead>
+<tbody>
+<tr>
+  <td class="day">Day 1<span class="date">Mon Jul 13</span></td>
+  <td><ul>
+    <li>Monorepo: <code>npm init -w backend -w frontend -w worker</code>; Express + TS scaffold</li>
+    <li><code>docker-compose.yml</code>: postgres:16 with <code>pgvector/pgvector:pg16</code> image, redis:7, minio + healthchecks</li>
+    <li><code>schema.prisma</code>: User, StudentProfile (education, skills, certs, github, resumeS3Key), Domain, Problem, Submission, Assessment, LearningPath, Badge, Review, Shortlist</li>
+    <li>Migration incl. <code>CREATE EXTENSION vector</code></li>
+  </ul></td>
+  <td><ul>
+    <li>Vite + React 18 + TS scaffold; tailwind, TanStack Query, router, socket.io-client</li>
+    <li><code>AppShell.tsx</code> + design tokens</li>
+    <li>Register/Login UI <span class="step">S1</span> (react-hook-form + zod)</li>
+  </ul></td>
+  <td class="done"><ul>
+    <li>Compose boots PG (with vector ext) + Redis + MinIO healthy</li>
+    <li><code>psql \dx</code> shows <code>vector</code></li>
+    <li>Shell + auth pages render</li>
+  </ul></td>
+</tr>
+<tr>
+  <td class="day">Day 2<span class="date">Tue Jul 14</span></td>
+  <td><ul>
+    <li><code>routes/auth.ts</code>: register (bcrypt), login → JWT 15m + refresh in Redis <code>SET refresh:{id} EX 604800</code></li>
+    <li>Google OAuth (passport-google-oauth20); <code>GET /auth/me</code></li>
+    <li>zod validation middleware on all bodies</li>
+  </ul></td>
+  <td><ul>
+    <li>Axios instance + JWT interceptor + refresh-on-401</li>
+    <li>MSW mocks for all planned endpoints</li>
+    <li>Auth flow wired; <code>RequireAuth.tsx</code> guard</li>
+  </ul></td>
+  <td class="done"><ul>
+    <li>Register → login → <code>/auth/me</code> E2E <span class="step">S1</span></li>
+    <li>OAuth round-trip OK; UI runs on mocks offline</li>
+  </ul></td>
+</tr>
+<tr>
+  <td class="day joint">Day 3<span class="date">Wed Jul 15</span></td>
+  <td class="joint"><ul>
+    <li><strong>Joint 2h: freeze <code>openapi.yaml</code></strong> (~32 endpoints) + socket events <code>grading:*</code>, <code>copilot:*</code></li>
+    <li>Profile API <span class="step">S2</span>: CRUD education/skills/certs/links; resume upload → presigned S3 PUT</li>
+    <li><span class="chip purple">AI</span> <code>POST /profile/parse-resume</code>: LLM proxy extracts skills/education JSON from resume text (pdf-parse) → prefill profile</li>
+  </ul></td>
+  <td class="joint"><ul>
+    <li><strong>Joint 2h: contract freeze</strong> — regen MSW from spec</li>
+    <li>Profile wizard <span class="step">S2</span>: 3-step form (basics → education/skills → GitHub/links), resume dropzone</li>
+    <li>“Parsed from resume — review &amp; confirm” diff-style prefill UI</li>
+  </ul></td>
+  <td class="done"><ul>
+    <li>Spec committed, both build against it</li>
+    <li>Upload resume → parsed skills prefill form → save profile</li>
+  </ul></td>
+</tr>
+<tr>
+  <td class="day">Day 4<span class="date">Thu Jul 16</span></td>
+  <td><ul>
+    <li>Domain seed <span class="step">S3</span>: AI/ML, Web Dev, Data Science, Cyber Security, Cloud — problems tagged <code>domainId</code></li>
+    <li><code>POST /profile/domain</code> {domainId, careerGoals}</li>
+    <li>Seed 3 problems/domain-agnostic (Two Sum, LRU Cache, Rate Limiter) with hidden test cases</li>
+    <li>BullMQ <code>grading</code> queue + worker skeleton emitting socket events</li>
+  </ul></td>
+  <td><ul>
+    <li>Domain picker <span class="step">S3</span>: card grid with icons, career-goals textarea</li>
+    <li>Monaco integration: <code>@monaco-editor/react</code>, language selector (py/js/java), boilerplate per problem, <code>Ctrl+Enter</code></li>
+    <li>Problem board + detail (markdown statement, resizable split)</li>
+  </ul></td>
+  <td class="done"><ul>
+    <li>Domain saved to profile; board filters by domain</li>
+    <li>Submit → dummy <code>grading:complete</code> in browser</li>
+  </ul></td>
+</tr>
+<tr>
+  <td class="day">Day 5<span class="date">Fri Jul 17</span></td>
+  <td><ul>
+    <li>GitHub Actions CI (lint, typecheck, prisma validate, build)</li>
+    <li>Provision EC2 t3.medium; <code>docker-compose.prod.yml</code>; Caddy auto-HTTPS <code>staging.talentforge.in</code></li>
+    <li>Secrets: <code>.env</code> on server only; LLM API key env var</li>
+  </ul></td>
+  <td><ul>
+    <li>Wire full onboarding (register → profile → domain) on staging</li>
+    <li>Toasts, error boundary, 404, loading skeletons</li>
+    <li>CI deploys frontend to staging</li>
+  </ul></td>
+  <td class="done"><ul>
+    <li><span class="chip green">EXIT</span> S1→S3 onboarding + editor live on staging; CI green</li>
+  </ul></td>
+</tr>
+</tbody>
+</table>
+
+<!-- ================= WEEK 2 ================= -->
+<h2 class="week">WEEK 2 — Sandbox Grading &amp; Baseline Assessment (Jul 20–24) <span class="tag">CRITICAL PATH</span></h2>
+<table>
+<colgroup><col class="c-day"><col class="c-rohan"><col class="c-karthik"><col class="c-done"></colgroup>
+<thead><tr><th>Day</th><th>Rohan — Backend / AI Services / Infra</th><th>Karthikeyan — Frontend / AI UX</th><th>Done When</th></tr></thead>
+<tbody>
+<tr>
+  <td class="day">Day 6<span class="date">Mon Jul 20</span></td>
+  <td><ul>
+    <li><span class="chip red">P0</span> Runner images: python:3.11-slim+pylint, node:18-alpine+eslint, temurin:17+checkstyle; non-root <code>runner</code> user</li>
+    <li>dockerode isolation: <code>NetworkMode:'none'</code>, <code>Memory:256MB</code>, <code>ReadonlyRootfs</code>, tmpfs 50m, <code>PidsLimit:64</code>, 30s kill timer</li>
+  </ul></td>
+  <td><ul>
+    <li>Submit UX: spinner → live chips (Queued → Running → Graded) via <code>useGradingSocket(id)</code></li>
+    <li><code>ResultsPanel.tsx</code> collapsible shell</li>
+  </ul></td>
+  <td class="done"><ul>
+    <li>3 languages execute; <code>curl</code> in container fails; infinite loop killed at 30s</li>
+  </ul></td>
+</tr>
+<tr>
+  <td class="day">Day 7<span class="date">Tue Jul 21</span></td>
+  <td><ul>
+    <li><code>grader/correctness.ts</code>: stdin per case, diff stdout, weighted pass % → 0–100; persist <code>scores.cases[]</code></li>
+    <li>Java <code>javac</code> compile step → COMPILE_ERROR path</li>
+  </ul></td>
+  <td><ul>
+    <li>Per-case table (pass/fail, expected-vs-actual diff, time, memory)</li>
+    <li>Animated score ring; COMPILE_ERROR / TIMEOUT / OOM states</li>
+  </ul></td>
+  <td class="done"><ul>
+    <li>Correct solution = 100 in all langs; failing cases show diffs</li>
+  </ul></td>
+</tr>
+<tr>
+  <td class="day">Day 8<span class="date">Wed Jul 22</span></td>
+  <td><ul>
+    <li><code>grader/complexity.ts</code>: n/2n/4n scaling fit → O-class vs <code>expectedComplexity</code></li>
+    <li><code>grader/style.ts</code>: linters in-container → 0–100; composite <code>0.6/0.3/0.1</code></li>
+  </ul></td>
+  <td><ul>
+    <li>Score bars + composite</li>
+    <li><span class="chip purple">AI</span> Coaching feedback: <code>POST /feedback/format</code> LLM proxy → 3 actionable bullets, typing effect, flag <code>VITE_FF_LLM_FEEDBACK</code></li>
+  </ul></td>
+  <td class="done"><ul>
+    <li>O(n²) scores below O(n); AI bullets &lt;3s or flag off cleanly</li>
+  </ul></td>
+</tr>
+<tr>
+  <td class="day">Day 9<span class="date">Thu Jul 23</span></td>
+  <td><ul>
+    <li>Precheck blocklist (subprocess / child_process / Runtime.exec…) → BLOCKED pre-run; queue never stalls; retry infra ×2 only</li>
+    <li>Baseline assessment API <span class="step">S4</span>: 40-item bank (aptitude, technical MCQ, logic, communication Likert); <code>POST /assessment/start|submit</code>; score % + section breakdown; <strong>pass ≥70</strong> else FAILED + <code>reassessAvailableAt</code> (48h) — the re-assess learning loop</li>
+  </ul></td>
+  <td><ul>
+    <li>Assessment UI <span class="step">S4</span>: timed 20-min flow, progress bar, sessionStorage autosave</li>
+    <li>Result screen: PASSED (green, % ring) / FAILED (re-assess countdown + “what to review” list)</li>
+    <li>Submission history page + resubmit cooldown chip</li>
+  </ul></td>
+  <td class="done"><ul>
+    <li>Malicious code blocked pre-execution</li>
+    <li>Score 78% → PASSED unlocks challenges; &lt;70% → re-assess loop visible</li>
+  </ul></td>
+</tr>
+<tr>
+  <td class="day joint">Day 10<span class="date">Fri Jul 24</span></td>
+  <td class="joint"><ul>
+    <li><strong>Joint E2E:</strong> 10 canned solutions × 3 langs; fix all</li>
+    <li>artillery: 20 concurrent submissions p95 &lt;5s; Sentry node/worker</li>
+  </ul></td>
+  <td class="joint"><ul>
+    <li><strong>Joint E2E</strong> browser side; fix top-10 papercuts</li>
+    <li>Sentry React + replay; socket reconnect + 5s poll fallback</li>
+  </ul></td>
+  <td class="done"><ul>
+    <li><span class="chip green">EXIT</span> S4 gate + grade &lt;5s p95 on staging; 20 concurrent, 0 failures</li>
+  </ul></td>
+</tr>
+</tbody>
+</table>
+
+<!-- ================= WEEK 3 ================= -->
+<h2 class="week">WEEK 3 — AI Layer: Learning Path, Copilot, Talent Profile, Mentor Review (Jul 27–31)</h2>
+<table>
+<colgroup><col class="c-day"><col class="c-rohan"><col class="c-karthik"><col class="c-done"></colgroup>
+<thead><tr><th>Day</th><th>Rohan — Backend / AI Services / Infra</th><th>Karthikeyan — Frontend / AI UX</th><th>Done When</th></tr></thead>
+<tbody>
+<tr>
+  <td class="day">Day 11<span class="date">Mon Jul 27</span></td>
+  <td><ul>
+    <li>Badge service <span class="step">S9</span>: score ≥75 → Badge (uuid verifyId, AI_VERIFIED); public <code>GET /verify/:id</code></li>
+    <li>Certificate PDF (pdf-lib + QR) → S3; leaderboard query (XP = sum of badge scores)</li>
+  </ul></td>
+  <td><ul>
+    <li>Badge celebration (confetti), gallery, public verify page + OG tags <span class="step">S9</span></li>
+    <li>Leaderboard page (rank, badges, XP) — anonymized toggle</li>
+  </ul></td>
+  <td class="done"><ul>
+    <li>Badge auto-award works; verify URL public; certificate QR resolves; leaderboard ranks</li>
+  </ul></td>
+</tr>
+<tr>
+  <td class="day">Day 12<span class="date">Tue Jul 28</span></td>
+  <td><ul>
+    <li><span class="chip purple">AI</span> Learning path <span class="step">S5</span>: <code>POST /learning-path/generate</code> — LLM prompt with profile + domain + assessment sections → strict JSON (milestones[], weeklyGoals[], recommendedProblemSlugs[]); zod-validate LLM output, retry ×1 on invalid; persist; regenerate hook after each re-assessment</li>
+  </ul></td>
+  <td><ul>
+    <li>Roadmap UI <span class="step">S5–S6</span>: vertical timeline (milestones → linked problem sets as “training modules”), checkbox progress, weekly goal cards</li>
+    <li>“Regenerate path” with diff-style what-changed banner</li>
+  </ul></td>
+  <td class="done"><ul>
+    <li>New user gets tailored roadmap referencing real seeded problems</li>
+    <li>Invalid LLM JSON never reaches DB (zod gate proven)</li>
+  </ul></td>
+</tr>
+<tr>
+  <td class="day">Day 13<span class="date">Wed Jul 29</span></td>
+  <td><ul>
+    <li><span class="chip purple">AI</span> Copilot: <code>POST /copilot/chat</code> SSE streaming; context injection = profile + current page + last submission scores; modes mentor|reviewer|advisor via system prompt; Redis rate limit 30 msg/day/user; conversation table</li>
+  </ul></td>
+  <td><ul>
+    <li>Copilot drawer (global, all pages): streamed markdown, mode pill, suggested prompts per page (“Why did case 7 fail?” on results; “What should I learn next?” on roadmap)</li>
+  </ul></td>
+  <td class="done"><ul>
+    <li>Streaming answers grounded in the user’s own scores; rate limit returns friendly 429 at 31st msg</li>
+  </ul></td>
+</tr>
+<tr>
+  <td class="day">Day 14<span class="date">Thu Jul 30</span></td>
+  <td><ul>
+    <li><span class="chip purple">AI</span> Talent profile <span class="step">S12</span>: skills-graph extraction — LLM maps profile + graded submissions → <code>SkillScore[]</code> rows; embedding job: profile text → vector via embeddings API → <code>profile_embedding vector(1536)</code> column + HNSW index</li>
+    <li>Nightly BullMQ repeatable job re-embeds changed profiles</li>
+  </ul></td>
+  <td><ul>
+    <li>Talent profile page <span class="step">S12</span>: skills radar (Recharts), strengths/interests chips, achievements &amp; scores timeline, GitHub link</li>
+    <li>Public/private toggle (<code>profilePublic</code>)</li>
+  </ul></td>
+  <td class="done"><ul>
+    <li>Profile shows extracted skills graph; <code>SELECT embedding &lt;=&gt; …</code> returns sane neighbors</li>
+  </ul></td>
+</tr>
+<tr>
+  <td class="day">Day 15<span class="date">Fri Jul 31</span></td>
+  <td><ul>
+    <li>Mentor review <span class="step">S10–S11</span>: <code>requireRole('REVIEWER')</code>; queue oldest-first; <code>POST /reviews/:id</code> {stars, comment, APPROVE|REJECT} → EXPERT_VERIFIED or revoke + notify</li>
+    <li>Seed to 8 problems incl. flagship <strong>Load Balancer</strong>; nightly <code>pg_dump→S3</code>; prod env split</li>
+  </ul></td>
+  <td><ul>
+    <li>Reviewer portal: queue, read-only Monaco, rating, approve/reject</li>
+    <li>Student notifications (bell) + mentor feedback shown on results <span class="step">S10</span></li>
+    <li>LinkedIn badge share; landing page v1; onboarding tour</li>
+  </ul></td>
+  <td class="done"><ul>
+    <li><span class="chip green">EXIT</span> full journey S1→S12 on staging: onboard → assess → roadmap → solve → badge → mentor-verified → talent profile</li>
+  </ul></td>
+</tr>
+</tbody>
+</table>
+
+<!-- ================= WEEK 4 ================= -->
+<h2 class="week">WEEK 4 — Recruiter Matching, Hardening, Beta &amp; Stretch (Aug 3–7)</h2>
+<table>
+<colgroup><col class="c-day"><col class="c-rohan"><col class="c-karthik"><col class="c-done"></colgroup>
+<thead><tr><th>Day</th><th>Rohan — Backend / AI Services / Infra</th><th>Karthikeyan — Frontend / AI UX</th><th>Done When</th></tr></thead>
+<tbody>
+<tr>
+  <td class="day">Day 16<span class="date">Mon Aug 3</span></td>
+  <td><ul>
+    <li>Recruiter APIs <span class="step">S13–S14</span>: <code>GET /candidates?minScore=&amp;badge=&amp;domain=</code> (indexed); shortlist CRUD</li>
+    <li><span class="chip purple">AI</span> Smart matching: recruiter posts role text → embed → pgvector cosine <code>ORDER BY embedding &lt;=&gt; $1 LIMIT 20</code> → match % = normalized similarity × badge-score weight</li>
+    <li>Shortlist email alert to student (nodemailer / MSG91)</li>
+  </ul></td>
+  <td><ul>
+    <li>Recruiter portal: register flow, Discover table (TanStack: match %, score sort, badge/domain filters)</li>
+    <li>Candidate drawer: skills radar, badges, best code sample, match explanation, Shortlist</li>
+    <li>Student: application status tracker (Shortlisted → Interview → Offer) <span class="step">S14</span></li>
+  </ul></td>
+  <td class="done"><ul>
+    <li>Role paste → ranked candidates with match %; shortlist notifies student; status visible both sides</li>
+  </ul></td>
+</tr>
+<tr>
+  <td class="day">Day 17<span class="date">Tue Aug 4</span></td>
+  <td><ul>
+    <li><span class="chip red">P0</span> <strong>Beta launch — 15–25 students</strong></li>
+    <li>Security: helmet, CORS allowlist, zod audit 100%, cookie flags, prompt-injection guard on copilot (system-prompt hardening + output length caps)</li>
+    <li>Live monitor Sentry + slow-query log; hotfixes</li>
+  </ul></td>
+  <td><ul>
+    <li>Beta comms channel + in-app feedback widget → <code>POST /feedback</code></li>
+    <li>Mobile pass (tables → cards; editor read-only banner on mobile)</li>
+    <li>Same-day UI hotfixes, GitHub <code>beta</code> issues</li>
+  </ul></td>
+  <td class="done"><ul>
+    <li>≥15 registered, ≥10 graded, ≥5 roadmaps generated; 0 open P1s</li>
+  </ul></td>
+</tr>
+<tr>
+  <td class="day joint">Day 18<span class="date">Wed Aug 5</span></td>
+  <td class="joint"><ul>
+    <li>k6 100 VUs (browse+submit+copilot mix); LLM cost guardrail: per-user daily token cap + cache identical roadmap prompts (Redis, 24h)</li>
+    <li>Compose <code>restart:always</code>, Redis AOF, disk alert; top-5 backend fixes</li>
+  </ul></td>
+  <td class="joint"><ul>
+    <li><strong>Joint 1h beta triage</strong> → ranked list; top-5 UX fixes</li>
+    <li>Lighthouse ≥90, LCP &lt;1.5s (route code-split, font preload)</li>
+  </ul></td>
+  <td class="done"><ul>
+    <li>k6: error &lt;1%, API p95 &lt;200ms; LLM spend projection within budget; top-10 beta list closed</li>
+  </ul></td>
+</tr>
+<tr>
+  <td class="day">Day 19<span class="date">Thu Aug 6</span></td>
+  <td><ul>
+    <li><span class="chip amber">STRETCH</span> Hardhat + OpenZeppelin <code>TalentForgeBadge.sol</code>; deploy Polygon Amoy; <code>POST /badges/:id/mint</code> server-side signer → txHash</li>
+    <li><strong>If behind: SKIP — DB badges ship</strong></li>
+  </ul></td>
+  <td><ul>
+    <li><span class="chip amber">STRETCH</span> “Mint on-chain” button → PolygonScan link; hidden when <code>VITE_FF_CHAIN=false</code></li>
+    <li>Recognition polish <span class="step">S9</span>: certificate download, rankings page final</li>
+  </ul></td>
+  <td class="done"><ul>
+    <li>Mint works on Amoy — or flag off with zero side effects</li>
+  </ul></td>
+</tr>
+<tr>
+  <td class="day joint">Day 20<span class="date">Fri Aug 7</span></td>
+  <td class="joint"><ul>
+    <li><code>RUNBOOK.md</code> (+ LLM provider outage playbook: copilot/roadmap degrade gracefully, grading unaffected)</li>
+    <li>Backup restore drill; <strong>joint go/no-go</strong></li>
+  </ul></td>
+  <td class="joint"><ul>
+    <li>Copy sweep, FAQ, 2-min demo video, recruiter one-pager PDF</li>
+    <li><strong>Joint go/no-go</strong></li>
+  </ul></td>
+  <td class="done"><ul>
+    <li><span class="chip green">EXIT</span> restore drill OK; LLM-down mode verified; go/no-go = GO; 0 P1/P2</li>
+  </ul></td>
+</tr>
+</tbody>
+</table>
+
+<!-- ================= LAUNCH WEEK ================= -->
+<h2 class="week">LAUNCH WEEK — Go Live (Aug 10–14) <span class="tag" style="background:var(--chip-green)">LAUNCH</span></h2>
+<table>
+<colgroup><col class="c-day"><col class="c-rohan"><col class="c-karthik"><col class="c-done"></colgroup>
+<thead><tr><th>Day</th><th>Rohan — Backend / Infra</th><th>Karthikeyan — Frontend / Comms</th><th>Done When</th></tr></thead>
+<tbody>
+<tr>
+  <td class="day">Day 21<span class="date">Mon Aug 10</span></td>
+  <td><ul>
+    <li><span class="chip red">CODE FREEZE</span> bugfix-only</li>
+    <li>Prod regression: full S1→S14 journey ×3 languages; DNS + SSL on <code>app.talentforge.in</code></li>
+  </ul></td>
+  <td><ul>
+    <li>Regression on Chrome/Firefox/Safari + 2 phones; OG previews validated</li>
+  </ul></td>
+  <td class="done"><ul>
+    <li>Journey checklist 100% green on production</li>
+  </ul></td>
+</tr>
+<tr>
+  <td class="day">Day 22<span class="date">Tue Aug 11</span></td>
+  <td><ul>
+    <li><span class="chip amber">SOFT LAUNCH</span> ~50 invited students; watch Sentry, queue depth, LLM spend dashboard</li>
+  </ul></td>
+  <td><ul>
+    <li>Send invites; monitor first sessions (replay); fix onboarding friction same-day</li>
+  </ul></td>
+  <td class="done"><ul>
+    <li>≥30 signups, ≥15 graded, ≥20 roadmaps, 0 P1s</li>
+  </ul></td>
+</tr>
+<tr>
+  <td class="day">Day 23<span class="date">Wed Aug 12</span></td>
+  <td><ul>
+    <li>Fix soft-launch findings; UptimeRobot on <code>/health</code>, frontend, verify URL</li>
+  </ul></td>
+  <td><ul>
+    <li>Recruiter outreach: one-pager to 5–10 HR contacts; assist accounts; collect student quotes</li>
+  </ul></td>
+  <td class="done"><ul>
+    <li>≥3 recruiter accounts; ≥1 AI-matched shortlist made</li>
+  </ul></td>
+</tr>
+<tr>
+  <td class="day">Day 24<span class="date">Thu Aug 13</span></td>
+  <td><ul>
+    <li>Final backup + snapshot; alert thresholds (error rate, disk, queue, LLM spend); on-call plan</li>
+  </ul></td>
+  <td><ul>
+    <li>Launch assets final: founder post, college groups, Discord, demo video pinned</li>
+  </ul></td>
+  <td class="done"><ul>
+    <li>Posts scheduled; backups verified</li>
+  </ul></td>
+</tr>
+<tr>
+  <td class="day">Day 25<span class="date">Fri Aug 14 🚀</span></td>
+  <td><ul>
+    <li><span class="chip green">PUBLIC LAUNCH</span> on-call: grading rate, uptime, queue, LLM latency/cost</li>
+    <li>Evening metrics snapshot for investor/customer deck</li>
+  </ul></td>
+  <td><ul>
+    <li>Publish 10:00 IST; respond all day; hotfix UI</li>
+    <li>Evening “first verified talents” follow-up post</li>
+  </ul></td>
+  <td class="done"><ul>
+    <li><strong>Targets:</strong> 100+ signups · 60+ assessments · 40+ roadmaps · 30+ submissions · 15+ badges · 3–5 recruiters · 1+ shortlist · 99%+ uptime · grading p95 &lt;5s</li>
+  </ul></td>
+</tr>
+</tbody>
+</table>
+
+<div class="footer-note">
+  <strong>Daily rhythm:</strong> 9:30 AM IST standup · PRs cross-reviewed &lt;12h · Friday 4 PM demo + retro · staging auto-deploys on <code>main</code>, prod manual &amp; tagged. &nbsp;
+  <strong>AI staging rule:</strong> LLM features (parse, roadmap, copilot, embedding match) ship now; ML features needing training data (XGBoost ranking, adaptive learning) wait for post-launch pilot data. &nbsp;
+  <strong>Say no until Aug 15:</strong> ECE domain, video interviews, payments, C++/Go/Rust.
+</div>
+
+</body>
+</html>

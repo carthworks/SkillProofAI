@@ -1,0 +1,7 @@
+FROM node:18-alpine
+RUN npm install -g eslint
+RUN adduser -D -u 1000 runner
+USER runner
+WORKDIR /box
+COPY run.sh /run.sh
+ENTRYPOINT ["sh", "/run.sh"]

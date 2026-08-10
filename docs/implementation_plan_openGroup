@@ -1,0 +1,71 @@
+# Implementation Plan - Fix OpenGroup (SAST) Scanner Integration
+
+Resolve issues with the OpenGroup SAST scanner integration to ensure findings are produced, deduplicated, enriched with AI and AST reachability, assigned non-zero priority scores, and correctly managed through their lifecycle without breaking existing scanners (Trivy, Gitleaks, Nuclei).
+
+## User Review Required
+
+> [!IMPORTANT]
+> A schema migration (Alembic) will add a `fingerprint` column with a unique index to the `findings` table to support upserts and lifecycle tracking (`New` -> `Fixed`).
+
+## Proposed Changes
+
+---
+
+### Backend Adapters & Config
+
+#### [MODIFY] [config.py](file:///c:/Users/tkart/Dev/products/security%20Platform/security-platform/backend/app/adapters/config.py)
+- Add `OPENGROUP_RULESET = _env("OPENGROUP_RULESET", "p/default")`.
+- Update `_SEVERITY_MAP` to map `"error": "high"` and `"warning": "medium"`.
+
+#### [MODIFY] [opengroup.py](file:///c:/Users/tkart/Dev/products/security%20Platform/security-platform/backend/app/adapters/opengroup.py)
+- **FIX-01**: Add `--config` (`options.get("ruleset") or config.OPENGROUP_RULESET`) to the scan command line.
+- **FIX-02**: Check if `target` is a URL (`http://`, `https://`, `git@` or not a local directory `os.path.isdir(target)`). If so, clone shallowly (`git clone --depth 50`) to a temporary directory in a `try...finally` block to ensure cleanup.
+- **FIX-07**: Update `_parse_finding` severity extraction to prioritize `extra.get("metadata", {}).get("severity")` and `extra.get("metadata", {}).get("impact")` before falling back to `extra.get("severity")` or `"WARNING"`.
+
+#### [MODIFY] [runner.py](file:///c:/Users/tkart/Dev/products/security%20Platform/security-platform/backend/app/adapters/runner.py)
+- **FIX-09**: Add sensitive string masking to `sink.push(...)` in `run_logged_command` to redact raw secrets or tokens in stdout/stderr lines before streaming to Redis.
+
+---
+
+### Backend Data Models & Database Schema
+
+#### [MODIFY] [finding.py](file:///c:/Users/tkart/Dev/products/security%20Platform/security-platform/backend/app/models/finding.py)
+- Add `fingerprint = Column(String(64), index=True, unique=True, nullable=True)` to `Finding` model.
+
+#### [NEW] [add_finding_fingerprint.py](file:///c:/Users/tkart/Dev/products/security%20Platform/security-platform/backend/alembic/versions/add_finding_fingerprint.py)
+- Create Alembic migration script to add `fingerprint` column and `ix_findings_fingerprint` unique index.
+
+---
+
+### Task Orchestration & Data Pipeline
+
+#### [MODIFY] [scan_tasks.py](file:///c:/Users/tkart/Dev/products/security%20Platform/security-platform/backend/app/tasks/scan_tasks.py)
+- **FIX-04 & FIX-08**:
+  - In `save_findings`, map `fingerprint=f.get("fingerprint")` and `scan_metadata=f.get("metadata") or f.get("scan_metadata") or {}`.
+  - Change single-row inserts to an **upsert** by fingerprint (`ON CONFLICT (fingerprint) DO UPDATE` or lookup by fingerprint), updating `scan_id`, `severity`, `updated_at`, `status` (re-opening `fixed` findings if re-detected), `title`, `url`, `description`, `scan_metadata`, and `priority_score`.
+  - Add a **reconciliation pass** for `(asset_id, tool)`: findings previously active on `asset_id` for `tool` whose fingerprints are missing in the current scan are marked `FindingStatus.fixed`.
+- **FIX-03**:
+  - In `enrich_findings_task`, replace the `0.0 * cvss` multiplier for non-CVE findings with a real score formula: `round(min(10.0, max(0.0, cvss * asset_weight)), 3)`.
+- **FIX-05**:
+  - In `enrich_findings_task`, expand the reachability block to `if f.tool in ("trivy", "opengroup") and repo_dir:`.
+  - For `opengroup`, check if the finding's file path exists in `repo_dir`. Set `Reachability.reachable` (multiplier 1.2) if present or `Reachability.unreachable` (multiplier 0.7) if missing.
+  - Fix `else` reason to say `"Codebase source files not available for AST analysis."` ONLY when `repo_dir` is `None`.
+- **FIX-06**:
+  - In `ai_enrichment_task`, update query filter to `Finding.tool.in_(["trivy", "opengroup"])`.
+
+#### [MODIFY] [prompt_builder.py](file:///c:/Users/tkart/Dev/products/security%20Platform/security-platform/backend/app/ai/prompt_builder.py)
+- Update `build_prompt` to format SAST finding details (check ID, file path, line number, and code snippet) for Claude AI enrichment.
+
+---
+
+## Verification Plan
+
+### Automated Tests
+- Run existing integration tests:
+  `pytest backend/tests/test_integration.py`
+- Create a unit test suite `backend/tests/test_opengroup_fixes.py` to test:
+  1. `OpenGroupAdapter` ruleset execution and local git cloning.
+  2. Fingerprint upserts and reconciliation to `FindingStatus.fixed`.
+  3. Non-CVE priority score calculations (> 0.0).
+  4. AST reachability status for OpenGroup findings.
+  5. Severity hierarchy mapping (`CRITICAL` -> `critical`).

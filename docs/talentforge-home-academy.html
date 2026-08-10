@@ -1,0 +1,398 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>TalentForge — proof beats a résumé</title>
+<script src="https://cdn.tailwindcss.com"></script>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@500;600;700;800&family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+<script>
+  tailwind.config = {
+    theme: { extend: {
+      fontFamily: {
+        display:['"Plus Jakarta Sans"','sans-serif'],
+        sans:['Inter','sans-serif'],
+        mono:['"JetBrains Mono"','ui-monospace','monospace'],
+      },
+      colors: {
+        bg:'#FBFBF9', surface:'#FFFFFF', tint:'#F2F6F4',
+        ink:'#111826', ink2:'#4B5563', ink3:'#9AA3AF',
+        line:'#E7E9E5', line2:'#D8DBD5',
+        emerald:'#10B981', emeraldd:'#059669', emeralddk:'#047857', emdim:'#E7F7F0',
+        indigo:'#4F46E5', indigol:'#6366F1', indim:'#ECEBFE',
+        amber:'#F59E0B', amberdim:'#FEF4E4',
+      },
+    }},
+  }
+</script>
+<style>
+  html{scroll-behavior:smooth}
+  body{background:#FBFBF9;color:#111826}
+  ::selection{background:#10B981;color:#fff}
+  ::-webkit-scrollbar{width:11px}::-webkit-scrollbar-thumb{background:#D8DBD5;border-radius:8px}
+  :focus-visible{outline:2px solid #4F46E5;outline-offset:2px;border-radius:6px}
+  .soft{box-shadow:0 1px 2px rgba(17,24,38,.04), 0 10px 30px -16px rgba(17,24,38,.14)}
+  .soft-sm{box-shadow:0 1px 2px rgba(17,24,38,.05), 0 6px 16px -12px rgba(17,24,38,.12)}
+  .card{background:#fff;border:1px solid #E7E9E5;border-radius:18px}
+  .eyebrow{font-family:"JetBrains Mono",monospace;font-size:11px;letter-spacing:.16em;text-transform:uppercase}
+  .hero-wash{background:radial-gradient(60% 50% at 20% 0%,rgba(79,70,229,.08),transparent 60%),radial-gradient(50% 45% at 90% 5%,rgba(16,185,129,.10),transparent 60%)}
+  .dotgrid{background-image:radial-gradient(rgba(17,24,38,.06) 1px,transparent 1px);background-size:22px 22px}
+  .btn{border-radius:12px;font-weight:600;transition:transform .08s, box-shadow .12s, background .12s}
+  .btn:active{transform:translateY(1px)}
+  .btn-em{background:#059669;color:#fff}.btn-em:hover{background:#047857}
+  .btn-in{background:#4F46E5;color:#fff}.btn-in:hover{background:#4338CA}
+  .btn-ghost{background:#fff;color:#111826;border:1px solid #D8DBD5}.btn-ghost:hover{border-color:#9AA3AF}
+  .ulink{color:#059669;font-weight:600}.ulink:hover{color:#047857;text-decoration:underline;text-underline-offset:3px}
+  [data-aud="candidate"] .aud-employer{display:none}
+  [data-aud="employer"] .aud-candidate{display:none}
+  details>summary{list-style:none}details>summary::-webkit-details-marker{display:none}
+  details[open] .faq-x{transform:rotate(45deg)}
+  @keyframes pop{0%{opacity:0;transform:scale(.7)}60%{opacity:1;transform:scale(1.06)}100%{opacity:1;transform:scale(1)}}
+  .seal{animation:pop .5s cubic-bezier(.2,.9,.3,1) both}
+  @media (prefers-reduced-motion:reduce){.seal{animation:none}}
+</style>
+</head>
+<body class="font-sans" data-aud="candidate">
+
+<!-- ═══ NAV ═══ -->
+<header class="sticky top-0 z-50 bg-bg/85 backdrop-blur-md border-b border-line">
+  <div class="max-w-[1180px] mx-auto px-5 h-[62px] flex items-center gap-6">
+    <a href="#top" class="flex items-center gap-2.5">
+      <span class="w-8 h-8 rounded-xl bg-gradient-to-br from-emerald to-emeraldd grid place-items-center text-white soft-sm">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6L9 17l-5-5"/></svg>
+      </span>
+      <span class="font-display font-800 text-[18px] tracking-tight">TalentForge</span>
+    </a>
+    <nav class="hidden md:flex items-center gap-6 text-[13.5px] text-ink2 font-medium">
+      <a href="#how" class="hover:text-ink">How it works</a>
+      <a href="#candidates" class="hover:text-ink">For candidates</a>
+      <a href="#employers" class="hover:text-ink">For employers</a>
+      <a href="#badges" class="hover:text-ink">Badges</a>
+      <a href="#faq" class="hover:text-ink">FAQ</a>
+    </nav>
+    <div class="ml-auto flex items-center gap-3">
+      <a href="#" class="hidden sm:block text-[13.5px] text-ink2 hover:text-ink font-medium">Sign in</a>
+      <a href="#start" class="btn btn-em text-[13px] px-4 py-2 soft-sm">Get verified</a>
+    </div>
+  </div>
+</header>
+
+<main id="top">
+
+<!-- ═══ HERO ═══ -->
+<section class="relative hero-wash border-b border-line overflow-hidden">
+  <div class="absolute inset-0 dotgrid opacity-50 pointer-events-none"></div>
+  <div class="relative max-w-[1180px] mx-auto px-5 py-16 lg:py-20 grid lg:grid-cols-[1.05fr,0.95fr] gap-12 items-center">
+
+    <div>
+      <div class="inline-flex items-center gap-2 text-[12px] font-semibold text-indigo bg-indim border border-indigo/15 rounded-full px-3.5 py-1.5">
+        <span>✦</span> v1.1 — Public portfolios · AI recommendations · Interviews
+      </div>
+      <h1 class="font-display font-800 tracking-[-.03em] text-[44px] sm:text-[56px] leading-[1.02] mt-6">
+        Proof beats a résumé.<br>
+        <span class="text-emeraldd">Get hired on what you build.</span>
+      </h1>
+      <p class="text-[16px] text-ink2 leading-relaxed mt-5 max-w-[54ch]">
+        TalentForge turns the challenges you solve into <span class="text-ink font-semibold">verified skill badges</span> — earned through real sandbox code execution, behavioral psychometrics, and expert human review. Build a public portfolio and get in front of employers who trust it.
+      </p>
+
+      <div class="inline-flex items-center gap-1 mt-8 p-1 rounded-xl bg-white border border-line soft-sm text-[13px]">
+        <button onclick="setAud('candidate')" id="tabCand" class="px-4 py-2 rounded-lg bg-indim text-indigo font-semibold">I'm a candidate</button>
+        <button onclick="setAud('employer')" id="tabEmp" class="px-4 py-2 rounded-lg text-ink3 hover:text-ink2 font-medium">I'm hiring</button>
+      </div>
+
+      <div id="start" class="flex flex-wrap items-center gap-3 mt-6">
+        <a href="#" class="aud-candidate btn btn-in px-6 py-3.5 soft text-[14.5px]">Take the 15-min assessment →</a>
+        <a href="#badges" class="aud-candidate btn btn-ghost px-6 py-3.5 text-[14.5px]">See a sample badge</a>
+        <a href="#" class="aud-employer btn btn-em px-6 py-3.5 soft text-[14.5px]">Discover verified talent →</a>
+        <a href="#how" class="aud-employer btn btn-ghost px-6 py-3.5 text-[14.5px]">How verification works</a>
+      </div>
+
+      <div class="flex flex-wrap gap-x-6 gap-y-1.5 mt-8 text-[12.5px] text-ink2">
+        <span class="flex items-center gap-1.5"><span class="text-emeraldd">✓</span> 3 verification layers</span>
+        <span class="flex items-center gap-1.5"><span class="text-emeraldd">✓</span> ERC-721 on Polygon</span>
+        <span class="flex items-center gap-1.5"><span class="text-emeraldd">✓</span> Real Docker sandbox</span>
+        <span class="flex items-center gap-1.5"><span class="text-emeraldd">✓</span> &lt;1.2s grading</span>
+      </div>
+    </div>
+
+    <!-- specimen badge card + medallion -->
+    <div class="relative">
+      <div class="seal absolute -top-6 -left-4 z-20 w-24 h-24 rounded-full bg-white border border-line soft grid place-items-center">
+        <svg viewBox="0 0 200 200" width="82" height="82">
+          <defs><path id="ring" d="M100,100 m-72,0 a72,72 0 1,1 144,0 a72,72 0 1,1 -144,0"/></defs>
+          <circle cx="100" cy="100" r="90" fill="#E7F7F0"/>
+          <circle cx="100" cy="100" r="78" fill="none" stroke="#10B981" stroke-width="2"/>
+          <text font-family="JetBrains Mono, monospace" font-size="13" font-weight="600" letter-spacing="3" fill="#059669">
+            <textPath href="#ring" startOffset="4%">VERIFIED · ON-CHAIN · POLYGON · </textPath>
+          </text>
+          <path d="M80 100l13 13 28-32" fill="none" stroke="#059669" stroke-width="8" stroke-linecap="round" stroke-linejoin="round"/>
+        </svg>
+      </div>
+
+      <div class="card soft p-7 pt-9">
+        <div class="flex items-start justify-between">
+          <div>
+            <div class="inline-flex items-center gap-1.5 text-[11px] font-mono font-600 text-emeraldd bg-emdim px-2.5 py-1 rounded-md">◆ EXPERT VERIFIED</div>
+            <div class="font-display font-700 text-[23px] leading-tight mt-3">Build a Load Balancer</div>
+            <div class="text-[12.5px] text-ink2 mt-1">Architect tier · flagship challenge</div>
+          </div>
+          <div class="text-right">
+            <div class="font-display font-800 text-[30px] text-emeraldd leading-none">98</div>
+            <div class="text-[11px] text-ink3 font-mono">/ 100</div>
+          </div>
+        </div>
+        <div class="mt-6 pt-4 border-t border-line space-y-2.5 text-[12.5px] font-mono">
+          <div class="flex justify-between"><span class="text-ink2">Correctness</span><span>10 / 10 hidden tests</span></div>
+          <div class="flex justify-between"><span class="text-ink2">Complexity</span><span>O(1) dispatch · verified</span></div>
+          <div class="flex justify-between"><span class="text-ink2">Reviewer</span><span>Senior Architect ✓</span></div>
+          <div class="flex justify-between"><span class="text-ink2">Chain record</span><span class="text-emeraldd">0xA41F…9b2 ↗</span></div>
+        </div>
+        <a href="#" class="ulink text-[12px] font-mono mt-4 inline-block">Verify on PolygonScan →</a>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ═══ TRUST STRIP ═══ -->
+<section class="border-b border-line bg-white">
+  <div class="max-w-[1180px] mx-auto px-5 grid grid-cols-2 md:grid-cols-4 divide-x divide-line">
+    <div class="px-5 py-8"><div class="font-display font-800 text-[28px] text-emeraldd leading-none">4-part</div><div class="text-[12px] text-ink2 mt-2">weighted fair score</div></div>
+    <div class="px-5 py-8"><div class="font-display font-800 text-[28px] text-emeraldd leading-none">8</div><div class="text-[12px] text-ink2 mt-2">architect-grade problems</div></div>
+    <div class="px-5 py-8"><div class="font-display font-800 text-[28px] text-emeraldd leading-none">10</div><div class="text-[12px] text-ink2 mt-2">hidden tests on the flagship</div></div>
+    <div class="px-5 py-8"><div class="font-display font-800 text-[28px] text-emeraldd leading-none">100%</div><div class="text-[12px] text-ink2 mt-2">auditable on PolygonScan</div></div>
+  </div>
+</section>
+
+<!-- ═══ VERIFICATION PIPELINE ═══ -->
+<section class="max-w-[1180px] mx-auto px-5 py-18 lg:py-20">
+  <div class="max-w-[620px]">
+    <div class="eyebrow text-indigo">The verification engine</div>
+    <h2 class="font-display font-800 text-[34px] tracking-tight mt-3">From code to cryptographic proof</h2>
+    <p class="text-[15px] text-ink2 mt-3">A claim only becomes a badge after it survives every layer. No self-attestation, no shortcuts.</p>
+  </div>
+
+  <div class="grid md:grid-cols-3 gap-4 mt-10">
+    <div class="card soft-sm p-6"><div class="w-8 h-8 rounded-lg bg-indim text-indigo grid place-items-center font-mono text-[13px] font-600">01</div><div class="font-display font-700 text-[16px] mt-3">Submit in Monaco</div><p class="text-[13px] text-ink2 mt-1.5">Python, JS or Java — with an AI copilot alongside the editor.</p></div>
+    <div class="card soft-sm p-6"><div class="w-8 h-8 rounded-lg bg-indim text-indigo grid place-items-center font-mono text-[13px] font-600">02</div><div class="font-display font-700 text-[16px] mt-3">Security precheck</div><p class="text-[13px] text-ink2 mt-1.5">Blocks <span class="font-mono text-[12px]">eval</span>, subprocess and fs before any container spawns.</p></div>
+    <div class="card soft-sm p-6"><div class="w-8 h-8 rounded-lg bg-indim text-indigo grid place-items-center font-mono text-[13px] font-600">03</div><div class="font-display font-700 text-[16px] mt-3">Sandbox grading</div><p class="text-[13px] text-ink2 mt-1.5">Correctness, Big-O complexity and style, in an isolated Docker run.</p></div>
+    <div class="card soft-sm p-6"><div class="w-8 h-8 rounded-lg bg-indim text-indigo grid place-items-center font-mono text-[13px] font-600">04</div><div class="font-display font-700 text-[16px] mt-3">AI-verified</div><p class="text-[13px] text-ink2 mt-1.5">Passing the threshold earns a provisional badge.</p></div>
+    <div class="card soft-sm p-6"><div class="w-8 h-8 rounded-lg bg-indim text-indigo grid place-items-center font-mono text-[13px] font-600">05</div><div class="font-display font-700 text-[16px] mt-3">Expert review</div><p class="text-[13px] text-ink2 mt-1.5">A senior engineer approves it — or revokes it.</p></div>
+    <div class="p-6 rounded-[18px] border border-emerald/30 bg-emdim"><div class="w-8 h-8 rounded-lg bg-emerald text-white grid place-items-center font-mono text-[13px] font-600">06</div><div class="font-display font-700 text-[16px] mt-3 text-emeraldd">Minted on Polygon</div><p class="text-[13px] text-ink2 mt-1.5">EXPERT_VERIFIED, as an ERC-721 you can link anywhere.</p></div>
+  </div>
+
+  <div class="mt-6 flex flex-wrap items-center gap-2.5 text-[12px] font-mono">
+    <span class="text-ink2">Per-submission code score =</span>
+    <span class="bg-white border border-line px-2.5 py-1 rounded-md">60% correctness</span><span class="text-ink3">+</span>
+    <span class="bg-white border border-line px-2.5 py-1 rounded-md">30% complexity</span><span class="text-ink3">+</span>
+    <span class="bg-white border border-line px-2.5 py-1 rounded-md">10% style</span>
+  </div>
+</section>
+
+<!-- ═══ HOW IT WORKS ═══ -->
+<section id="how" class="border-y border-line bg-tint">
+  <div class="max-w-[1180px] mx-auto px-5 py-18 lg:py-20">
+    <h2 class="font-display font-800 text-[34px] tracking-tight text-center">Three steps to a verified profile</h2>
+    <p class="text-[15px] text-ink2 mt-3 text-center">Cognitive fingerprint, real code evaluation, one fair score.</p>
+    <div class="grid md:grid-cols-3 gap-5 mt-12">
+      <div class="card soft-sm p-6"><div class="font-display font-800 text-[30px] text-indigo leading-none">01</div><h3 class="font-display font-700 text-[18px] mt-4">15-minute psychometric</h3><p class="text-[13.5px] text-ink2 mt-2 leading-relaxed">A diagnostic across five traits — Logical Reasoning, Attention to Detail, Persistence, Learning Speed, Architecture — drawn as your radar map.</p></div>
+      <div class="card soft-sm p-6"><div class="font-display font-800 text-[30px] text-indigo leading-none">02</div><h3 class="font-display font-700 text-[18px] mt-4">Solve real challenges</h3><p class="text-[13.5px] text-ink2 mt-2 leading-relaxed">Explorer → Builder → Architect problems in Monaco, graded live in a sandbox. Results return in under 1.2 seconds.</p></div>
+      <div class="card soft-sm p-6"><div class="font-display font-800 text-[30px] text-indigo leading-none">03</div><h3 class="font-display font-700 text-[18px] mt-4">Earn one fair score</h3><p class="text-[13.5px] text-ink2 mt-2 leading-relaxed">Your aggregate blends code, psychometrics, profile and GitHub, so no single signal can be gamed.</p></div>
+    </div>
+  </div>
+</section>
+
+<!-- ═══ TWO-SIDED VALUE ═══ -->
+<section class="max-w-[1180px] mx-auto px-5 py-18 lg:py-20 space-y-16">
+
+  <div id="candidates" class="grid lg:grid-cols-[360px,1fr] gap-10 items-start">
+    <div>
+      <div class="eyebrow text-indigo">For candidates</div>
+      <h2 class="font-display font-800 text-[32px] tracking-tight mt-3 leading-[1.05]">Stop sending PDFs.<br>Send proof.</h2>
+      <p class="text-[14.5px] text-ink2 mt-4 leading-relaxed">Every solve compounds into a public portfolio recruiters can verify without taking your word for it.</p>
+      <a href="#" class="inline-block btn btn-in px-5 py-3 soft-sm text-[14px] mt-6">Start earning badges →</a>
+    </div>
+    <div class="grid sm:grid-cols-2 gap-4">
+      <div class="card soft-sm p-5"><div class="w-9 h-9 rounded-lg bg-emdim text-emeraldd grid place-items-center">◆</div><div class="font-display font-700 text-[15px] mt-3">Verified skill badges</div><p class="text-[12.5px] text-ink2 mt-1.5">Backed by real test output and expert review — minted as ERC-721 on Polygon.</p></div>
+      <div class="card soft-sm p-5"><div class="w-9 h-9 rounded-lg bg-indim text-indigo grid place-items-center">◍</div><div class="font-display font-700 text-[15px] mt-3">Public portfolio <span class="font-mono text-[11px] text-ink3">/p/:id</span></div><p class="text-[12.5px] text-ink2 mt-1.5">A shareable page with skills, badges and an AI executive summary.</p></div>
+      <div class="card soft-sm p-5"><div class="w-9 h-9 rounded-lg bg-amberdim text-amber grid place-items-center">▤</div><div class="font-display font-700 text-[15px] mt-3">PDF export &amp; LinkedIn share</div><p class="text-[12.5px] text-ink2 mt-1.5">Print a clean résumé from the browser, or post a pre-filled, verified update in one click.</p></div>
+      <div class="card soft-sm p-5"><div class="w-9 h-9 rounded-lg bg-indim text-indigo grid place-items-center">✦</div><div class="font-display font-700 text-[15px] mt-3">Interview requests, in-app</div><p class="text-[12.5px] text-ink2 mt-1.5">Employers reach out with a calendar link straight to your dashboard.</p></div>
+    </div>
+  </div>
+
+  <div id="employers" class="grid lg:grid-cols-[1fr,360px] gap-10 items-start">
+    <div class="grid sm:grid-cols-2 gap-4 order-2 lg:order-1">
+      <div class="card soft-sm p-5"><div class="w-9 h-9 rounded-lg bg-emdim text-emeraldd grid place-items-center">◎</div><div class="font-display font-700 text-[15px] mt-3">Discover by verified score</div><p class="text-[12.5px] text-ink2 mt-1.5">Sort and filter candidates by aggregate score, badge and language — no résumé guesswork.</p></div>
+      <div class="card soft-sm p-5"><div class="w-9 h-9 rounded-lg bg-indim text-indigo grid place-items-center">▣</div><div class="font-display font-700 text-[15px] mt-3">Inspect drawer</div><p class="text-[12.5px] text-ink2 mt-1.5">Psychometric radar, score breakdown, and a read-only sample of their best code.</p></div>
+      <div class="card soft-sm p-5"><div class="w-9 h-9 rounded-lg bg-emdim text-emeraldd grid place-items-center">✳</div><div class="font-display font-700 text-[15px] mt-3">Smart Match AI</div><p class="text-[12.5px] text-ink2 mt-1.5">Paste a job description; get candidates ranked by real skill fit.</p></div>
+      <div class="card soft-sm p-5"><div class="w-9 h-9 rounded-lg bg-amberdim text-amber grid place-items-center">◷</div><div class="font-display font-700 text-[15px] mt-3">One-click interviews</div><p class="text-[12.5px] text-ink2 mt-1.5">Send a Calendly link with a note; it arrives as an in-app notification instantly.</p></div>
+    </div>
+    <div class="order-1 lg:order-2">
+      <div class="eyebrow text-emeraldd">For employers</div>
+      <h2 class="font-display font-800 text-[32px] tracking-tight mt-3 leading-[1.05]">Screen in 90 seconds,<br>not three calls.</h2>
+      <p class="text-[14.5px] text-ink2 mt-4 leading-relaxed">See verified performance, inspect actual code, and reach out — all from one drawer.</p>
+      <a href="#" class="inline-block btn btn-em px-5 py-3 soft-sm text-[14px] mt-6">Open recruiter portal →</a>
+    </div>
+  </div>
+</section>
+
+<!-- ═══ FAIR SCORE ═══ -->
+<section class="border-y border-line bg-tint">
+  <div class="max-w-[860px] mx-auto px-5 py-16 text-center">
+    <h2 class="font-display font-800 text-[30px] tracking-tight">One score no single signal can game</h2>
+    <p class="text-[14.5px] text-ink2 mt-3">Every candidate's aggregate is a fixed, transparent weighting.</p>
+    <div class="mt-8 flex h-11 rounded-xl overflow-hidden border border-line soft-sm font-mono text-[12px] font-600 text-white">
+      <div class="bg-emeraldd grid place-items-center" style="width:50%">Code 50%</div>
+      <div class="bg-emerald grid place-items-center" style="width:25%">Psych 25%</div>
+      <div class="bg-indigo grid place-items-center" style="width:15%">Profile 15%</div>
+      <div class="bg-amber grid place-items-center" style="width:10%">GitHub 10%</div>
+    </div>
+    <p class="text-[12px] text-ink3 mt-3 font-mono">Hover any candidate's score in the employer drawer to see this exact breakdown.</p>
+  </div>
+</section>
+
+<!-- ═══ BADGE SHOWCASE ═══ -->
+<section id="badges" class="max-w-[1180px] mx-auto px-5 py-18 lg:py-20">
+  <div class="flex items-end justify-between flex-wrap gap-3">
+    <div>
+      <div class="eyebrow text-emeraldd">Verified badge registry</div>
+      <h2 class="font-display font-800 text-[34px] tracking-tight mt-3">Credentials you can audit</h2>
+      <p class="text-[15px] text-ink2 mt-2">Each badge links to its on-chain record and the exact test output behind it.</p>
+    </div>
+    <a href="#" class="ulink text-[13.5px]">Explore the badge gallery →</a>
+  </div>
+
+  <div class="grid md:grid-cols-3 gap-5 mt-10">
+    <div class="relative card soft p-6 border-emerald/30">
+      <div class="seal absolute -top-5 -right-4 w-16 h-16 rounded-full bg-white border border-line soft-sm grid place-items-center">
+        <svg viewBox="0 0 200 200" width="52" height="52"><circle cx="100" cy="100" r="92" fill="#E7F7F0"/><text x="100" y="88" text-anchor="middle" font-family="Plus Jakarta Sans, sans-serif" font-weight="800" font-size="34" fill="#059669">98</text><text x="100" y="126" text-anchor="middle" font-family="JetBrains Mono, monospace" font-size="17" letter-spacing="1" fill="#059669">/100</text></svg>
+      </div>
+      <div class="inline-flex items-center gap-1.5 text-[11px] font-mono font-600 text-emeraldd bg-emdim px-2.5 py-1 rounded-md">◆ EXPERT VERIFIED</div>
+      <div class="font-display font-700 text-[19px] mt-3 leading-tight">Build a Load Balancer</div>
+      <div class="text-[12.5px] text-ink2">Architect · flagship · 250 XP</div>
+      <div class="mt-5 pt-4 border-t border-line space-y-2 text-[12px] font-mono">
+        <div class="flex justify-between"><span class="text-ink2">Reviewer</span><span>Senior Architect</span></div>
+        <div class="flex justify-between"><span class="text-ink2">Hidden tests</span><span class="text-emeraldd">10 / 10 passed</span></div>
+      </div>
+      <a href="#" class="ulink text-[12px] font-mono mt-4 inline-block">Verify on PolygonScan →</a>
+    </div>
+
+    <div class="card soft-sm p-6">
+      <div class="inline-flex items-center gap-1.5 text-[11px] font-mono font-600 text-indigo bg-indim px-2.5 py-1 rounded-md">✦ AI VERIFIED</div>
+      <div class="font-display font-700 text-[19px] mt-3 leading-tight">LRU Cache System</div>
+      <div class="text-[12.5px] text-ink2">Builder · O(1) eviction · 150 XP</div>
+      <div class="mt-5 pt-4 border-t border-line space-y-2 text-[12px] font-mono">
+        <div class="flex justify-between"><span class="text-ink2">Score</span><span class="text-emeraldd">95 / 100</span></div>
+        <div class="flex justify-between"><span class="text-ink2">Tests</span><span>8 / 8 passed</span></div>
+      </div>
+      <a href="#" class="ulink text-[12px] font-mono mt-4 inline-block">Verify on PolygonScan →</a>
+    </div>
+
+    <div class="card soft-sm p-6">
+      <div class="inline-flex items-center gap-1.5 text-[11px] font-mono font-600 text-indigo bg-indim px-2.5 py-1 rounded-md">✦ AI VERIFIED</div>
+      <div class="font-display font-700 text-[19px] mt-3 leading-tight">Token Bucket Rate Limiter</div>
+      <div class="text-[12.5px] text-ink2">Builder · multi-client refill · 150 XP</div>
+      <div class="mt-5 pt-4 border-t border-line space-y-2 text-[12px] font-mono">
+        <div class="flex justify-between"><span class="text-ink2">Score</span><span class="text-emeraldd">92 / 100</span></div>
+        <div class="flex justify-between"><span class="text-ink2">Tests</span><span>8 / 8 passed</span></div>
+      </div>
+      <a href="#" class="ulink text-[12px] font-mono mt-4 inline-block">Verify on PolygonScan →</a>
+    </div>
+  </div>
+</section>
+
+<!-- ═══ TESTIMONIALS ═══ -->
+<section class="border-y border-line bg-tint">
+  <div class="max-w-[1180px] mx-auto px-5 py-16 grid md:grid-cols-2 gap-5">
+    <figure class="card soft-sm p-7">
+      <div class="text-indigo text-3xl leading-none font-display">"</div>
+      <blockquote class="text-[16px] leading-relaxed mt-2">I stopped attaching a résumé. I send my <span class="font-mono text-[14px] text-emeraldd">/p</span> link and let the badges do the talking — recruiters check the code themselves.</blockquote>
+      <figcaption class="text-[12.5px] text-ink2 mt-4 font-mono">— Final-year CSE student · Architect tier</figcaption>
+    </figure>
+    <figure class="card soft-sm p-7">
+      <div class="text-emeraldd text-3xl leading-none font-display">"</div>
+      <blockquote class="text-[16px] leading-relaxed mt-2">The inspect drawer told me more in ninety seconds than three phone screens. Verified score, radar, real code — then one click to schedule.</blockquote>
+      <figcaption class="text-[12.5px] text-ink2 mt-4 font-mono">— Engineering hiring lead · early-stage startup</figcaption>
+    </figure>
+  </div>
+</section>
+
+<!-- ═══ FAQ ═══ -->
+<section id="faq" class="max-w-[820px] mx-auto px-5 py-18 lg:py-20">
+  <h2 class="font-display font-800 text-[32px] tracking-tight text-center">Questions, answered</h2>
+  <div class="mt-10 space-y-3">
+    <details class="card soft-sm px-5">
+      <summary class="flex items-center gap-3 py-5 cursor-pointer font-display font-700 text-[16px]">Are the badges actually verifiable?<span class="faq-x ml-auto text-emeraldd text-2xl leading-none transition-transform">+</span></summary>
+      <p class="text-[13.5px] text-ink2 leading-relaxed pb-5">Yes. Every EXPERT_VERIFIED badge is minted as an ERC-721 on Polygon with a PolygonScan link, and each exposes the exact sandbox test output it was earned from. Anyone can audit it without an account.</p>
+    </details>
+    <details class="card soft-sm px-5">
+      <summary class="flex items-center gap-3 py-5 cursor-pointer font-display font-700 text-[16px]">How long does it take to get started?<span class="faq-x ml-auto text-emeraldd text-2xl leading-none transition-transform">+</span></summary>
+      <p class="text-[13.5px] text-ink2 leading-relaxed pb-5">The psychometric diagnostic is about 15 minutes. Coding challenges vary by tier — Explorer problems take minutes; Architect problems like the Load Balancer are a deeper sit-down. You build your profile incrementally.</p>
+    </details>
+    <details class="card soft-sm px-5">
+      <summary class="flex items-center gap-3 py-5 cursor-pointer font-display font-700 text-[16px]">Do employers really see my code?<span class="faq-x ml-auto text-emeraldd text-2xl leading-none transition-transform">+</span></summary>
+      <p class="text-[13.5px] text-ink2 leading-relaxed pb-5">Only if you make your profile public. When you do, employers see a read-only view of your best sample — never editable, never anything you've kept private.</p>
+    </details>
+    <details class="card soft-sm px-5">
+      <summary class="flex items-center gap-3 py-5 cursor-pointer font-display font-700 text-[16px]">What languages are supported?<span class="faq-x ml-auto text-emeraldd text-2xl leading-none transition-transform">+</span></summary>
+      <p class="text-[13.5px] text-ink2 leading-relaxed pb-5">Python, JavaScript and Java in the Monaco editor — each graded in an isolated container for correctness, Big-O complexity and style.</p>
+    </details>
+    <details class="card soft-sm px-5">
+      <summary class="flex items-center gap-3 py-5 cursor-pointer font-display font-700 text-[16px]">Can I resubmit to improve a score?<span class="faq-x ml-auto text-emeraldd text-2xl leading-none transition-transform">+</span></summary>
+      <p class="text-[13.5px] text-ink2 leading-relaxed pb-5">Yes, with a 60-second cooldown between attempts. Your profile reflects your best verified result.</p>
+    </details>
+  </div>
+</section>
+
+<!-- ═══ FINAL CTA ═══ -->
+<section class="max-w-[1180px] mx-auto px-5 pb-20">
+  <div class="relative overflow-hidden rounded-3xl bg-gradient-to-br from-indigo to-[#3F37C9] text-white p-10 sm:p-14 text-center soft">
+    <div class="absolute inset-0 dotgrid opacity-20 pointer-events-none"></div>
+    <div class="relative">
+      <h2 class="font-display font-800 text-[36px] tracking-tight">Ready to prove it?</h2>
+      <p class="text-[15px] text-white/80 mt-3 max-w-[52ch] mx-auto">Candidates earn verified badges. Employers hire on evidence. Pick your side.</p>
+      <div class="flex flex-wrap items-center justify-center gap-3 mt-8">
+        <a href="#" class="btn bg-white text-indigo px-6 py-3.5 text-[14.5px] hover:bg-white/90">Take the assessment</a>
+        <a href="#" class="btn border border-white/50 text-white px-6 py-3.5 text-[14.5px] hover:bg-white/10">Create a recruiter account</a>
+      </div>
+    </div>
+  </div>
+</section>
+
+</main>
+
+<!-- ═══ FOOTER ═══ -->
+<footer class="border-t border-line bg-white">
+  <div class="max-w-[1180px] mx-auto px-5 py-12 grid md:grid-cols-[1.5fr,1fr,1fr,1fr] gap-8">
+    <div>
+      <div class="flex items-center gap-2.5">
+        <span class="w-8 h-8 rounded-xl bg-gradient-to-br from-emerald to-emeraldd grid place-items-center text-white"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6L9 17l-5-5"/></svg></span>
+        <span class="font-display font-800 text-[17px]">TalentForge</span>
+      </div>
+      <p class="text-[12.5px] text-ink2 mt-3 max-w-[34ch]">The performance-verified talent marketplace. Proof over résumé inflation.</p>
+    </div>
+    <div><div class="eyebrow text-ink3 mb-3">Product</div><ul class="space-y-2 text-[13px] text-ink2"><li><a href="#how" class="hover:text-ink">How it works</a></li><li><a href="#badges" class="hover:text-ink">Badge gallery</a></li><li><a href="#" class="hover:text-ink">Problem board</a></li><li><a href="#" class="hover:text-ink">Leaderboard</a></li></ul></div>
+    <div><div class="eyebrow text-ink3 mb-3">Sign in as</div><ul class="space-y-2 text-[13px] text-ink2"><li><a href="#" class="hover:text-ink">Student</a></li><li><a href="#" class="hover:text-ink">Reviewer</a></li><li><a href="#" class="hover:text-ink">Employer</a></li><li><a href="#" class="hover:text-ink">Admin</a></li></ul></div>
+    <div><div class="eyebrow text-ink3 mb-3">Resources</div><ul class="space-y-2 text-[13px] text-ink2"><li><a href="#" class="hover:text-ink">Platform guide</a></li><li><a href="#faq" class="hover:text-ink">FAQ</a></li><li><a href="#" class="hover:text-ink">API reference</a></li><li><a href="#" class="hover:text-ink">Verify a badge</a></li></ul></div>
+  </div>
+  <div class="border-t border-line">
+    <div class="max-w-[1180px] mx-auto px-5 py-5 flex flex-wrap items-center gap-3 text-[12px] font-mono text-ink3">
+      <span>© 2026 TalentForge</span><span>·</span><a href="#" class="hover:text-ink2">Privacy</a><span>·</span><a href="#" class="hover:text-ink2">Terms</a>
+      <span class="ml-auto flex items-center gap-2 text-emeraldd">◆ Badges verifiable on Polygon</span>
+    </div>
+  </div>
+</footer>
+
+<script>
+  const body=document.body, tabCand=document.getElementById('tabCand'), tabEmp=document.getElementById('tabEmp');
+  const onC='px-4 py-2 rounded-lg bg-indim text-indigo font-semibold', offC='px-4 py-2 rounded-lg text-ink3 hover:text-ink2 font-medium';
+  function setAud(a){
+    body.setAttribute('data-aud',a);
+    tabCand.className=(a==='candidate'?onC:offC);
+    tabEmp.className =(a==='employer'?onC:offC);
+  }
+</script>
+</body>
+</html>

@@ -1,0 +1,72 @@
+# TalentForge — local/dev infrastructure
+# Usage:  cp .env.example .env  &&  docker compose up -d
+# Note: the top-level `version:` key is obsolete in Compose v2 and intentionally removed.
+
+name: talentforge
+
+services:
+  postgres:
+    image: pgvector/pgvector:pg16          # pin minor version — reproducible across both machines
+    restart: always
+    environment:
+      POSTGRES_USER: ${POSTGRES_USER:-talentforge}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:-talentforge_dev_secret}
+      POSTGRES_DB: ${POSTGRES_DB:-talentforge}
+      # faster local dev; do NOT use in prod compose file
+      POSTGRES_INITDB_ARGS: "--data-checksums"
+    command: >
+      postgres
+      -c shared_buffers=256MB
+      -c max_connections=100
+      -c log_min_duration_statement=200
+    volumes:
+      - postgres-data:/var/lib/postgresql/data
+    ports:
+      - "127.0.0.1:${POSTGRES_PORT:-5439}:5432"            # bind to localhost only — never expose DB on 0.0.0.0
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U ${POSTGRES_USER:-talentforge} -d ${POSTGRES_DB:-talentforge}"]
+      interval: 5s
+      timeout: 3s
+      retries: 10
+      start_period: 10s
+    shm_size: 256mb                      # avoids Postgres shared-memory errors under load tests
+    deploy:
+      resources:
+        limits:
+          memory: 1g
+
+  redis:
+    image: redis:7.4-alpine
+    restart: always
+    # AOF persistence (BullMQ jobs survive restarts) + password + memory cap
+    command: >
+      redis-server
+      --appendonly yes
+      --appendfsync everysec
+      --requirepass ${REDIS_PASSWORD:-redis_dev_secret}
+      --maxmemory 256mb
+      --maxmemory-policy noeviction
+    volumes:
+      - redis-data:/data
+    ports:
+      - "127.0.0.1:${REDIS_PORT:-6380}:6379"
+    healthcheck:
+      test: ["CMD-SHELL", "redis-cli -a $$REDIS_PASSWORD ping | grep PONG"]
+      interval: 5s
+      timeout: 3s
+      retries: 10
+    deploy:
+      resources:
+        limits:
+          memory: 384m
+
+volumes:
+  postgres-data:
+  redis-data:
+
+# Default network is created automatically as `talentforge_default`.
+# App services (backend/worker) added later should use:
+#   depends_on:
+#     postgres: { condition: service_healthy }
+#     redis:    { condition: service_healthy }
+#     minio:    { condition: service_healthy }

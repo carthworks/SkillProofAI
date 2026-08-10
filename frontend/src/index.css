@@ -1,0 +1,217 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* ─── TalentForge Design Tokens ─────────────────────────────────────────────── */
+:root {
+  color-scheme: light;
+
+  /* Font Tokens */
+  --app-font-sans: "Inter", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+  --app-font-display: "Space Grotesk", "Inter", sans-serif;
+  font-family: var(--app-font-sans);
+
+  /* Home-page palette — default Light theme */
+  --bg:        #FBFBF9;   /* warm off-white page background */
+  --surface:   #FFFFFF;   /* card / sidebar / topbar surface */
+  --tint:      #F2F6F4;   /* section tint, hover backgrounds */
+  --border:    #E7E9E5;   /* default border */
+  --border2:   #D8DBD5;   /* stronger border / hover border */
+
+  --ink:       #111826;   /* primary text */
+  --ink2:      #4B5563;   /* secondary text */
+  --ink3:      #9AA3AF;   /* muted text */
+
+  --emerald:   #10B981;
+  --emerald-d: #059669;
+  --emerald-dk:#047857;
+  --em-dim:    #E7F7F0;
+
+  --indigo:    #4F46E5;
+  --indigo-l:  #6366F1;
+  --in-dim:    #ECEBFE;
+
+  --amber:     #F59E0B;
+  --am-dim:    #FEF4E4;
+}
+
+/* ─── Dark Theme Tokens ──────────────────────────────────────────────────────── */
+html.dark {
+  color-scheme: dark;
+
+  --bg:        #0F172A;
+  --surface:   #1E293B;
+  --tint:      #0F172A;
+  --border:    #334155;
+  --border2:   #475569;
+
+  --ink:       #F8FAFC;
+  --ink2:      #94A3B8;
+  --ink3:      #64748B;
+
+  --emerald:   #10B981;
+  --emerald-d: #059669;
+  --em-dim:    rgba(16,185,129,0.15);
+
+  --indigo:    #818CF8;
+  --indigo-l:  #A5B4FC;
+  --in-dim:    rgba(99,102,241,0.2);
+
+  --amber:     #F59E0B;
+  --am-dim:    rgba(245,158,11,0.15);
+}
+
+/* ─── Midnight / Abyss Theme Tokens ─────────────────────────────────────────── */
+html.midnight {
+  color-scheme: dark;
+
+  --bg:        #070C1A;   /* deep oceanic abyss background */
+  --surface:   #0F172A;   /* abyss slate panel card surface */
+  --tint:      #1E293B;   /* secondary hover / active surface */
+  --border:    #1E293B;   /* crisp dark border */
+  --border2:   #334155;   /* active / hover border */
+
+  --ink:       #F8FAFC;   /* 100% high-contrast white for primary text */
+  --ink2:      #CBD5E1;   /* luminous slate-300 for secondary text */
+  --ink3:      #94A3B8;   /* slate-400 for muted text */
+
+  --emerald:   #10B981;
+  --emerald-d: #059669;
+  --em-dim:    rgba(16,185,129,0.18);
+
+  --indigo:    #818CF8;
+  --indigo-l:  #A5B4FC;
+  --in-dim:    rgba(99,102,241,0.22);
+
+  --amber:     #F59E0B;
+  --am-dim:    rgba(245,158,11,0.18);
+}
+
+/* ─── High Contrast Overrides for Dark / Midnight / Abyss Themes ───────────── */
+html.midnight, html.dark {
+  color: var(--ink);
+  background-color: var(--bg);
+}
+
+html.midnight .text-slate-900,
+html.midnight .text-slate-800,
+html.midnight .text-slate-700,
+html.midnight .text-gray-900,
+html.midnight .text-gray-800,
+html.midnight .text-gray-700,
+html.midnight .text-\[\#111826\] {
+  color: #F8FAFC !important;
+}
+
+html.midnight .text-slate-600,
+html.midnight .text-slate-500,
+html.midnight .text-gray-600,
+html.midnight .text-gray-500,
+html.midnight .text-\[\#4B5563\] {
+  color: #CBD5E1 !important;
+}
+
+html.midnight .text-slate-400,
+html.midnight .text-gray-400,
+html.midnight .text-\[\#9AA3AF\] {
+  color: #94A3B8 !important;
+}
+
+/* Surface background overrides for Midnight / Dark mode */
+html.midnight .bg-white,
+html.dark .bg-white {
+  background-color: var(--surface) !important;
+}
+
+html.midnight .bg-slate-50,
+html.midnight .bg-gray-50,
+html.dark .bg-slate-50,
+html.dark .bg-gray-50 {
+  background-color: var(--tint) !important;
+}
+
+
+
+/* ─── Base Reset ─────────────────────────────────────────────────────────────── */
+*, *::before, *::after { box-sizing: border-box; }
+
+body {
+  margin: 0;
+  font-family: var(--app-font-sans);
+  background: var(--bg);
+  color: var(--ink);
+  -webkit-font-smoothing: antialiased;
+}
+
+h1, h2, h3, h4, h5, h6, .font-display, .font-space {
+  font-family: var(--app-font-display);
+}
+
+button, input, textarea, select {
+  font: inherit;
+  color: inherit;
+}
+
+
+option {
+  background-color: var(--surface);
+  color: var(--ink);
+}
+
+/* ─── Selection ──────────────────────────────────────────────────────────────── */
+::selection { background: var(--emerald); color: #fff; }
+
+/* ─── Scrollbars ─────────────────────────────────────────────────────────────── */
+::-webkit-scrollbar        { width: 8px; height: 8px; }
+::-webkit-scrollbar-track  { background: transparent; }
+::-webkit-scrollbar-thumb  { background: var(--border2); border-radius: 8px; }
+::-webkit-scrollbar-thumb:hover { background: var(--ink3); }
+
+.hide-scrollbar::-webkit-scrollbar  { display: none; }
+.hide-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
+
+.thin-scrollbar::-webkit-scrollbar       { width: 5px; height: 5px; }
+.thin-scrollbar::-webkit-scrollbar-track { background: transparent; }
+.thin-scrollbar::-webkit-scrollbar-thumb { background: rgba(156,163,175,.3); border-radius: 8px; }
+.thin-scrollbar:hover::-webkit-scrollbar-thumb { background: rgba(156,163,175,.5); }
+
+/* ─── AppShell Theme Component Classes ───────────────────────────────────────── */
+.tf-shell          { background: var(--bg); color: var(--ink); }
+.tf-sidebar        { background: var(--surface); border-color: var(--border); }
+.tf-topbar         { background: var(--surface); border-color: var(--border); }
+.tf-content        { background: var(--tint); }
+.tf-nav-link       {
+  color: var(--ink2);
+  border-radius: 12px;
+  transition: background .15s, color .15s;
+}
+.tf-nav-link:hover {
+  background: var(--tint);
+  color: var(--ink);
+}
+.tf-nav-link.active {
+  background: var(--in-dim);
+  color: var(--indigo);
+  font-weight: 600;
+}
+.tf-nav-icon.active   { color: var(--indigo); }
+.tf-nav-icon          { color: var(--ink3); }
+
+/* ─── Global card utility (used across all themes) ───────────────────────────── */
+.tf-card {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 16px;
+  transition: transform .2s cubic-bezier(.2,.8,.2,1), box-shadow .2s cubic-bezier(.2,.8,.2,1);
+}
+.tf-card:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 2px 4px rgba(17,24,38,.05), 0 12px 28px -12px rgba(17,24,38,.14);
+}
+
+/* ─── Focus ring ──────────────────────────────────────────────────────────────── */
+:focus-visible { outline: 2px solid var(--indigo); outline-offset: 2px; border-radius: 6px; }
+
+/* ─── Sonner toast overrides ─────────────────────────────────────────────────── */
+[data-sonner-toaster] [data-type='success'] { border-color: var(--emerald) !important; }
+[data-sonner-toaster] [data-type='error']   { border-color: #EF4444 !important; }

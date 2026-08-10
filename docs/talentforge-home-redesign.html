@@ -1,0 +1,435 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>TalentForge — proof beats a résumé</title>
+<script src="https://cdn.tailwindcss.com"></script>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
+<script>
+  tailwind.config = {
+    theme: { extend: {
+      fontFamily: { sans:['Inter','sans-serif'], mono:['ui-monospace','SF Mono','Menlo','monospace'] },
+      colors: {
+        bg:'#060812', panel:'#0E1420', panel2:'#131A28', panel3:'#0A0F19',
+        line:'#1E2634', line2:'#2C3547',
+        tx:'#EDF1F8', tx2:'#A3AEC2', tx3:'#6E7A8F',
+        violet:'#8B5CF6', violet2:'#A78BFA', vdim:'#1B1738',
+        emerald:'#34D399', emerald2:'#6EE7B7', edim:'#0C2A22',
+        teal:'#5EEAD4', amber:'#F0B95E', red:'#FF7A75',
+      },
+    }},
+  }
+</script>
+<style>
+  html{scroll-behavior:smooth}
+  body{background:#060812}
+  ::-webkit-scrollbar{width:10px}::-webkit-scrollbar-thumb{background:#1E2634;border-radius:8px}
+  :focus-visible{outline:2px solid #A78BFA;outline-offset:2px;border-radius:6px}
+  .grad-text{background:linear-gradient(100deg,#A78BFA 0%,#8B5CF6 35%,#5EEAD4 100%);-webkit-background-clip:text;background-clip:text;color:transparent}
+  .hero-glow{background:radial-gradient(70% 55% at 50% -5%,rgba(139,92,246,.28),transparent 60%),radial-gradient(40% 40% at 85% 10%,rgba(94,234,212,.10),transparent 60%)}
+  .grid-lines{background-image:linear-gradient(rgba(139,92,246,.05) 1px,transparent 1px),linear-gradient(90deg,rgba(139,92,246,.05) 1px,transparent 1px);background-size:30px 30px}
+  .card{background:#0E1420;border:1px solid #1E2634;border-radius:16px}
+  .nav-blur{background:rgba(6,8,18,.72);backdrop-filter:blur(14px)}
+  [data-aud="candidate"] .aud-employer{display:none}
+  [data-aud="employer"] .aud-candidate{display:none}
+  details>summary{list-style:none}details>summary::-webkit-details-marker{display:none}
+  details[open] .faq-plus{transform:rotate(45deg)}
+  @keyframes floaty{0%,100%{transform:translateY(0)}50%{transform:translateY(-5px)}}
+  .floaty{animation:floaty 4s ease-in-out infinite}
+</style>
+</head>
+<body class="font-sans text-tx antialiased" data-aud="candidate">
+
+<!-- ═══ NAV ═══ -->
+<header class="fixed top-0 inset-x-0 z-50 nav-blur border-b border-line/70">
+  <div class="max-w-[1200px] mx-auto px-5 h-[62px] flex items-center gap-6">
+    <a href="#top" class="flex items-center gap-2.5">
+      <span class="w-8 h-8 rounded-lg bg-gradient-to-br from-violet to-[#5A48D6] grid place-items-center font-extrabold text-white text-[13px]">TF</span>
+      <span class="font-bold text-[16px] tracking-tight">TalentForge</span>
+    </a>
+    <nav class="hidden md:flex items-center gap-6 text-[13.5px] text-tx2">
+      <a href="#how" class="hover:text-tx">How it works</a>
+      <a href="#candidates" class="hover:text-tx">For candidates</a>
+      <a href="#employers" class="hover:text-tx">For employers</a>
+      <a href="#badges" class="hover:text-tx">Badges</a>
+      <a href="#faq" class="hover:text-tx">FAQ</a>
+    </nav>
+    <div class="ml-auto flex items-center gap-2.5">
+      <a href="#" class="hidden sm:block text-[13.5px] text-tx2 hover:text-tx px-3 py-2">Sign in</a>
+      <a href="#start" class="text-[13.5px] font-semibold px-4 py-2 rounded-lg bg-violet hover:bg-[#7C4DF0] text-white transition-colors">Get verified</a>
+    </div>
+  </div>
+</header>
+
+<main id="top">
+
+<!-- ═══ HERO ═══ -->
+<section class="relative overflow-hidden hero-glow pt-[62px]">
+  <div class="absolute inset-0 grid-lines opacity-40 pointer-events-none"></div>
+  <div class="relative max-w-[900px] mx-auto px-5 pt-20 pb-16 text-center">
+    <div class="inline-flex items-center gap-2 text-[12px] font-medium text-violet2 border border-violet/25 bg-violet/8 rounded-full px-4 py-1.5 mb-8">
+      <span>✦</span> v1.1 — Public portfolios · AI recommendations · One-click interviews
+    </div>
+
+    <h1 class="text-[42px] sm:text-[58px] font-extrabold tracking-[-.03em] leading-[1.02]">
+      Proof beats a résumé.<br>
+      <span class="grad-text">Get hired on what you build.</span>
+    </h1>
+
+    <p class="text-[16px] sm:text-[17px] text-tx2 mt-6 max-w-[62ch] mx-auto leading-relaxed">
+      TalentForge replaces résumé inflation with <b class="text-tx">cryptographically verified skill badges</b> — earned through real sandbox code execution, behavioral psychometrics, and expert human review. Build a public portfolio and get in front of employers who trust it.
+    </p>
+
+    <!-- audience toggle -->
+    <div class="inline-flex items-center gap-1 mt-8 p-1 rounded-xl bg-panel3 border border-line2 text-[13px]">
+      <button onclick="setAud('candidate')" id="tabCand" class="px-4 py-2 rounded-lg bg-[#1D2436] text-tx font-medium">I'm a candidate</button>
+      <button onclick="setAud('employer')" id="tabEmp" class="px-4 py-2 rounded-lg text-tx3 hover:text-tx2">I'm hiring</button>
+    </div>
+
+    <!-- CTAs -->
+    <div class="flex flex-wrap items-center justify-center gap-3 mt-6" id="start">
+      <a href="#" class="aud-candidate flex items-center gap-2 px-6 py-3.5 rounded-xl bg-violet hover:bg-[#7C4DF0] text-white font-semibold shadow-[0_16px_40px_-12px_rgba(139,92,246,.6)] transition-colors">
+        <span>◈</span> Take the 15-min assessment <span>→</span></a>
+      <a href="#how" class="aud-candidate px-6 py-3.5 rounded-xl border border-line2 text-tx2 hover:text-tx hover:border-line2 font-medium">See a sample badge</a>
+
+      <a href="#" class="aud-employer flex items-center gap-2 px-6 py-3.5 rounded-xl bg-violet hover:bg-[#7C4DF0] text-white font-semibold shadow-[0_16px_40px_-12px_rgba(139,92,246,.6)] transition-colors">
+        <span>◎</span> Discover verified talent <span>→</span></a>
+      <a href="#how" class="aud-employer px-6 py-3.5 rounded-xl border border-line2 text-tx2 hover:text-tx font-medium">How verification works</a>
+    </div>
+
+    <!-- mechanism trust chips (replaces infra spec chips) -->
+    <div class="flex flex-wrap items-center justify-center gap-x-6 gap-y-2 mt-10 text-[12.5px] text-tx3">
+      <span class="flex items-center gap-2"><span class="text-emerald">✓</span> 3 independent verification layers</span>
+      <span class="flex items-center gap-2"><span class="text-emerald">✓</span> On-chain ERC-721 proof</span>
+      <span class="flex items-center gap-2"><span class="text-emerald">✓</span> Real Docker sandbox execution</span>
+      <span class="flex items-center gap-2"><span class="text-emerald">✓</span> &lt;1.2s grading feedback</span>
+    </div>
+  </div>
+</section>
+
+<!-- ═══ TRUST STRIP ═══ -->
+<section class="border-y border-line/70 bg-panel3/40">
+  <div class="max-w-[1100px] mx-auto px-5 py-8 grid grid-cols-2 md:grid-cols-4 gap-6">
+    <div class="text-center"><div class="text-[30px] font-extrabold font-mono grad-text leading-none">4-part</div><div class="text-[12px] text-tx3 mt-2">weighted fair score</div></div>
+    <div class="text-center"><div class="text-[30px] font-extrabold font-mono grad-text leading-none">8</div><div class="text-[12px] text-tx3 mt-2">architect-grade problems</div></div>
+    <div class="text-center"><div class="text-[30px] font-extrabold font-mono grad-text leading-none">10</div><div class="text-[12px] text-tx3 mt-2">hidden tests on the flagship</div></div>
+    <div class="text-center"><div class="text-[30px] font-extrabold font-mono grad-text leading-none">100%</div><div class="text-[12px] text-tx3 mt-2">auditable on PolygonScan</div></div>
+  </div>
+</section>
+
+<!-- ═══ PROOF PIPELINE (the moat, visualized) ═══ -->
+<section class="max-w-[1120px] mx-auto px-5 py-20">
+  <div class="text-center max-w-[640px] mx-auto">
+    <div class="text-[12px] font-semibold tracking-[.14em] text-violet2 uppercase">The verification engine</div>
+    <h2 class="text-[32px] font-extrabold tracking-tight mt-3">From code to cryptographic proof</h2>
+    <p class="text-[15px] text-tx2 mt-3">A claim only becomes a badge after it survives every layer. No self-attestation, no shortcuts.</p>
+  </div>
+
+  <div class="mt-12 grid md:grid-cols-6 gap-3">
+    <div class="card p-4 relative">
+      <div class="text-[11px] font-mono text-tx3">01</div>
+      <div class="text-emerald text-lg mt-1">⌨</div>
+      <div class="text-[13.5px] font-semibold mt-2">Submit in Monaco</div>
+      <div class="text-[11.5px] text-tx3 mt-1">Python · JS · Java, with an AI copilot alongside.</div>
+    </div>
+    <div class="card p-4">
+      <div class="text-[11px] font-mono text-tx3">02</div>
+      <div class="text-red text-lg mt-1">◈</div>
+      <div class="text-[13.5px] font-semibold mt-2">Security precheck</div>
+      <div class="text-[11.5px] text-tx3 mt-1">Blocks eval, subprocess, fs before any container spawns.</div>
+    </div>
+    <div class="card p-4">
+      <div class="text-[11px] font-mono text-tx3">03</div>
+      <div class="text-violet2 text-lg mt-1">▣</div>
+      <div class="text-[13.5px] font-semibold mt-2">Sandbox grading</div>
+      <div class="text-[11.5px] text-tx3 mt-1">Correctness, Big-O complexity &amp; style, in an isolated Docker run.</div>
+    </div>
+    <div class="card p-4">
+      <div class="text-[11px] font-mono text-tx3">04</div>
+      <div class="text-violet2 text-lg mt-1">✦</div>
+      <div class="text-[13.5px] font-semibold mt-2">AI-verified</div>
+      <div class="text-[11.5px] text-tx3 mt-1">Passes threshold → provisional AI_VERIFIED badge.</div>
+    </div>
+    <div class="card p-4">
+      <div class="text-[11px] font-mono text-tx3">05</div>
+      <div class="text-amber text-lg mt-1">♜</div>
+      <div class="text-[13.5px] font-semibold mt-2">Expert review</div>
+      <div class="text-[11.5px] text-tx3 mt-1">A senior engineer approves — or revokes it.</div>
+    </div>
+    <div class="card p-4 border-emerald/30 bg-emerald/[.04]">
+      <div class="text-[11px] font-mono text-tx3">06</div>
+      <div class="text-emerald text-lg mt-1">◆</div>
+      <div class="text-[13.5px] font-semibold mt-2 text-emerald2">Minted on Polygon</div>
+      <div class="text-[11.5px] text-tx3 mt-1">EXPERT_VERIFIED, as an ERC-721 you can link anywhere.</div>
+    </div>
+  </div>
+
+  <div class="mt-6 flex flex-wrap items-center justify-center gap-2.5 text-[12px]">
+    <span class="text-tx3">Per-submission code score =</span>
+    <span class="px-2.5 py-1 rounded-md bg-violet/10 text-violet2 font-mono">60% correctness</span>
+    <span class="text-tx3">+</span>
+    <span class="px-2.5 py-1 rounded-md bg-violet/10 text-violet2 font-mono">30% complexity</span>
+    <span class="text-tx3">+</span>
+    <span class="px-2.5 py-1 rounded-md bg-violet/10 text-violet2 font-mono">10% style</span>
+  </div>
+</section>
+
+<!-- ═══ HOW IT WORKS (3 steps) ═══ -->
+<section id="how" class="bg-panel3/40 border-y border-line/70">
+  <div class="max-w-[1120px] mx-auto px-5 py-20">
+    <div class="text-center"><h2 class="text-[32px] font-extrabold tracking-tight">Three steps to a verified profile</h2>
+      <p class="text-[15px] text-tx2 mt-3">Cognitive fingerprint, real code evaluation, one fair score.</p></div>
+
+    <div class="grid md:grid-cols-3 gap-4 mt-12">
+      <div class="card p-6">
+        <div class="w-10 h-10 rounded-xl bg-violet/12 grid place-items-center font-mono text-violet2 font-bold">01</div>
+        <h3 class="text-[16px] font-semibold mt-4">15-min psychometric</h3>
+        <p class="text-[13.5px] text-tx2 mt-2 leading-relaxed">A diagnostic across 5 traits — Logical Reasoning, Attention to Detail, Persistence, Learning Speed, Architecture — rendered as your radar map.</p>
+      </div>
+      <div class="card p-6">
+        <div class="w-10 h-10 rounded-xl bg-teal/12 grid place-items-center font-mono text-teal font-bold">02</div>
+        <h3 class="text-[16px] font-semibold mt-4">Solve real challenges</h3>
+        <p class="text-[13.5px] text-tx2 mt-2 leading-relaxed">Explorer → Builder → Architect problems in Monaco with an AI copilot. Graded live in a sandbox — results stream back in under 1.2 seconds.</p>
+      </div>
+      <div class="card p-6">
+        <div class="w-10 h-10 rounded-xl bg-emerald/12 grid place-items-center font-mono text-emerald2 font-bold">03</div>
+        <h3 class="text-[16px] font-semibold mt-4">Earn one fair score</h3>
+        <p class="text-[13.5px] text-tx2 mt-2 leading-relaxed">Your aggregate blends code, psychometrics, profile and GitHub — so no single signal can be gamed. Verified badges attach on-chain.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ═══ TWO-SIDED VALUE ═══ -->
+<section class="max-w-[1120px] mx-auto px-5 py-20 space-y-14">
+
+  <!-- candidates -->
+  <div id="candidates" class="grid lg:grid-cols-[380px,1fr] gap-8 items-start">
+    <div>
+      <div class="text-[12px] font-semibold tracking-[.14em] text-violet2 uppercase">For candidates</div>
+      <h2 class="text-[30px] font-extrabold tracking-tight mt-3">Stop sending PDFs.<br>Send proof.</h2>
+      <p class="text-[14.5px] text-tx2 mt-4 leading-relaxed">Every solve compounds into a public portfolio recruiters can verify without taking your word for it.</p>
+      <a href="#" class="inline-flex items-center gap-2 mt-6 px-5 py-3 rounded-xl bg-violet hover:bg-[#7C4DF0] text-white font-semibold text-[14px]">Start earning badges →</a>
+    </div>
+    <div class="grid sm:grid-cols-2 gap-3">
+      <div class="card p-5"><div class="text-emerald text-lg">◆</div><div class="text-[14px] font-semibold mt-2">Verified skill badges</div><p class="text-[12.5px] text-tx3 mt-1.5">Backed by real test output and expert review — minted as ERC-721 on Polygon.</p></div>
+      <div class="card p-5"><div class="text-violet2 text-lg">◍</div><div class="text-[14px] font-semibold mt-2">Public portfolio <span class="font-mono text-tx3 text-[11px]">/p/:id</span></div><p class="text-[12.5px] text-tx3 mt-1.5">A shareable page with skills, badges and an AI executive summary.</p></div>
+      <div class="card p-5"><div class="text-teal text-lg">▤</div><div class="text-[14px] font-semibold mt-2">PDF export &amp; LinkedIn share</div><p class="text-[12.5px] text-tx3 mt-1.5">Print a clean résumé from the browser, or post a pre-filled, verified update in one click.</p></div>
+      <div class="card p-5"><div class="text-amber text-lg">✦</div><div class="text-[14px] font-semibold mt-2">Interview requests, in-app</div><p class="text-[12.5px] text-tx3 mt-1.5">Employers reach out with a calendar link straight to your dashboard.</p></div>
+    </div>
+  </div>
+
+  <!-- employers -->
+  <div id="employers" class="grid lg:grid-cols-[1fr,380px] gap-8 items-start">
+    <div class="grid sm:grid-cols-2 gap-3 order-2 lg:order-1">
+      <div class="card p-5"><div class="text-emerald text-lg">◎</div><div class="text-[14px] font-semibold mt-2">Discover by verified score</div><p class="text-[12.5px] text-tx3 mt-1.5">Sort and filter candidates by aggregate score, badge and language — no résumé guesswork.</p></div>
+      <div class="card p-5"><div class="text-violet2 text-lg">▣</div><div class="text-[14px] font-semibold mt-2">Inspect drawer</div><p class="text-[12.5px] text-tx3 mt-1.5">Psychometric radar, score breakdown, and a read-only Monaco sample of their best code.</p></div>
+      <div class="card p-5"><div class="text-teal text-lg">✳</div><div class="text-[14px] font-semibold mt-2">Smart Match AI</div><p class="text-[12.5px] text-tx3 mt-1.5">Paste a job description; get candidates ranked by real skill fit.</p></div>
+      <div class="card p-5"><div class="text-amber text-lg">◷</div><div class="text-[14px] font-semibold mt-2">One-click interviews</div><p class="text-[12.5px] text-tx3 mt-1.5">Send a Calendly link with a note; it lands as an in-app notification instantly.</p></div>
+    </div>
+    <div class="order-1 lg:order-2">
+      <div class="text-[12px] font-semibold tracking-[.14em] text-emerald2 uppercase">For employers</div>
+      <h2 class="text-[30px] font-extrabold tracking-tight mt-3">Screen in 90 seconds,<br>not three calls.</h2>
+      <p class="text-[14.5px] text-tx2 mt-4 leading-relaxed">See verified performance, inspect actual code, and reach out — all from one drawer.</p>
+      <a href="#" class="inline-flex items-center gap-2 mt-6 px-5 py-3 rounded-xl border border-line2 hover:border-emerald/40 text-tx font-semibold text-[14px]">Open recruiter portal →</a>
+    </div>
+  </div>
+</section>
+
+<!-- ═══ FAIR SCORE VIZ ═══ -->
+<section class="bg-panel3/40 border-y border-line/70">
+  <div class="max-w-[900px] mx-auto px-5 py-16 text-center">
+    <h2 class="text-[28px] font-extrabold tracking-tight">One score no single signal can game</h2>
+    <p class="text-[14.5px] text-tx2 mt-3">Every candidate's aggregate is a fixed, transparent weighting.</p>
+    <div class="mt-8 h-10 rounded-xl overflow-hidden flex text-[12px] font-semibold border border-line2">
+      <div class="bg-violet/80 grid place-items-center" style="width:50%">Code&nbsp;50%</div>
+      <div class="bg-teal/70 text-[#04211c] grid place-items-center" style="width:25%">Psychometric&nbsp;25%</div>
+      <div class="bg-emerald/70 text-[#04211c] grid place-items-center" style="width:15%">Profile&nbsp;15%</div>
+      <div class="bg-amber/70 text-[#231803] grid place-items-center" style="width:10%">GitHub&nbsp;10%</div>
+    </div>
+    <p class="text-[12px] text-tx3 mt-3">Hover any candidate's score in the employer drawer to see this exact breakdown.</p>
+  </div>
+</section>
+
+<!-- ═══ BADGE SHOWCASE (elevated) ═══ -->
+<section id="badges" class="max-w-[1120px] mx-auto px-5 py-20">
+  <div class="flex items-end justify-between flex-wrap gap-3">
+    <div>
+      <div class="text-[12px] font-semibold tracking-[.14em] text-emerald2 uppercase">Verified badge registry</div>
+      <h2 class="text-[32px] font-extrabold tracking-tight mt-3">Credentials you can audit</h2>
+      <p class="text-[15px] text-tx2 mt-2">Each badge links to its on-chain record and the exact test output behind it.</p>
+    </div>
+    <a href="#" class="text-[13.5px] text-violet2 hover:text-violet font-medium">Explore the badge gallery →</a>
+  </div>
+
+  <div class="grid md:grid-cols-3 gap-4 mt-10">
+    <!-- flagship -->
+    <div class="card p-6 border-emerald/30 relative overflow-hidden">
+      <div class="absolute -right-8 -top-8 w-24 h-24 rounded-full bg-emerald/10 blur-2xl"></div>
+      <div class="flex items-center justify-between">
+        <span class="flex items-center gap-1.5 text-[11px] font-semibold px-2.5 py-1 rounded-md bg-emerald/12 text-emerald">◆ Expert Verified</span>
+        <span class="font-mono text-[15px]"><b class="text-emerald2">98</b><span class="text-tx3"> / 100</span></span>
+      </div>
+      <div class="text-[17px] font-bold mt-4">Build a Load Balancer</div>
+      <div class="text-[12.5px] text-tx3">Architect · flagship challenge · 250 XP</div>
+      <div class="mt-5 pt-4 border-t border-line grid grid-cols-2 gap-y-2 text-[11.5px]">
+        <span class="text-tx3">Reviewer</span><span class="text-right text-tx2">Senior Architect</span>
+        <span class="text-tx3">Hidden tests</span><span class="text-right text-emerald">10 / 10 passed</span>
+      </div>
+      <a href="#" class="flex items-center gap-1.5 mt-4 text-[12px] text-violet2 hover:text-violet"><span>◈</span> Verify on PolygonScan →</a>
+    </div>
+
+    <div class="card p-6">
+      <div class="flex items-center justify-between">
+        <span class="flex items-center gap-1.5 text-[11px] font-semibold px-2.5 py-1 rounded-md bg-violet/12 text-violet2">✦ AI Verified</span>
+        <span class="font-mono text-[15px]"><b>95</b><span class="text-tx3"> / 100</span></span>
+      </div>
+      <div class="text-[17px] font-bold mt-4">LRU Cache System</div>
+      <div class="text-[12.5px] text-tx3">Builder · O(1) eviction · 150 XP</div>
+      <div class="mt-5 pt-4 border-t border-line grid grid-cols-2 gap-y-2 text-[11.5px]">
+        <span class="text-tx3">Graded by</span><span class="text-right text-tx2">Sandbox engine</span>
+        <span class="text-tx3">Tests</span><span class="text-right text-emerald">8 / 8 passed</span>
+      </div>
+      <a href="#" class="flex items-center gap-1.5 mt-4 text-[12px] text-violet2 hover:text-violet"><span>◈</span> Verify on PolygonScan →</a>
+    </div>
+
+    <div class="card p-6">
+      <div class="flex items-center justify-between">
+        <span class="flex items-center gap-1.5 text-[11px] font-semibold px-2.5 py-1 rounded-md bg-violet/12 text-violet2">✦ AI Verified</span>
+        <span class="font-mono text-[15px]"><b>92</b><span class="text-tx3"> / 100</span></span>
+      </div>
+      <div class="text-[17px] font-bold mt-4">Token Bucket Rate Limiter</div>
+      <div class="text-[12.5px] text-tx3">Builder · multi-client refill · 150 XP</div>
+      <div class="mt-5 pt-4 border-t border-line grid grid-cols-2 gap-y-2 text-[11.5px]">
+        <span class="text-tx3">Graded by</span><span class="text-right text-tx2">Sandbox engine</span>
+        <span class="text-tx3">Tests</span><span class="text-right text-emerald">8 / 8 passed</span>
+      </div>
+      <a href="#" class="flex items-center gap-1.5 mt-4 text-[12px] text-violet2 hover:text-violet"><span>◈</span> Verify on PolygonScan →</a>
+    </div>
+  </div>
+</section>
+
+<!-- ═══ TESTIMONIALS ═══ -->
+<section class="bg-panel3/40 border-y border-line/70">
+  <div class="max-w-[1120px] mx-auto px-5 py-16 grid md:grid-cols-2 gap-4">
+    <figure class="card p-7">
+      <div class="text-violet2 text-3xl leading-none">"</div>
+      <blockquote class="text-[16px] text-tx leading-relaxed mt-2">I stopped attaching a résumé. I send my <span class="font-mono text-teal">/p</span> link and let the badges do the talking — recruiters can check the code themselves.</blockquote>
+      <figcaption class="text-[12.5px] text-tx3 mt-4">Final-year CSE student · Architect tier</figcaption>
+    </figure>
+    <figure class="card p-7">
+      <div class="text-emerald2 text-3xl leading-none">"</div>
+      <blockquote class="text-[16px] text-tx leading-relaxed mt-2">The inspect drawer told me more in ninety seconds than three phone screens. Verified score, radar chart, real code sample — then one click to schedule.</blockquote>
+      <figcaption class="text-[12.5px] text-tx3 mt-4">Engineering hiring lead · early-stage startup</figcaption>
+    </figure>
+  </div>
+</section>
+
+<!-- ═══ FAQ ═══ -->
+<section id="faq" class="max-w-[800px] mx-auto px-5 py-20">
+  <h2 class="text-[30px] font-extrabold tracking-tight text-center">Questions, answered</h2>
+  <div class="mt-10 space-y-3">
+    <details class="card px-5 py-1 open:pb-4">
+      <summary class="flex items-center gap-3 py-4 cursor-pointer text-[15px] font-medium">Are the badges actually verifiable?<span class="faq-plus ml-auto text-tx3 text-xl transition-transform">+</span></summary>
+      <p class="text-[13.5px] text-tx2 leading-relaxed">Yes. Every EXPERT_VERIFIED badge is minted as an ERC-721 on Polygon with a PolygonScan link, and each badge exposes the exact sandbox test output it was earned from. Anyone can audit it without an account.</p>
+    </details>
+    <details class="card px-5 py-1 open:pb-4">
+      <summary class="flex items-center gap-3 py-4 cursor-pointer text-[15px] font-medium">How long does it take to get started?<span class="faq-plus ml-auto text-tx3 text-xl transition-transform">+</span></summary>
+      <p class="text-[13.5px] text-tx2 leading-relaxed">The psychometric diagnostic is about 15 minutes. Coding challenges vary by tier — Explorer problems take minutes, Architect problems like the Load Balancer are a deeper sit-down. You can build your profile incrementally.</p>
+    </details>
+    <details class="card px-5 py-1 open:pb-4">
+      <summary class="flex items-center gap-3 py-4 cursor-pointer text-[15px] font-medium">Do employers really see my code?<span class="faq-plus ml-auto text-tx3 text-xl transition-transform">+</span></summary>
+      <p class="text-[13.5px] text-tx2 leading-relaxed">Only if you make your profile public. When you do, employers see a read-only Monaco view of your best sample — never an editable copy, and never anything you've kept private.</p>
+    </details>
+    <details class="card px-5 py-1 open:pb-4">
+      <summary class="flex items-center gap-3 py-4 cursor-pointer text-[15px] font-medium">What languages are supported?<span class="faq-plus ml-auto text-tx3 text-xl transition-transform">+</span></summary>
+      <p class="text-[13.5px] text-tx2 leading-relaxed">Python, JavaScript and Java in the Monaco editor, each graded in an isolated container for correctness, Big-O complexity and style.</p>
+    </details>
+    <details class="card px-5 py-1 open:pb-4">
+      <summary class="flex items-center gap-3 py-4 cursor-pointer text-[15px] font-medium">Can I resubmit to improve a score?<span class="faq-plus ml-auto text-tx3 text-xl transition-transform">+</span></summary>
+      <p class="text-[13.5px] text-tx2 leading-relaxed">Yes, with a 60-second cooldown between attempts. Your profile reflects your best verified result.</p>
+    </details>
+  </div>
+</section>
+
+<!-- ═══ FINAL CTA ═══ -->
+<section class="max-w-[1120px] mx-auto px-5 pb-20">
+  <div class="relative overflow-hidden rounded-3xl border border-violet/30 bg-gradient-to-br from-violet/20 via-panel to-panel3 p-10 sm:p-14 text-center">
+    <div class="absolute inset-0 grid-lines opacity-30 pointer-events-none"></div>
+    <div class="relative">
+      <h2 class="text-[34px] font-extrabold tracking-tight">Ready to prove it?</h2>
+      <p class="text-[15px] text-tx2 mt-3 max-w-[52ch] mx-auto">Candidates earn verified badges. Employers hire on evidence. Pick your side.</p>
+      <div class="flex flex-wrap items-center justify-center gap-3 mt-8">
+        <a href="#" class="flex items-center gap-2 px-6 py-3.5 rounded-xl bg-violet hover:bg-[#7C4DF0] text-white font-semibold shadow-[0_16px_40px_-12px_rgba(139,92,246,.6)]">◈ Take the assessment</a>
+        <a href="#" class="px-6 py-3.5 rounded-xl border border-line2 hover:border-emerald/40 text-tx font-semibold">Create a recruiter account</a>
+      </div>
+    </div>
+  </div>
+</section>
+
+</main>
+
+<!-- ═══ FOOTER ═══ -->
+<footer class="border-t border-line bg-panel3/40">
+  <div class="max-w-[1120px] mx-auto px-5 py-12 grid md:grid-cols-[1.4fr,1fr,1fr,1fr] gap-8">
+    <div>
+      <div class="flex items-center gap-2.5">
+        <span class="w-8 h-8 rounded-lg bg-gradient-to-br from-violet to-[#5A48D6] grid place-items-center font-extrabold text-white text-[13px]">TF</span>
+        <span class="font-bold text-[16px]">TalentForge</span>
+      </div>
+      <p class="text-[12.5px] text-tx3 mt-3 max-w-[34ch]">The performance-verified talent marketplace. Proof over résumé inflation.</p>
+    </div>
+    <div>
+      <div class="text-[12px] font-semibold tracking-wide text-tx3 uppercase mb-3">Product</div>
+      <ul class="space-y-2 text-[13px] text-tx2">
+        <li><a href="#how" class="hover:text-tx">How it works</a></li>
+        <li><a href="#badges" class="hover:text-tx">Badge gallery</a></li>
+        <li><a href="#" class="hover:text-tx">Problem board</a></li>
+        <li><a href="#" class="hover:text-tx">Leaderboard</a></li>
+      </ul>
+    </div>
+    <div>
+      <div class="text-[12px] font-semibold tracking-wide text-tx3 uppercase mb-3">Sign in as</div>
+      <ul class="space-y-2 text-[13px] text-tx2">
+        <li><a href="#" class="hover:text-tx">Student</a></li>
+        <li><a href="#" class="hover:text-tx">Reviewer</a></li>
+        <li><a href="#" class="hover:text-tx">Employer</a></li>
+        <li><a href="#" class="hover:text-tx">Admin</a></li>
+      </ul>
+    </div>
+    <div>
+      <div class="text-[12px] font-semibold tracking-wide text-tx3 uppercase mb-3">Resources</div>
+      <ul class="space-y-2 text-[13px] text-tx2">
+        <li><a href="#" class="hover:text-tx">Platform guide</a></li>
+        <li><a href="#faq" class="hover:text-tx">FAQ</a></li>
+        <li><a href="#" class="hover:text-tx">API reference</a></li>
+        <li><a href="#" class="hover:text-tx">Verify a badge</a></li>
+      </ul>
+    </div>
+  </div>
+  <div class="border-t border-line">
+    <div class="max-w-[1120px] mx-auto px-5 py-5 flex flex-wrap items-center gap-3 text-[12px] text-tx3">
+      <span>© 2026 TalentForge</span>
+      <span class="text-line2">·</span><a href="#" class="hover:text-tx2">Privacy</a>
+      <span class="text-line2">·</span><a href="#" class="hover:text-tx2">Terms</a>
+      <span class="ml-auto flex items-center gap-2 text-emerald"><span class="w-1.5 h-1.5 rounded-full bg-emerald"></span> Badges verifiable on Polygon</span>
+    </div>
+  </div>
+</footer>
+
+<script>
+  const body = document.body;
+  const tabCand = document.getElementById('tabCand');
+  const tabEmp  = document.getElementById('tabEmp');
+  const on='px-4 py-2 rounded-lg bg-[#1D2436] text-tx font-medium';
+  const off='px-4 py-2 rounded-lg text-tx3 hover:text-tx2';
+  function setAud(a){
+    body.setAttribute('data-aud',a);
+    tabCand.className = a==='candidate'?on:off;
+    tabEmp.className  = a==='employer'?on:off;
+  }
+</script>
+</body>
+</html>

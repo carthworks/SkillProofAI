@@ -1,0 +1,25 @@
+config:
+  target: "http://localhost:5000"
+  phases:
+    - duration: 30
+      arrivalRate: 20
+      name: "Sustained 20 Concurrent Submissions"
+  plugins:
+    expect: {}
+  ensure:
+    p95: 5000
+
+scenarios:
+  - name: "Post Problem Submission"
+    flow:
+      - post:
+          url: "/api/students/problems/mock-p1/submit"
+          headers:
+            Content-Type: "application/json"
+            Authorization: "Bearer mock_jwt_token"
+          json:
+            s3Key: "submissions/test-user/two-sum/test.py"
+            language: "python"
+          expect:
+            - statusCode: 202
+            - contentType: json

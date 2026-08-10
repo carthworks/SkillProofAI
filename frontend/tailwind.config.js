@@ -1,0 +1,77 @@
+/** @type {import('tailwindcss').Config} */
+export default {
+  darkMode: 'class',
+  content: ['./index.html', './src/**/*.{ts,tsx}'],
+  theme: {
+    extend: {
+      colors: {
+        ps: {
+          blue: '#0070d1',
+          'blue-pressed': '#0064b7',
+          'blue-active': '#004d8d',
+          orange: '#d53b00',
+          black: '#000000',
+          charcoal: '#1f2024',
+          'ink-deep': '#121314',
+          'ink-elevated': '#181818',
+          'surface-card': '#f5f7fa',
+          'surface-dark-card': '#181818',
+        },
+        brand: {
+          50: '#eef2ff',
+          100: '#e0e7ff',
+          200: '#c7d2fe',
+          300: '#a5b4fc',
+          400: '#818cf8',
+          500: '#6366f1',
+          600: '#4f46e5',
+          700: '#4338ca',
+          800: '#3730a3',
+          900: '#312e81',
+        },
+        bg: '#050810',
+        panel: '#0E1420',
+        panel2: '#131A28',
+        panel3: '#0A0F19',
+        line: '#1E2634',
+        line2: '#2C3547',
+        tx: '#EDF1F8',
+        tx2: '#A3AEC2',
+        tx3: '#6E7A8F',
+        indigo: '#7C6CF6',
+        indigo2: '#9C8FFF',
+        amber: '#F0B95E',
+        green: '#4FD9A4',
+        cyan: '#6BD6E8',
+        red: '#FF7A75',
+      },
+      fontFamily: {
+        sans: [
+          'Inter',
+          'ui-sans-serif',
+          'system-ui',
+          '-apple-system',
+          'BlinkMacSystemFont',
+          'Segoe UI',
+          'Roboto',
+          'sans-serif',
+        ],
+        mono: [
+          'ui-monospace',
+          'SF Mono',
+          'JetBrains Mono',
+          'Menlo',
+          'Consolas',
+          'monospace',
+        ],
+        display: ['Space Grotesk', 'Inter', 'sans-serif'],
+        space: ['Space Grotesk', 'sans-serif'],
+      },
+    },
+  },
+  plugins: [
+    function ({ addVariant }) {
+      addVariant('midnight', '.midnight &');
+    },
+  ],
+};

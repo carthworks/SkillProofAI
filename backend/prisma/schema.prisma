@@ -1,0 +1,275 @@
+generator client {
+  provider        = "prisma-client-js"
+  previewFeatures = ["postgresqlExtensions"]
+}
+
+datasource db {
+  provider   = "postgresql"
+  url        = env("DATABASE_URL")
+  extensions = [vector]
+}
+
+model User {
+  id                    String    @id @default(uuid())
+  email                 String    @unique
+  password              String
+  name                  String
+  domain                String    @default("cse")
+  role                  String    @default("STUDENT")
+  tier                  String    @default("Explorer")
+  xp                    Int       @default(0)
+  isAnonymized          Boolean   @default(false)
+  profilePublic         Boolean   @default(true)
+  walletAddress         String?
+
+  // Social OAuth
+  linkedinId            String?
+  githubId              String?
+  githubUsername        String?
+  avatarUrl             String?
+
+  // DigiLocker KYC
+  digilockerId          String?
+  digilockerVerified    Boolean   @default(false)
+
+  // Geolocation
+  geoCity               String?
+  geoState              String?
+  geoCountry            String?
+
+  // Selected domain (onboarding step)
+  selectedDomain        String?
+  onboardingComplete    Boolean   @default(false)
+  
+  // Academic Details
+  college               String?
+  degree                String?
+  graduationYear        String?
+
+  // Profile data & freeze
+  profileFrozen         Boolean   @default(false)
+  mobileNumber          String?
+  profileEmbedding      Unsupported("vector(1536)")?
+
+  // Profile S2 fields
+  skills                Json?     // Array of skill objects: { name: string, level: string }
+  certifications        Json?     // Array of cert objects: { name: string, issuer: string, url: string }
+  links                 Json?     // Array of link objects: { label: string, url: string }
+  resumeUrl             String?   // Local path: /uploads/resumes/<userId>/resume.pdf
+  linkedinUrl           String?
+  aiSummary             String?   @db.Text
+
+
+  // Computed aggregate score (updated on submission, assessment save, profile save)
+  aggregateScore        Float     @default(0)
+  githubScore           Float     @default(0)
+
+  // Challenge tier unlock (payments)
+  unlockedTier          String    @default("free")   // free | basic | advanced
+  freeChallengesUsed    Int       @default(0)
+
+  // Gamification & streak
+  successfulSubmissions Int       @default(0)
+  badgesEarned          Int       @default(0)
+  currentStreak         Int       @default(0)
+  longestStreak         Int       @default(0)
+  lastActivityDate      DateTime?
+  totalSubmissions      Int       @default(0)
+  velocityScore         Float     @default(0)
+
+  submissions    Submission[]
+  badges         Badge[]
+  psychProfile   PsychProfile?
+  skillScores    SkillScore[]
+  createdAt      DateTime  @default(now())
+  updatedAt      DateTime  @updatedAt
+  learningPath   LearningPath?
+  conversations  Conversation[]
+  notifications  Notification[]
+  shortlists     Shortlist[]
+  paymentOrders  PaymentOrder[]
+  placements     Placement[]    @relation("CandidatePlacements")
+}
+
+
+model Problem {
+  id              String       @id @default(uuid())
+  title           String
+  slug            String       @unique
+  description     String
+  tier            String
+  domain          String
+  reward          Int
+  publicTestCases Json?
+  hiddenTestCases Json?
+  createdAt       DateTime     @default(now())
+  updatedAt       DateTime     @updatedAt
+  submissions     Submission[]
+}
+
+model Submission {
+  id          String    @id @default(uuid())
+  user        User      @relation(fields: [userId], references: [id])
+  userId      String
+  problem     Problem   @relation(fields: [problemId], references: [id])
+  problemId   String
+  code        String    // stores s3Key or 'inline' marker
+  codeContent String?   // actual code stored inline (replaces S3)
+  language    String    @default("python")
+  score       Int?
+  feedback    String?
+  status      String    @default("pending")
+  createdAt   DateTime  @default(now())
+  updatedAt   DateTime  @updatedAt
+  reviews     Review[]
+
+  @@index([score])
+}
+
+model Badge {
+  id           String    @id @default(uuid())
+  verifyId     String    @unique @default(uuid())
+  user         User      @relation(fields: [userId], references: [id])
+  userId       String
+  title        String
+  problemTitle String?
+  problemSlug  String?
+  score        Int       @default(0)
+  status       String    @default("AI_VERIFIED")
+  pdfUrl       String?
+  nftTokenId   String?
+  mintedAt     DateTime?
+  createdAt    DateTime  @default(now())
+
+  @@index([status])
+}
+
+model PsychProfile {
+  id           String   @id @default(uuid())
+  user         User     @relation(fields: [userId], references: [id])
+  userId       String   @unique
+  logical      Int      @default(0)
+  detail       Int      @default(0)
+  persistence  Int      @default(0)
+  learning     Int      @default(0)
+  architecture Int      @default(0)
+  overallScore Int      @default(0)
+  createdAt    DateTime @default(now())
+  updatedAt    DateTime @default(now()) @updatedAt
+}
+
+model Review {
+  id          String   @id @default(uuid())
+  submission  Submission @relation(fields: [submissionId], references: [id])
+  submissionId String
+  reviewer    String
+  comment     String?
+  score       Int
+  createdAt   DateTime @default(now())
+}
+
+model LearningPath {
+  id                        String   @id @default(uuid())
+  user                      User     @relation(fields: [userId], references: [id])
+  userId                    String   @unique
+  domain                    String
+  milestones                Json     // Array of milestones
+  weeklyGoals               Json     // Array of weekly goals
+  recommendedProblemSlugs   Json     // Array of problem slugs
+  createdAt                 DateTime @default(now())
+  updatedAt                 DateTime @updatedAt
+}
+
+model Conversation {
+  id          String   @id @default(uuid())
+  user        User     @relation(fields: [userId], references: [id])
+  userId      String
+  messages    Json     // Array of {role: string, content: string}
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+}
+
+model Notification {
+  id        String   @id @default(uuid())
+  user      User     @relation(fields: [userId], references: [id])
+  userId    String
+  title     String
+  message   String
+  type      String   @default("INFO")
+  read      Boolean  @default(false)
+  createdAt DateTime @default(now())
+}
+
+model Shortlist {
+  id          String   @id @default(uuid())
+  employerId  String
+  candidateId String
+  hiringStage String   @default("SHORTLISTED") // DISCOVERED | SHORTLISTED | VERIFIED | INTERVIEWING | OFFERED
+  notes       String?
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  user        User     @relation(fields: [candidateId], references: [id])
+  @@unique([employerId, candidateId])
+}
+
+// ─── Payment & Monetisation ──────────────────────────────────────────────────
+model PaymentOrder {
+  id            String   @id @default(uuid())
+  user          User     @relation(fields: [userId], references: [id])
+  userId        String
+  razorpayId    String   @unique
+  amount        Int      // in paise (19900 = ₹199)
+  tier          String   // 'basic' | 'advanced'
+  status        String   @default("created")  // created | paid | failed
+  createdAt     DateTime @default(now())
+  updatedAt     DateTime @updatedAt
+}
+
+// ─── LMS Videos ──────────────────────────────────────────────────────────────
+model LMSVideo {
+  id          String   @id @default(uuid())
+  title       String
+  slug        String   @unique
+  domain      String   // cse | ece
+  tier        String   // Explorer | Builder | Architect
+  youtubeId   String?
+  description String?
+  duration    Int?     // seconds
+  tags        String[]
+  createdAt   DateTime @default(now())
+}
+
+// ─── Placement Tracking ───────────────────────────────────────────────────────
+model Placement {
+  id          String   @id @default(uuid())
+  candidate   User     @relation("CandidatePlacements", fields: [candidateId], references: [id])
+  candidateId String
+  recruiterId String
+  companyName String
+  packageLPA  Float    @default(0)
+  placedAt    DateTime @default(now())
+}
+
+model SkillScore {
+  id        String   @id @default(uuid())
+  user      User     @relation(fields: [userId], references: [id])
+  userId    String
+  skill     String
+  score     Int
+  category  String   // e.g., 'strength', 'interest', 'core'
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@unique([userId, skill])
+}
+
+model PlatformFeedback {
+  id        String   @id @default(uuid())
+  userId    String?
+  message   String
+  type      String   @default("bug") // bug, idea, other
+  createdAt DateTime @default(now())
+}
+
+

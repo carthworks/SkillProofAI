@@ -1,0 +1,436 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>TalentForge — student dashboard, redesigned</title>
+<script src="https://cdn.tailwindcss.com"></script>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<script>
+  tailwind.config = {
+    theme: {
+      extend: {
+        fontFamily: {
+          sans: ['Inter','-apple-system','BlinkMacSystemFont','Segoe UI','sans-serif'],
+          mono: ['ui-monospace','SF Mono','JetBrains Mono','Menlo','monospace'],
+        },
+        colors: {
+          bg:      '#050810',
+          panel:   '#0E1420',
+          panel2:  '#131A28',
+          panel3:  '#0A0F19',
+          line:    '#1E2634',
+          line2:   '#2C3547',
+          tx:      '#EDF1F8',
+          tx2:     '#A3AEC2',
+          tx3:     '#6E7A8F',
+          indigo:  '#7C6CF6',
+          indigo2: '#9C8FFF',
+          amber:   '#F0B95E',
+          green:   '#4FD9A4',
+          cyan:    '#6BD6E8',
+          red:     '#FF7A75',
+        },
+      },
+    },
+  }
+</script>
+<style>
+  body{background:#050810}
+  ::-webkit-scrollbar{width:10px;height:10px}
+  ::-webkit-scrollbar-thumb{background:#1E2634;border-radius:8px}
+  :focus-visible{outline:2px solid #9C8FFF;outline-offset:2px;border-radius:6px}
+  @keyframes pulse{0%,100%{opacity:1}50%{opacity:.4}}
+  .flame{animation:pulse 1.8s ease-in-out infinite}
+  .pip-fill{background:linear-gradient(135deg,#7C6CF6,#9C8FFF)}
+  .hero-glow{background:radial-gradient(120% 140% at 15% 0%,rgba(124,108,246,.18),transparent 55%)}
+  .grid-lines{background-image:linear-gradient(rgba(124,108,246,.04) 1px,transparent 1px),linear-gradient(90deg,rgba(124,108,246,.04) 1px,transparent 1px);background-size:26px 26px}
+  [x-state="returning"] .only-new{display:none}
+  [x-state="new"] .only-returning{display:none}
+</style>
+</head>
+<body class="font-sans text-tx antialiased" x-state="new">
+
+<div class="flex min-h-screen">
+
+  <!-- ── sidebar ── -->
+  <aside class="w-[232px] flex-none bg-bg border-r border-line hidden lg:flex flex-col">
+    <div class="flex items-center gap-3 px-5 h-[64px] border-b border-line">
+      <div class="w-9 h-9 rounded-xl bg-gradient-to-br from-indigo to-[#5A48D6] grid place-items-center font-extrabold text-white text-sm">TF</div>
+      <div>
+        <div class="font-bold text-[15px] leading-none">TalentForge</div>
+        <div class="text-[10px] tracking-[.12em] text-tx3 font-semibold mt-1">POC WORKSPACE</div>
+      </div>
+    </div>
+    <nav class="flex-1 px-3 py-4 space-y-1 text-[14px]">
+      <a class="flex items-center gap-3 px-3 py-2.5 rounded-lg bg-indigo/10 text-indigo2 font-medium">
+        <span class="w-5 text-center">▨</span> Dashboard</a>
+      <a class="flex items-center gap-3 px-3 py-2.5 rounded-lg text-tx3 hover:bg-panel hover:text-tx2">
+        <span class="w-5 text-center">‹›</span> Problems</a>
+      <a class="flex items-center gap-3 px-3 py-2.5 rounded-lg text-tx3 hover:bg-panel hover:text-tx2">
+        <span class="w-5 text-center">◎</span> Assessment</a>
+      <a class="flex items-center gap-3 px-3 py-2.5 rounded-lg text-tx3 hover:bg-panel hover:text-tx2">
+        <span class="w-5 text-center">◷</span> Submissions</a>
+      <a class="flex items-center gap-3 px-3 py-2.5 rounded-lg text-tx3 hover:bg-panel hover:text-tx2">
+        <span class="w-5 text-center">▤</span> Learning Center</a>
+      <a class="flex items-center gap-3 px-3 py-2.5 rounded-lg text-tx3 hover:bg-panel hover:text-tx2">
+        <span class="w-5 text-center">✦</span> Leaderboard</a>
+      <a class="flex items-center gap-3 px-3 py-2.5 rounded-lg text-tx3 hover:bg-panel hover:text-tx2">
+        <span class="w-5 text-center">◍</span> Profile</a>
+    </nav>
+    <div class="p-3 border-t border-line">
+      <div class="flex items-center gap-3 p-2.5 rounded-xl bg-panel2 border border-line">
+        <div class="w-9 h-9 rounded-lg bg-gradient-to-br from-[#8B5CF6] to-indigo grid place-items-center text-white text-sm">◇</div>
+        <div class="min-w-0">
+          <div class="flex items-center gap-2">
+            <span class="text-[13px] font-semibold truncate">Demo Student</span>
+            <span class="text-[9px] font-bold tracking-wide bg-indigo/15 text-indigo2 px-1.5 py-0.5 rounded">STUDENT</span>
+          </div>
+          <div class="text-[11px] text-tx3">CSE · Explorer</div>
+        </div>
+      </div>
+    </div>
+  </aside>
+
+  <!-- ── main ── -->
+  <div class="flex-1 min-w-0 flex flex-col">
+
+    <!-- top bar -->
+    <header class="h-[64px] flex-none flex items-center gap-4 px-6 border-b border-line">
+      <h1 class="text-[15px] text-tx2 font-medium">Student Dashboard</h1>
+      <!-- lifecycle-state preview toggle (product demo control) -->
+      <div class="ml-auto flex items-center gap-1.5 bg-panel3 border border-line2 rounded-lg p-0.5 text-[12px]">
+        <span class="text-tx3 px-2 hidden sm:inline">Preview</span>
+        <button id="btnNew" class="px-3 py-1.5 rounded-md bg-[#1D2436] text-tx font-medium">New student</button>
+        <button id="btnRet" class="px-3 py-1.5 rounded-md text-tx3 hover:text-tx2">Returning</button>
+      </div>
+      <button class="w-9 h-9 grid place-items-center rounded-lg text-tx3 hover:bg-panel hover:text-tx2">◔</button>
+      <button class="px-4 py-2 rounded-lg border border-line2 text-[13px] text-tx2 hover:border-line2 hover:text-tx">Sign out</button>
+    </header>
+
+    <main class="flex-1 overflow-y-auto">
+      <div class="max-w-[1080px] mx-auto px-6 py-7 space-y-6">
+
+        <!-- ══ HERO: the single next action ══ -->
+        <section class="relative overflow-hidden rounded-2xl border border-line2 bg-panel hero-glow">
+          <div class="absolute inset-0 grid-lines opacity-60 pointer-events-none"></div>
+          <div class="relative p-7">
+
+            <div class="flex items-center gap-2 text-[12px] font-semibold text-indigo2 mb-4">
+              <span class="w-1.5 h-1.5 rounded-full bg-indigo2"></span>
+              <span class="only-new">FIRST SESSION</span>
+              <span class="only-returning">4-DAY STREAK · KEEP IT ALIVE</span>
+            </div>
+
+            <div class="grid lg:grid-cols-[1fr,320px] gap-7 items-center">
+              <!-- left: framing + value prop -->
+              <div>
+                <h2 class="text-[30px] font-extrabold tracking-tight leading-[1.15]">
+                  <span class="only-new">Turn what you solve into<br><span class="text-indigo2">proof employers can verify.</span></span>
+                  <span class="only-returning">Welcome back, Demo.<br><span class="text-amber">One solve to a new badge.</span></span>
+                </h2>
+                <p class="text-[14px] text-tx2 mt-3 max-w-[46ch]">
+                  <span class="only-new">No résumé claims — just evidence. Every challenge you pass is auto-graded and issued as a verifiable skill badge recruiters can check independently.</span>
+                  <span class="only-returning">You're <b class="text-tx">4 solves</b> into your first badge and <b class="text-tx">30%</b> toward the Builder tier. Finish the next problem to bank both.</span>
+                </p>
+
+                <!-- the value loop -->
+                <div class="flex items-center gap-2 mt-6 flex-wrap text-[11.5px]">
+                  <span class="flex items-center gap-2 px-3 py-1.5 rounded-lg bg-panel3 border border-line">
+                    <span class="text-green">①</span> Solve</span>
+                  <span class="text-tx3">→</span>
+                  <span class="flex items-center gap-2 px-3 py-1.5 rounded-lg bg-panel3 border border-line">
+                    <span class="text-amber">②</span> Earn XP + badge</span>
+                  <span class="text-tx3">→</span>
+                  <span class="flex items-center gap-2 px-3 py-1.5 rounded-lg bg-panel3 border border-line">
+                    <span class="text-indigo2">③</span> Climb tiers</span>
+                  <span class="text-tx3">→</span>
+                  <span class="flex items-center gap-2 px-3 py-1.5 rounded-lg bg-indigo/10 border border-[#33285C] text-indigo2 font-medium">
+                    <span>④</span> Employers verify it</span>
+                </div>
+              </div>
+
+              <!-- right: THE next action, elevated -->
+              <div class="rounded-xl border border-[#33285C] bg-gradient-to-b from-indigo/12 to-transparent p-5">
+                <div class="flex items-center gap-2 text-[11px] font-semibold text-tx3 tracking-wide uppercase">
+                  <span class="only-new">Start here</span><span class="only-returning">Pick up where you left off</span>
+                </div>
+                <div class="mt-2 flex items-center gap-2">
+                  <span class="text-[10px] font-bold tracking-wide px-2 py-0.5 rounded bg-indigo/15 text-indigo2 only-new">EASIEST</span>
+                  <span class="text-[10px] font-bold tracking-wide px-2 py-0.5 rounded bg-amber/15 text-amber only-returning">NEXT UP</span>
+                  <span class="text-[11px] text-tx3">CSE · Algorithms</span>
+                </div>
+                <div class="text-[19px] font-bold mt-1.5 only-new">Two Sum</div>
+                <div class="text-[19px] font-bold mt-1.5 only-returning">Token Bucket Rate Limiter</div>
+                <div class="flex items-center gap-3 text-[12px] text-tx2 mt-2">
+                  <span class="only-new">~15 min</span><span class="only-returning">~45 min</span>
+                  <span class="text-tx3">·</span>
+                  <span class="text-amber font-semibold only-new">+100 XP</span>
+                  <span class="text-amber font-semibold only-returning">+250 XP</span>
+                </div>
+                <p class="text-[12px] text-tx3 mt-3 leading-relaxed">
+                  <span class="only-new">Your fastest path to a first verified badge.</span>
+                  <span class="only-returning">Solve #5 — this one completes your first badge.</span>
+                </p>
+                <button class="w-full mt-4 py-2.5 rounded-lg bg-indigo hover:bg-[#6C5AF0] text-white font-semibold text-[14px] flex items-center justify-center gap-2 transition-colors">
+                  <span class="only-new">Start challenge</span><span class="only-returning">Resume challenge</span>
+                  <span>→</span>
+                </button>
+                <button class="w-full mt-2 py-2 rounded-lg text-tx3 hover:text-tx2 text-[12.5px]">Browse all problems</button>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <!-- ══ FIRST-BADGE QUEST: zero-bar → named-payoff path ══ -->
+        <section class="rounded-2xl border border-line bg-panel p-6">
+          <div class="flex items-center justify-between flex-wrap gap-2">
+            <div class="flex items-center gap-2.5">
+              <span class="text-amber text-lg">◆</span>
+              <div>
+                <div class="text-[14px] font-semibold">Your first verified skill badge</div>
+                <div class="text-[12px] text-tx3">Pass 5 challenges — recruiters can independently verify the result.</div>
+              </div>
+            </div>
+            <div class="text-[12px]">
+              <span class="only-new text-tx3"><b class="text-tx">0</b> of 5 solved</span>
+              <span class="only-returning text-amber font-semibold"><b>4</b> of 5 — almost there</span>
+            </div>
+          </div>
+          <!-- discrete pip path (milestones read better than a vague bar) -->
+          <div class="grid grid-cols-5 gap-2 mt-5">
+            <div class="only-new h-2 rounded-full bg-line"></div>
+            <div class="only-new h-2 rounded-full bg-line"></div>
+            <div class="only-new h-2 rounded-full bg-line"></div>
+            <div class="only-new h-2 rounded-full bg-line"></div>
+            <div class="only-new h-2 rounded-full bg-line"></div>
+            <div class="only-returning h-2 rounded-full pip-fill"></div>
+            <div class="only-returning h-2 rounded-full pip-fill"></div>
+            <div class="only-returning h-2 rounded-full pip-fill"></div>
+            <div class="only-returning h-2 rounded-full pip-fill"></div>
+            <div class="only-returning h-2 rounded-full bg-line ring-1 ring-amber/40"></div>
+          </div>
+          <div class="mt-3 text-[11.5px] text-tx3 flex items-center gap-1.5">
+            <span>↳ verifiable credential</span><span class="text-line2">·</span>
+            <span>issued on-chain (ERC-721) so proof outlives any single platform</span>
+          </div>
+        </section>
+
+        <!-- ══ STATS — honest & state-aware (color = earned) ══ -->
+        <section class="grid grid-cols-2 lg:grid-cols-4 gap-4">
+
+          <!-- solved -->
+          <div class="rounded-xl border border-line bg-panel p-5">
+            <div class="flex items-center justify-between">
+              <span class="text-[12px] text-tx3 font-medium">Challenges solved</span>
+              <span class="w-7 h-7 grid place-items-center rounded-lg bg-panel2 text-tx3">✓</span>
+            </div>
+            <div class="mt-3 flex items-baseline gap-1.5">
+              <span class="text-[30px] font-bold font-mono only-new text-tx3">0</span>
+              <span class="text-[30px] font-bold font-mono only-returning text-tx">4</span>
+              <span class="text-[14px] text-tx3 font-mono">/ 5</span>
+            </div>
+            <div class="mt-2 text-[11.5px]">
+              <span class="only-new text-tx3">Solve one to open your track</span>
+              <span class="only-returning text-green">↗ 100% auto-graded correct</span>
+            </div>
+          </div>
+
+          <!-- streak -->
+          <div class="rounded-xl border border-line bg-panel p-5">
+            <div class="flex items-center justify-between">
+              <span class="text-[12px] text-tx3 font-medium">Streak</span>
+              <span class="w-7 h-7 grid place-items-center rounded-lg bg-panel2 text-amber only-returning flame">🔥</span>
+              <span class="w-7 h-7 grid place-items-center rounded-lg bg-panel2 text-tx3 only-new">🔥</span>
+            </div>
+            <div class="mt-3 flex items-baseline gap-1.5">
+              <span class="text-[30px] font-bold font-mono only-new text-tx3">0</span>
+              <span class="text-[30px] font-bold font-mono only-returning text-amber">4</span>
+              <span class="text-[13px] text-tx3">days</span>
+            </div>
+            <div class="mt-2 text-[11.5px]">
+              <span class="only-new text-tx3">Your first solve starts it</span>
+              <span class="only-returning text-tx2">Best: 4 days · solve today to extend</span>
+            </div>
+          </div>
+
+          <!-- badges -->
+          <div class="rounded-xl border border-line bg-panel p-5">
+            <div class="flex items-center justify-between">
+              <span class="text-[12px] text-tx3 font-medium">Skill badges</span>
+              <span class="w-7 h-7 grid place-items-center rounded-lg bg-panel2 text-tx3">◆</span>
+            </div>
+            <div class="mt-3 flex items-baseline gap-1.5">
+              <span class="text-[30px] font-bold font-mono text-tx3 only-new">0</span>
+              <span class="text-[30px] font-bold font-mono text-tx3 only-returning">0</span>
+              <span class="text-[12px] text-tx3">earned</span>
+            </div>
+            <div class="mt-2 text-[11.5px]">
+              <span class="only-new text-tx3">First badge at 5 solves</span>
+              <span class="only-returning text-amber">1 solve away from your first</span>
+            </div>
+          </div>
+
+          <!-- accuracy (replaces the broken "velocity 1 / 0 attempts") -->
+          <div class="rounded-xl border border-line bg-panel p-5">
+            <div class="flex items-center justify-between">
+              <span class="text-[12px] text-tx3 font-medium">Accuracy</span>
+              <span class="w-7 h-7 grid place-items-center rounded-lg bg-panel2 text-tx3">◔</span>
+            </div>
+            <div class="mt-3 flex items-baseline gap-1.5">
+              <span class="text-[30px] font-bold font-mono text-tx3 only-new">—</span>
+              <span class="text-[30px] font-bold font-mono text-green only-returning">80<span class="text-[16px]">%</span></span>
+            </div>
+            <div class="mt-2 text-[11.5px]">
+              <span class="only-new text-tx3">Tracks once you submit</span>
+              <span class="only-returning text-tx2">4 of 5 passed first try</span>
+            </div>
+          </div>
+        </section>
+
+        <!-- ══ tier progress (honest to solve count) ══ -->
+        <section class="rounded-xl border border-line bg-panel p-5">
+          <div class="flex items-center justify-between text-[12.5px] mb-3">
+            <div class="flex items-center gap-2">
+              <span class="text-tx2 font-medium">Tier</span>
+              <span class="font-bold text-indigo2 tracking-wide">EXPLORER</span>
+              <span class="text-tx3">→ Builder</span>
+            </div>
+            <div class="text-tx3">
+              <span class="only-new"><b class="text-tx2 font-mono">0</b> / 500 XP</span>
+              <span class="only-returning"><b class="text-tx2 font-mono">380</b> / 500 XP · 76% to Builder</span>
+            </div>
+          </div>
+          <div class="h-2.5 rounded-full bg-panel3 overflow-hidden">
+            <div class="h-full pip-fill only-returning" style="width:76%"></div>
+            <div class="h-full only-new" style="width:0%"></div>
+          </div>
+          <div class="mt-3 text-[11.5px] text-tx3">Builder tier unlocks harder challenges worth more XP — and the badges recruiters filter by most.</div>
+        </section>
+
+        <!-- ══ recommended + recent ══ -->
+        <div class="grid lg:grid-cols-[1fr,320px] gap-6">
+
+          <!-- recommended, laddered by difficulty -->
+          <section>
+            <div class="flex items-center justify-between mb-3">
+              <h3 class="text-[15px] font-semibold flex items-center gap-2"><span class="text-indigo2">‹›</span> Recommended next</h3>
+              <a class="text-[12.5px] text-indigo2 hover:text-indigo">View all →</a>
+            </div>
+            <div class="space-y-3">
+
+              <!-- elevated first pick -->
+              <div class="group flex items-center gap-4 rounded-xl border border-[#33285C] bg-gradient-to-r from-indigo/8 to-transparent p-4 hover:border-indigo transition-colors">
+                <div class="w-10 h-10 rounded-lg bg-green/10 grid place-items-center text-green flex-none text-[13px] font-bold">E</div>
+                <div class="min-w-0 flex-1">
+                  <div class="flex items-center gap-2 text-[11px]">
+                    <span class="px-2 py-0.5 rounded bg-green/15 text-green font-semibold">Easy · Explorer</span>
+                    <span class="text-tx3">~15 min</span>
+                  </div>
+                  <div class="text-[14.5px] font-semibold mt-1">Two Sum</div>
+                </div>
+                <div class="text-amber font-semibold text-[13px]">+100 XP</div>
+                <button class="px-4 py-2 rounded-lg bg-indigo hover:bg-[#6C5AF0] text-white text-[13px] font-medium flex items-center gap-1.5">Solve →</button>
+              </div>
+
+              <div class="group flex items-center gap-4 rounded-xl border border-line bg-panel p-4 hover:border-line2 transition-colors">
+                <div class="w-10 h-10 rounded-lg bg-amber/10 grid place-items-center text-amber flex-none text-[13px] font-bold">B</div>
+                <div class="min-w-0 flex-1">
+                  <div class="flex items-center gap-2 text-[11px]">
+                    <span class="px-2 py-0.5 rounded bg-amber/15 text-amber font-semibold">Medium · Builder</span>
+                    <span class="text-tx3">~40 min</span>
+                  </div>
+                  <div class="text-[14.5px] font-semibold mt-1">LRU Cache</div>
+                </div>
+                <div class="text-amber font-semibold text-[13px]">+250 XP</div>
+                <button class="px-4 py-2 rounded-lg border border-line2 text-tx2 hover:text-tx hover:border-indigo text-[13px] font-medium">Solve →</button>
+              </div>
+
+              <div class="group flex items-center gap-4 rounded-xl border border-line bg-panel p-4 hover:border-line2 transition-colors">
+                <div class="w-10 h-10 rounded-lg bg-amber/10 grid place-items-center text-amber flex-none text-[13px] font-bold">B</div>
+                <div class="min-w-0 flex-1">
+                  <div class="flex items-center gap-2 text-[11px]">
+                    <span class="px-2 py-0.5 rounded bg-amber/15 text-amber font-semibold">Medium · Builder</span>
+                    <span class="text-tx3">~45 min</span>
+                  </div>
+                  <div class="text-[14.5px] font-semibold mt-1">Token Bucket Rate Limiter</div>
+                </div>
+                <div class="text-amber font-semibold text-[13px]">+250 XP</div>
+                <button class="px-4 py-2 rounded-lg border border-line2 text-tx2 hover:text-tx hover:border-indigo text-[13px] font-medium">Solve →</button>
+              </div>
+
+              <a class="flex items-center gap-3 rounded-xl border border-line bg-panel3 p-4 hover:border-line2 transition-colors">
+                <span class="text-indigo2 text-lg">▤</span>
+                <div class="flex-1">
+                  <div class="text-[13.5px] font-semibold">Stuck? Learning Center</div>
+                  <div class="text-[12px] text-tx3">Short video lessons for every problem type and tier</div>
+                </div>
+                <span class="text-tx3">→</span>
+              </a>
+            </div>
+          </section>
+
+          <!-- recent submissions -->
+          <section>
+            <div class="flex items-center justify-between mb-3">
+              <h3 class="text-[15px] font-semibold flex items-center gap-2"><span class="text-indigo2">◷</span> Recent activity</h3>
+              <a class="text-[12.5px] text-indigo2 hover:text-indigo">All →</a>
+            </div>
+
+            <!-- new: directional empty state -->
+            <div class="only-new rounded-xl border border-dashed border-line2 bg-panel3 p-6 text-center">
+              <div class="text-tx3 text-2xl mb-2">‹›</div>
+              <div class="text-[13px] font-medium text-tx2">Nothing here yet</div>
+              <p class="text-[12px] text-tx3 mt-1 mb-4">Your submissions and badge progress will land here.</p>
+              <button class="px-4 py-2 rounded-lg bg-indigo/15 text-indigo2 text-[12.5px] font-medium hover:bg-indigo/25">Solve Two Sum →</button>
+            </div>
+
+            <!-- returning: real feed -->
+            <div class="only-returning space-y-2.5">
+              <div class="flex items-center gap-3 rounded-xl border border-line bg-panel p-3.5">
+                <span class="w-6 h-6 rounded-md bg-green/15 text-green grid place-items-center text-[12px]">✓</span>
+                <div class="flex-1 min-w-0"><div class="text-[13px] font-medium truncate">Valid Parentheses</div><div class="text-[11px] text-tx3">Passed · 6h ago</div></div>
+                <span class="text-[11px] text-amber font-semibold">+100</span>
+              </div>
+              <div class="flex items-center gap-3 rounded-xl border border-line bg-panel p-3.5">
+                <span class="w-6 h-6 rounded-md bg-green/15 text-green grid place-items-center text-[12px]">✓</span>
+                <div class="flex-1 min-w-0"><div class="text-[13px] font-medium truncate">Merge Intervals</div><div class="text-[11px] text-tx3">Passed · yesterday</div></div>
+                <span class="text-[11px] text-amber font-semibold">+180</span>
+              </div>
+              <div class="flex items-center gap-3 rounded-xl border border-line bg-panel p-3.5">
+                <span class="w-6 h-6 rounded-md bg-red/15 text-red grid place-items-center text-[12px]">×</span>
+                <div class="flex-1 min-w-0"><div class="text-[13px] font-medium truncate">LRU Cache</div><div class="text-[11px] text-tx3">2 tests failed · 2d ago</div></div>
+                <button class="text-[11px] text-indigo2">Retry</button>
+              </div>
+              <div class="flex items-center gap-3 rounded-xl border border-line bg-panel p-3.5">
+                <span class="w-6 h-6 rounded-md bg-green/15 text-green grid place-items-center text-[12px]">✓</span>
+                <div class="flex-1 min-w-0"><div class="text-[13px] font-medium truncate">Binary Search</div><div class="text-[11px] text-tx3">Passed · 3d ago</div></div>
+                <span class="text-[11px] text-amber font-semibold">+100</span>
+              </div>
+            </div>
+          </section>
+        </div>
+
+      </div>
+    </main>
+  </div>
+</div>
+
+<script>
+  const root = document.body;
+  const btnNew = document.getElementById('btnNew');
+  const btnRet = document.getElementById('btnRet');
+  const on  = 'bg-[#1D2436] text-tx font-medium';
+  const off = 'text-tx3 hover:text-tx2';
+  function setState(s){
+    root.setAttribute('x-state', s);
+    const isNew = s === 'new';
+    btnNew.className = 'px-3 py-1.5 rounded-md ' + (isNew ? on : off);
+    btnRet.className = 'px-3 py-1.5 rounded-md ' + (isNew ? off : on);
+  }
+  btnNew.onclick = () => setState('new');
+  btnRet.onclick = () => setState('returning');
+</script>
+</body>
+</html>

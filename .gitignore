@@ -1,0 +1,89 @@
+# Dependencies
+node_modules/
+**/node_modules/
+
+# Build & Output directories
+dist/
+**/dist/
+build/
+**/build/
+out/
+**/out/
+.next/
+.nuxt/
+.docusaurus/
+.svelte-kit/
+.serverless/
+.tsbuildinfo
+
+# Debugging and Logging
+*.log
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+pnpm-debug.log*
+lerna-debug.log*
+
+# Runtime and Local Environment files
+.env
+.env.local
+.env.development.local
+.env.test.local
+.env.production.local
+.env.*.local
+**/.env
+**/.env.*
+.env*.local
+
+# Database local configurations
+*.db
+*.db-journal
+*.sqlite
+dev.db
+backend/prisma/migrations/migrate.lock
+
+# Testing configurations and outputs
+coverage/
+**/coverage/
+.nyc_output
+.cypress/
+cypress/videos/
+cypress/screenshots/
+.playwright/
+playwright-report/
+test-results/
+
+# System specific files
+.DS_Store
+.DS_Store?
+._*
+.Spotlight-V100
+.Trashes
+ehthumbs.db
+Thumbs.db
+desktop.ini
+
+# IDE & Editor Specific Configs
+.idea/
+.vscode/
+*.suo
+*.ntvs*
+*.njsproj
+*.sln
+*.swp
+.project
+.classpath
+.settings/
+
+# Cache directories
+.cache/
+**/.cache/
+.parcel-cache/
+.eslintcache
+.stylelintcache
+.turbo/
+.vercel/
+.yarn/install-state.gz
+
+# Lockfiles and packages (optional, typically ignored if user explicitly overrides, but keeping standard lockfiles tracked. Let's make sure we do NOT ignore standard lockfiles like package-lock.json).
+*.tgz

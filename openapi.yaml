@@ -1,0 +1,353 @@
+openapi: 3.0.3
+info:
+  title: TalentForge API Specifications
+  description: Complete OpenAPI API specifications for the TalentForge performance-verified talent marketplace.
+  version: 0.1.0-alpha
+servers:
+  - url: http://localhost:5000/api
+    description: Local Dev Server
+paths:
+  # Authentication Gateway Endpoints
+  /auth/register:
+    post:
+      summary: Register candidate account
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+                - email
+                - password
+                - name
+                - domain
+              properties:
+                email:
+                  type: string
+                  format: email
+                password:
+                  type: string
+                  minLength: 8
+                name:
+                  type: string
+                domain:
+                  type: string
+                  enum: [cse, ece]
+      responses:
+        '201':
+          description: User registered successfully
+        '400':
+          description: Payload validation failed
+        '409':
+          description: Email already in use
+
+  /auth/login:
+    post:
+      summary: Login candidate session
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+                - email
+                - password
+              properties:
+                email:
+                  type: string
+                password:
+                  type: string
+      responses:
+        '200':
+          description: Authenticated successfully. Returns JWT and refresh token.
+        '401':
+          description: Invalid email or password
+
+  /auth/refresh:
+    post:
+      summary: Refresh JWT credentials token
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+                - refreshToken
+              properties:
+                refreshToken:
+                  type: string
+      responses:
+        '200':
+          description: Token rotated successfully. Returns new JWT.
+        '401':
+          description: Invalid or expired refresh token
+
+  /auth/logout:
+    post:
+      summary: Logout candidate session and clear refresh token cache
+      responses:
+        '200':
+          description: Logged out successfully
+
+  /auth/me:
+    get:
+      summary: Retrieve candidate user profile
+      security:
+        - bearerAuth: []
+      responses:
+        '200':
+          description: Candidate details retrieved
+        '401':
+          description: Unauthorized session
+
+  /auth/google:
+    get:
+      summary: Redirect to Google OAuth provider endpoint
+      responses:
+        '302':
+          description: Redirects to Google authentication screen
+
+  /auth/google/callback:
+    get:
+      summary: Process Google callback parameters and retrieve JWT keys
+      responses:
+        '302':
+          description: Redirects candidate to dashboard with token parameters
+
+  # Problems & Assessments CRUD
+  /students/problems:
+    get:
+      summary: Get lists of problems
+      parameters:
+        - name: tier
+          in: query
+          required: false
+          schema:
+            type: string
+        - name: domain
+          in: query
+          required: false
+          schema:
+            type: string
+            enum: [cse, ece]
+      responses:
+        '200':
+          description: Array of problems (public parameters only. hiddenTestCases omitted)
+
+  /students/problems/{slug}:
+    get:
+      summary: Get specific problem detail parameters by slug
+      parameters:
+        - name: slug
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Problem parameters (public parameters only. hiddenTestCases omitted)
+        '404':
+          description: Problem not found
+
+  /students/problems/{id}/presigned:
+    get:
+      summary: Retrieve presigned S3 upload URL for submission code
+      security:
+        - bearerAuth: []
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Returns uploadUrl matching MinIO S3 bucket configurations
+
+  /students/problems/{id}/submit:
+    post:
+      summary: Submit solution parameters for async autograde runs
+      security:
+        - bearerAuth: []
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+                - s3Key
+              properties:
+                s3Key:
+                  type: string
+      responses:
+        '202':
+          description: Solution queued. Returns submissionId.
+
+  # Submissions Tracker
+  /students/submissions:
+    get:
+      summary: Query student submissions history
+      security:
+        - bearerAuth: []
+      responses:
+        '200':
+          description: Submissions log matching userId
+
+  /students/submissions/{id}:
+    get:
+      summary: Retrieve submission grading results
+      security:
+        - bearerAuth: []
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Autograde details, code style checks, and review comments
+
+  # Profile & Psychometrics
+  /students/profile:
+    get:
+      summary: Fetch student portfolio metadata
+      security:
+        - bearerAuth: []
+      responses:
+        '200':
+          description: Profile records and achievements
+    put:
+      summary: Update student portfolio metadata
+      security:
+        - bearerAuth: []
+      responses:
+        '200':
+          description: Profile records updated
+
+  /students/profile/s2:
+    put:
+      summary: Update extended Profile S2 metadata (skills, certs, links)
+      security:
+        - bearerAuth: []
+      responses:
+        '200':
+          description: Profile S2 records updated
+
+  /students/profile/resume-upload-url:
+    get:
+      summary: Retrieve presigned S3 upload URL for resume PDF
+      security:
+        - bearerAuth: []
+      responses:
+        '200':
+          description: Returns uploadUrl matching MinIO S3 bucket configurations
+
+  /students/profile/parse-resume:
+    post:
+      summary: Parse uploaded resume using AI
+      security:
+        - bearerAuth: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+                - s3Key
+              properties:
+                s3Key:
+                  type: string
+      responses:
+        '200':
+          description: Returns extracted skills and education JSON
+
+  /students/psychometric/start:
+    post:
+      summary: Start 30-minute psychometric assessment test
+      security:
+        - bearerAuth: []
+      responses:
+        '200':
+          description: Assessment start timestamps locked
+
+  /students/psychometric/submit:
+    post:
+      summary: Submit psychometric checklist results
+      security:
+        - bearerAuth: []
+      responses:
+        '200':
+          description: Scoring calculations locked to database
+
+  /students/badges:
+    get:
+      summary: Get student verified badges
+      security:
+        - bearerAuth: []
+      responses:
+        '200':
+          description: Active badges metadata
+
+  # Expert Reviews
+  /reviews/queue:
+    get:
+      summary: Fetch reviews queue for expert reviewing
+      responses:
+        '200':
+          description: List of pending review tasks
+
+  /reviews/{id}:
+    post:
+      summary: Submit expert review scores
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+                - score
+                - comment
+              properties:
+                score:
+                  type: integer
+                  minimum: 0
+                  maximum: 100
+                comment:
+                  type: string
+      responses:
+        '200':
+          description: Review results updated
+
+  # Corporate recruiter views
+  /candidates:
+    get:
+      summary: Query verified candidate pool profiles
+      responses:
+        '200':
+          description: Pre-verified candidate details
+
+components:
+  securitySchemes:
+    bearerAuth:
+      type: http
+      scheme: bearer
+      bearerFormat: JWT

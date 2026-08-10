@@ -1,0 +1,43 @@
+name: TalentForge Frontend CI Staging Deployment
+
+on:
+  push:
+    branches:
+      - main
+      - staging
+  pull_request:
+    branches:
+      - main
+
+jobs:
+  build-and-test:
+    name: Build & Validate Staging Release
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout Code Repository
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js Environment
+        uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+          cache: 'npm'
+
+      - name: Install Monorepo Dependencies
+        run: npm install
+
+      - name: TypeScript Type-Check Frontend
+        run: npm --prefix frontend run type-check
+
+      - name: Build Staging Production Frontend Bundle
+        env:
+          VITE_API_URL: https://staging-api.talentforge.in/api
+        run: npm --prefix frontend run build
+
+      - name: Upload Staging Build Artifacts
+        uses: actions/upload-artifact@v4
+        with:
+          name: frontend-staging-dist
+          path: frontend/dist/
+          retention-days: 7

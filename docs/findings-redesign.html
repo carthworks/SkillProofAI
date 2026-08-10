@@ -1,0 +1,633 @@
+<!DOCTYPE html>
+<html lang="en">
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Findings — decision queue</title>
+<style>
+  :root{
+    --bg:#070B12; --panel:#0E1420; --panel-2:#131A28; --panel-3:#0A0F19;
+    --line:#1E2634; --line-2:#2C3547;
+    --tx:#EDF1F8; --tx-2:#A3AEC2; --tx-3:#6E7A8F;
+    --indigo:#7C6CF6; --indigo-2:#9C8FFF; --indigo-dim:#1B1738;
+    --red:#FF7A75; --red-dim:#2A1210;
+    --amber:#F0B95E; --amber-dim:#241C0E;
+    --green:#4FD9A4; --green-dim:#0F2A20;
+    --cyan:#6BD6E8;
+    --r:10px;
+  }
+  *{box-sizing:border-box;margin:0;padding:0}
+  body{background:#050810;color:var(--tx);font-size:14px;line-height:1.5;
+    font-family:"Inter",-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,sans-serif;
+    -webkit-font-smoothing:antialiased;overflow:hidden}
+  .mono{font-family:ui-monospace,"SF Mono","JetBrains Mono",Menlo,monospace}
+  :focus-visible{outline:2px solid var(--indigo-2);outline-offset:2px;border-radius:4px}
+  button{font:inherit}
+
+  .app{display:flex;height:100vh}
+
+  /* ── rail ── */
+  .rail{width:60px;flex:none;background:var(--bg);border-right:1px solid var(--line);
+    display:flex;flex-direction:column;align-items:center;padding:16px 0;gap:6px}
+  .rail .logo{width:30px;height:30px;border-radius:8px;background:linear-gradient(135deg,var(--indigo),#5A48D6);
+    display:grid;place-items:center;color:#fff;font-weight:700;margin-bottom:14px}
+  .rail a{width:38px;height:38px;border-radius:9px;display:grid;place-items:center;color:var(--tx-3);
+    text-decoration:none;position:relative;font-size:17px}
+  .rail a:hover{background:var(--panel);color:var(--tx-2)}
+  .rail a.on{background:var(--indigo-dim);color:var(--indigo-2)}
+  .rail a.on::before{content:"";position:absolute;left:-13px;top:8px;bottom:8px;width:3px;
+    border-radius:2px;background:var(--indigo)}
+  .rail .sp{flex:1}
+
+  /* ── main ── */
+  .main{flex:1;min-width:0;display:flex;flex-direction:column}
+  .top{display:flex;align-items:center;gap:16px;padding:18px 28px 0}
+  .top h1{font-size:22px;font-weight:600;letter-spacing:-.02em}
+  .top .sub{font-size:13px;color:var(--tx-3);margin-top:2px}
+  .range{margin-left:auto;display:flex;background:var(--panel-3);border:1px solid var(--line-2);
+    border-radius:8px;overflow:hidden}
+  .range button{background:none;border:0;border-right:1px solid var(--line);color:var(--tx-3);
+    padding:7px 13px;font-size:12.5px;cursor:pointer}
+  .range button:last-child{border-right:0}
+  .range button.on{background:#1D2436;color:var(--tx);font-weight:500}
+
+  /* ── funnel hero ── */
+  .funnel{margin:18px 28px 0;background:var(--panel);border:1px solid var(--line-2);
+    border-radius:14px;padding:18px 22px;display:flex;align-items:stretch;gap:0}
+  .fstep{flex:1;padding:0 18px;border-right:1px solid var(--line);position:relative}
+  .fstep:first-child{padding-left:0}
+  .fstep:last-child{border-right:0;padding-right:0}
+  .fstep .k{font-size:11px;letter-spacing:.07em;text-transform:uppercase;color:var(--tx-3);font-weight:600}
+  .fstep .v{font-size:30px;font-weight:700;letter-spacing:-.03em;margin-top:6px;line-height:1;
+    font-family:ui-monospace,Menlo,monospace}
+  .fstep .d{font-size:12px;color:var(--tx-2);margin-top:6px}
+  .fstep .arrow{position:absolute;right:-7px;top:50%;transform:translateY(-50%);color:var(--tx-3);
+    font-size:14px;background:var(--panel);padding:2px 0;z-index:2}
+  .fstep.hot .v{color:var(--red)}
+  .fstep.mute .v{color:var(--tx-3)}
+  .fstep.act{background:linear-gradient(180deg,rgba(124,108,246,.10),transparent);
+    border-radius:10px;margin:-6px 0}
+  .fstep.act .v{color:var(--indigo-2)}
+  .cut{font-size:11.5px;color:var(--green);margin-top:6px;display:flex;align-items:center;gap:5px}
+  .cut::before{content:"↓";font-weight:700}
+
+  /* ── controls ── */
+  .ctl{margin:18px 28px 0;display:flex;align-items:center;gap:10px}
+  .views{display:flex;gap:6px}
+  .views button{background:var(--panel-2);border:1px solid var(--line);border-radius:8px;
+    padding:7px 13px;font-size:13px;color:var(--tx-2);cursor:pointer;display:flex;align-items:center;gap:7px}
+  .views button:hover{border-color:var(--line-2);color:var(--tx)}
+  .views button.on{background:var(--indigo-dim);border-color:#33285C;color:var(--indigo-2);font-weight:500}
+  .views button .n{font-size:11px;background:rgba(255,255,255,.06);border-radius:20px;padding:1px 7px;
+    font-family:ui-monospace,Menlo,monospace}
+  .views button.on .n{background:rgba(124,108,246,.2)}
+  .search{margin-left:auto;position:relative;width:280px}
+  .search input{width:100%;background:var(--panel-3);border:1px solid var(--line-2);border-radius:8px;
+    padding:8px 12px 8px 34px;color:var(--tx);font:inherit;font-size:13px}
+  .search input::placeholder{color:var(--tx-3)}
+  .search input:focus{border-color:var(--indigo)}
+  .search svg{position:absolute;left:11px;top:50%;transform:translateY(-50%);color:var(--tx-3)}
+  .sort{background:var(--panel-2);border:1px solid var(--line);border-radius:8px;padding:8px 12px;
+    font-size:12.5px;color:var(--tx-2);cursor:pointer;display:flex;align-items:center;gap:7px}
+  .sort:hover{border-color:var(--line-2);color:var(--tx)}
+
+  /* ── queue ── */
+  .queue{flex:1;overflow-y:auto;margin:14px 28px 0;padding-bottom:20px}
+  .qhead{display:grid;grid-template-columns:82px 1fr 300px 96px 34px;gap:14px;
+    padding:0 14px 9px;font-size:11px;letter-spacing:.06em;text-transform:uppercase;
+    color:var(--tx-3);font-weight:600;position:sticky;top:0;background:#050810;z-index:3}
+  .row{display:grid;grid-template-columns:82px 1fr 300px 96px 34px;gap:14px;align-items:center;
+    padding:14px;border:1px solid var(--line);border-radius:12px;margin-bottom:8px;
+    background:var(--panel);cursor:pointer;position:relative;transition:border-color .12s,background .12s}
+  .row:hover{border-color:var(--line-2);background:var(--panel-2)}
+  .row.open{border-color:var(--indigo);background:var(--panel-2)}
+
+  /* priority chip */
+  .pri{display:flex;flex-direction:column;align-items:center;gap:3px}
+  .pscore{width:52px;height:52px;border-radius:12px;display:grid;place-items:center;
+    font-size:22px;font-weight:700;font-family:ui-monospace,Menlo,monospace;letter-spacing:-.02em;
+    border:1px solid transparent}
+  .p-crit{background:var(--red-dim);color:var(--red);border-color:#4A2320}
+  .p-high{background:var(--amber-dim);color:var(--amber);border-color:#453413}
+  .p-med{background:var(--indigo-dim);color:var(--indigo-2);border-color:#2E2650}
+  .p-low{background:#141A26;color:var(--tx-3);border-color:var(--line)}
+  .pri .plab{font-size:9.5px;letter-spacing:.05em;text-transform:uppercase;color:var(--tx-3);font-weight:600}
+
+  /* finding cell */
+  .fnd b{font-size:14px;font-weight:600;letter-spacing:-.01em;display:block}
+  .fnd .loc{font-size:12px;color:var(--tx-2);margin-top:3px;display:flex;align-items:center;gap:6px}
+  .fnd .loc .file{color:var(--cyan);font-family:ui-monospace,Menlo,monospace;font-size:11.5px}
+  .fnd .meta{display:flex;align-items:center;gap:8px;margin-top:6px;flex-wrap:wrap}
+  .grp{font-size:10.5px;background:#1A2130;color:var(--tx-2);padding:2px 8px;border-radius:6px;
+    font-weight:500;display:inline-flex;align-items:center;gap:5px}
+  .grp b{display:inline;font-size:10.5px;color:var(--tx);font-weight:700}
+  .scn{font-size:10.5px;color:var(--tx-3);display:inline-flex;align-items:center;gap:5px;font-weight:500}
+  .scn::before{content:"";width:5px;height:5px;border-radius:50%;background:var(--tx-3)}
+  .scn.trivy::before{background:#7C6CF6}.scn.gitleaks::before{background:#F0B95E}
+  .scn.opengrep::before{background:#4FD9A4}.scn.nuclei::before{background:#6BD6E8}
+
+  /* signal cell — chips */
+  .sig{display:flex;gap:6px;flex-wrap:wrap}
+  .chip{font-size:11px;padding:3px 9px;border-radius:6px;font-weight:500;display:inline-flex;
+    align-items:center;gap:5px;white-space:nowrap;border:1px solid transparent}
+  .chip.live{background:var(--red-dim);color:var(--red);border-color:#4A2320}
+  .chip.reach{background:var(--green-dim);color:var(--green);border-color:#14392C}
+  .chip.kev{background:#2A1210;color:#FF9A6B;border-color:#4A2A1A}
+  .chip.unreach{background:#141A26;color:var(--tx-3);border-color:var(--line)}
+  .chip.tainted{background:var(--indigo-dim);color:var(--indigo-2);border-color:#2E2650}
+  .chip.pub{background:#161D2B;color:var(--tx-2);border-color:var(--line-2)}
+  .chip .dot{width:5px;height:5px;border-radius:50%;background:currentColor}
+  .chip.live .dot{animation:pulse 1.6s ease-in-out infinite}
+  @keyframes pulse{0%,100%{opacity:1}50%{opacity:.35}}
+
+  /* age */
+  .age{font-size:12px;color:var(--tx-2)}
+  .age .new{color:var(--indigo-2);font-weight:600}
+  .age .sub{font-size:11px;color:var(--tx-3);display:block;margin-top:2px}
+
+  /* row actions (hover) */
+  .racts{display:flex;justify-content:flex-end}
+  .chev{color:var(--tx-3);font-size:18px;transition:transform .12s}
+  .row:hover .chev{color:var(--tx-2)}
+  .row.open .chev{color:var(--indigo-2);transform:rotate(90deg)}
+  .hover-acts{position:absolute;right:52px;top:50%;transform:translateY(-50%);display:none;gap:6px}
+  .row:hover .hover-acts{display:flex}
+  .ha{background:var(--panel-3);border:1px solid var(--line-2);border-radius:7px;padding:5px 10px;
+    font-size:11.5px;color:var(--tx-2);cursor:pointer;display:flex;align-items:center;gap:5px}
+  .ha:hover{border-color:var(--indigo);color:var(--tx)}
+  .ha.ghost:hover{border-color:var(--tx-3);color:var(--tx-3)}
+
+  /* suppressed band */
+  .suppressed{margin-top:16px}
+  .sup-head{display:flex;align-items:center;gap:10px;padding:11px 14px;border:1px solid var(--line);
+    border-radius:10px;background:var(--panel-3);cursor:pointer}
+  .sup-head:hover{border-color:var(--line-2)}
+  .sup-head .caret{color:var(--tx-3);font-size:16px;transition:transform .15s}
+  .sup-head.exp .caret{transform:rotate(90deg)}
+  .sup-head b{font-size:13px;font-weight:600}
+  .sup-head span{font-size:12px;color:var(--tx-3)}
+  .sup-head .why{margin-left:auto;font-size:11.5px;color:var(--tx-3)}
+  .sup-body{display:none;padding-top:8px}
+  .sup-head.exp + .sup-body{display:block}
+  .sup-row{display:grid;grid-template-columns:82px 1fr 300px 96px 34px;gap:14px;align-items:center;
+    padding:12px 14px;border:1px solid var(--line);border-radius:10px;margin-bottom:6px;
+    background:transparent;opacity:.6;cursor:pointer}
+  .sup-row:hover{opacity:.9;background:var(--panel)}
+
+  /* ── drawer ── */
+  .scrim{position:fixed;inset:0;background:rgba(3,6,12,.55);opacity:0;pointer-events:none;
+    transition:opacity .2s;z-index:40}
+  .scrim.show{opacity:1;pointer-events:auto}
+  .drawer{position:fixed;top:0;right:0;bottom:0;width:min(560px,92vw);background:var(--panel);
+    border-left:1px solid var(--line-2);box-shadow:-40px 0 90px -30px rgba(0,0,0,.9);
+    transform:translateX(100%);transition:transform .24s cubic-bezier(.32,.72,0,1);z-index:41;
+    display:flex;flex-direction:column}
+  .drawer.show{transform:translateX(0)}
+
+  .dhd{padding:20px 24px 16px;border-bottom:1px solid var(--line)}
+  .dhd .tags{display:flex;align-items:center;gap:8px;margin-bottom:12px}
+  .dtag{font-size:10.5px;font-weight:700;letter-spacing:.04em;padding:3px 9px;border-radius:6px}
+  .dtag.crit{background:var(--red-dim);color:var(--red)}
+  .dtag.scn{background:var(--amber-dim);color:var(--amber)}
+  .dhd .close{margin-left:auto;background:none;border:0;color:var(--tx-3);cursor:pointer;
+    font-size:22px;line-height:1;padding:2px 6px}
+  .dhd .close:hover{color:var(--tx)}
+  .dhd h2{font-size:18px;font-weight:600;letter-spacing:-.02em;line-height:1.35}
+  .dhd .id{font-size:11.5px;color:var(--tx-3);margin-top:8px;font-family:ui-monospace,Menlo,monospace}
+
+  .dbody{flex:1;overflow-y:auto;padding:20px 24px 24px}
+
+  /* score reconcile block */
+  .verdict{border:1px solid #33285C;border-radius:12px;
+    background:linear-gradient(180deg,rgba(124,108,246,.10),rgba(124,108,246,.02));padding:16px 18px}
+  .verdict .row1{display:flex;align-items:center;gap:16px}
+  .verdict .big{width:64px;height:64px;border-radius:14px;background:var(--red-dim);color:var(--red);
+    border:1px solid #4A2320;display:grid;place-items:center;font-size:28px;font-weight:700;
+    font-family:ui-monospace,Menlo,monospace;flex:none}
+  .verdict .lbl{font-size:11px;letter-spacing:.06em;text-transform:uppercase;color:var(--tx-3);font-weight:600}
+  .verdict h3{font-size:16px;font-weight:600;margin-top:3px}
+  .verdict .expl{font-size:13px;color:var(--tx-2);margin-top:12px;line-height:1.6}
+  .verdict .expl b{color:var(--tx);font-weight:600}
+  .factors{display:flex;gap:7px;margin-top:14px;flex-wrap:wrap}
+  .factor{font-size:11px;padding:4px 10px;border-radius:7px;background:var(--panel-3);
+    border:1px solid var(--line-2);color:var(--tx-2);display:flex;align-items:center;gap:6px}
+  .factor .v{font-weight:700;font-family:ui-monospace,Menlo,monospace}
+  .factor .v.up{color:var(--red)}.factor .v.down{color:var(--green)}
+
+  /* evidence */
+  .sec-h{font-size:11px;letter-spacing:.08em;text-transform:uppercase;color:var(--tx-3);
+    font-weight:600;margin:22px 0 10px;display:flex;align-items:center;gap:8px}
+  .evidence{border:1px solid var(--line-2);border-radius:12px;overflow:hidden;background:var(--panel-3)}
+  .ev-file{display:flex;align-items:center;gap:9px;padding:12px 14px;border-bottom:1px solid var(--line)}
+  .ev-file .path{font-family:ui-monospace,Menlo,monospace;font-size:12.5px;color:var(--cyan)}
+  .ev-file .ln{margin-left:auto;font-size:11px;color:var(--tx-3);font-family:ui-monospace,Menlo,monospace}
+  .ev-code{padding:13px 14px;font-family:ui-monospace,Menlo,monospace;font-size:12px;line-height:1.7;
+    color:var(--tx-2);overflow-x:auto;white-space:pre}
+  .ev-code .hl{background:rgba(255,122,117,.14);border-left:2px solid var(--red);
+    display:block;margin:0 -14px;padding:0 14px 0 12px;color:var(--tx)}
+  .ev-code .redact{color:var(--red)}
+  .validity{display:flex;align-items:center;gap:9px;padding:11px 14px;border-top:1px solid var(--line);
+    background:var(--red-dim)}
+  .validity .dot{width:8px;height:8px;border-radius:50%;background:var(--red);animation:pulse 1.6s infinite}
+  .validity b{font-size:12.5px;color:var(--red);font-weight:600}
+  .validity span{font-size:11.5px;color:var(--tx-2)}
+
+  /* do this next */
+  .next{border:1px solid #14392C;border-radius:12px;background:var(--green-dim);padding:15px 16px;margin-top:10px}
+  .next .h{font-size:12px;font-weight:700;color:var(--green);letter-spacing:.03em;display:flex;
+    align-items:center;gap:8px;text-transform:uppercase}
+  .next ol{margin:12px 0 0;padding-left:0;list-style:none;counter-reset:s}
+  .next li{counter-increment:s;font-size:13px;color:var(--tx-2);padding:7px 0 7px 30px;position:relative;
+    line-height:1.55;border-bottom:1px solid rgba(79,217,164,.12)}
+  .next li:last-child{border-bottom:0}
+  .next li::before{content:counter(s);position:absolute;left:0;top:7px;width:20px;height:20px;
+    border-radius:6px;background:rgba(79,217,164,.15);color:var(--green);font-size:11px;font-weight:700;
+    display:grid;place-items:center;font-family:ui-monospace,Menlo,monospace}
+  .next code{font-family:ui-monospace,Menlo,monospace;font-size:11.5px;background:rgba(0,0,0,.3);
+    padding:1px 6px;border-radius:5px;color:var(--cyan)}
+
+  /* tabs */
+  .tabs{display:flex;gap:2px;margin-top:22px;border-bottom:1px solid var(--line)}
+  .tabs button{background:none;border:0;border-bottom:2px solid transparent;color:var(--tx-3);
+    padding:10px 14px;font-size:13.5px;cursor:pointer;font-weight:500}
+  .tabs button:hover{color:var(--tx-2)}
+  .tabs button.on{color:var(--indigo-2);border-bottom-color:var(--indigo)}
+
+  /* footer actions */
+  .dft{padding:14px 24px;border-top:1px solid var(--line);background:var(--panel-3);display:flex;gap:10px}
+  .dbtn{padding:10px 16px;border-radius:9px;font-size:13.5px;font-weight:600;border:1px solid transparent;
+    cursor:pointer;display:flex;align-items:center;gap:8px}
+  .dbtn.primary{background:var(--red);color:#1a0a08}
+  .dbtn.primary:hover{background:#ff8f8a}
+  .dbtn.ghost{background:var(--panel-2);border-color:var(--line-2);color:var(--tx-2)}
+  .dbtn.ghost:hover{border-color:#3E4A63;color:var(--tx)}
+  .dft .spacer{flex:1}
+
+  @media (max-width:1180px){
+    .qhead,.row,.sup-row{grid-template-columns:70px 1fr 200px 34px}
+    .qhead .h-sig,.row .sig-wrap,.sup-row .sig-wrap{display:none}
+    .funnel{flex-wrap:wrap}.fstep{flex:1 1 40%;border-bottom:1px solid var(--line);padding:10px 14px}
+  }
+</style>
+
+<div class="app">
+  <!-- rail -->
+  <nav class="rail" aria-label="Primary">
+    <div class="logo">C</div>
+    <a href="#" title="Dashboard">▨</a>
+    <a href="#" title="Assets">⬡</a>
+    <a href="#" title="Scans">◈</a>
+    <a href="#" class="on" title="Findings">⚠</a>
+    <a href="#" title="Remediation">⚕</a>
+    <div class="sp"></div>
+    <a href="#" title="Settings">⚙</a>
+  </nav>
+
+  <!-- main -->
+  <div class="main">
+    <div class="top">
+      <div>
+        <h1>Findings</h1>
+        <div class="sub">carthworks/LibraDigit_web · last scan 12 min ago</div>
+      </div>
+      <div class="range">
+        <button>24h</button><button class="on">30 days</button><button>90 days</button><button>Custom</button>
+      </div>
+    </div>
+
+    <!-- FUNNEL HERO: the noise-reduction story -->
+    <div class="funnel" role="group" aria-label="Signal funnel">
+      <div class="fstep">
+        <div class="k">Raw detected</div>
+        <div class="v">1,242</div>
+        <div class="d">Across 4 scanners</div>
+        <span class="arrow">→</span>
+      </div>
+      <div class="fstep">
+        <div class="k">Unique issues</div>
+        <div class="v">47</div>
+        <div class="d">After fingerprint dedup</div>
+        <div class="cut">1,195 duplicates collapsed</div>
+        <span class="arrow">→</span>
+      </div>
+      <div class="fstep">
+        <div class="k">Reachable</div>
+        <div class="v">26</div>
+        <div class="d">On a live call path</div>
+        <span class="arrow">→</span>
+      </div>
+      <div class="fstep hot act">
+        <div class="k">Need you now</div>
+        <div class="v">18</div>
+        <div class="d">Live, exploitable or in prod</div>
+      </div>
+    </div>
+
+    <!-- controls -->
+    <div class="ctl">
+      <div class="views">
+        <button class="on">Needs action <span class="n">18</span></button>
+        <button>Reachable <span class="n">26</span></button>
+        <button>All unique <span class="n">47</span></button>
+        <button>Suppressed <span class="n">1,195</span></button>
+      </div>
+      <button class="sort">Priority · high → low ▾</button>
+      <div class="search">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="7"/><path d="M21 21l-4-4"/></svg>
+        <input placeholder="Filter by file, rule, CVE…">
+      </div>
+    </div>
+
+    <!-- queue -->
+    <div class="queue">
+      <div class="qhead">
+        <div>Priority</div>
+        <div>Finding</div>
+        <div class="h-sig">Signal</div>
+        <div>Lifecycle</div>
+        <div></div>
+      </div>
+
+      <!-- row 1 -->
+      <div class="row open" data-f="1" tabindex="0">
+        <div class="pri"><div class="pscore p-crit">94</div><div class="plab">Critical</div></div>
+        <div class="fnd">
+          <b>AWS secret access key — live &amp; usable</b>
+          <div class="loc"><span class="file">services/worker/.env.prod</span> : 14</div>
+          <div class="meta">
+            <span class="grp"><b>2</b> live · in group of 340</span>
+            <span class="scn gitleaks">Gitleaks</span>
+          </div>
+        </div>
+        <div class="sig sig-wrap">
+          <span class="chip live"><span class="dot"></span>Key still valid</span>
+          <span class="chip reach">Reachable</span>
+          <span class="chip pub">Public repo</span>
+        </div>
+        <div class="age"><span class="new">New</span><span class="sub">seen 2d ago</span></div>
+        <div class="racts">
+          <div class="hover-acts">
+            <button class="ha">Rotate</button>
+            <button class="ha ghost">Ignore</button>
+          </div>
+          <span class="chev">›</span>
+        </div>
+      </div>
+
+      <!-- row 2 -->
+      <div class="row" data-f="2" tabindex="0">
+        <div class="pri"><div class="pscore p-crit">88</div><div class="plab">Critical</div></div>
+        <div class="fnd">
+          <b>lodash prototype pollution — CVE-2023-26136</b>
+          <div class="loc"><span class="file">imported by utils/merge.ts</span></div>
+          <div class="meta">
+            <span class="grp">runtime dependency</span>
+            <span class="scn trivy">Trivy</span>
+          </div>
+        </div>
+        <div class="sig sig-wrap">
+          <span class="chip kev">🔥 In KEV catalog</span>
+          <span class="chip reach">Reachable</span>
+        </div>
+        <div class="age">14d<span class="sub">unchanged</span></div>
+        <div class="racts">
+          <div class="hover-acts">
+            <button class="ha">Fix PR</button>
+            <button class="ha ghost">Ignore</button>
+          </div>
+          <span class="chev">›</span>
+        </div>
+      </div>
+
+      <!-- row 3 -->
+      <div class="row" data-f="3" tabindex="0">
+        <div class="pri"><div class="pscore p-crit">84</div><div class="plab">Critical</div></div>
+        <div class="fnd">
+          <b>GitHub App private key committed to source</b>
+          <div class="loc"><span class="file">deploy/keys/app.pem</span> : 1</div>
+          <div class="meta">
+            <span class="grp">grants org-wide access</span>
+            <span class="scn gitleaks">Gitleaks</span>
+          </div>
+        </div>
+        <div class="sig sig-wrap">
+          <span class="chip live"><span class="dot"></span>Key still valid</span>
+          <span class="chip reach">Reachable</span>
+        </div>
+        <div class="age"><span class="new">New</span><span class="sub">seen 3d ago</span></div>
+        <div class="racts">
+          <div class="hover-acts">
+            <button class="ha">Rotate</button>
+            <button class="ha ghost">Ignore</button>
+          </div>
+          <span class="chev">›</span>
+        </div>
+      </div>
+
+      <!-- row 4 -->
+      <div class="row" data-f="4" tabindex="0">
+        <div class="pri"><div class="pscore p-high">81</div><div class="plab">High</div></div>
+        <div class="fnd">
+          <b>SQL injection in report export</b>
+          <div class="loc"><span class="file">api/reports/export.py</span> : 88</div>
+          <div class="meta">
+            <span class="grp">user input reaches query</span>
+            <span class="scn opengrep">Opengrep</span>
+          </div>
+        </div>
+        <div class="sig sig-wrap">
+          <span class="chip tainted">Tainted input</span>
+          <span class="chip reach">Reachable</span>
+        </div>
+        <div class="age"><span class="new">New</span><span class="sub">seen 6h ago</span></div>
+        <div class="racts">
+          <div class="hover-acts">
+            <button class="ha">Fix PR</button>
+            <button class="ha ghost">Ignore</button>
+          </div>
+          <span class="chev">›</span>
+        </div>
+      </div>
+
+      <!-- row 5 -->
+      <div class="row" data-f="5" tabindex="0">
+        <div class="pri"><div class="pscore p-high">72</div><div class="plab">High</div></div>
+        <div class="fnd">
+          <b>JWT signing secret hardcoded in source</b>
+          <div class="loc"><span class="file">config/auth.ts</span> : 22</div>
+          <div class="meta">
+            <span class="grp">signs all session tokens</span>
+            <span class="scn gitleaks">Gitleaks</span>
+          </div>
+        </div>
+        <div class="sig sig-wrap">
+          <span class="chip reach">Reachable</span>
+          <span class="chip pub">Public repo</span>
+        </div>
+        <div class="age">6d<span class="sub">unchanged</span></div>
+        <div class="racts">
+          <div class="hover-acts">
+            <button class="ha">Rotate</button>
+            <button class="ha ghost">Ignore</button>
+          </div>
+          <span class="chev">›</span>
+        </div>
+      </div>
+
+      <!-- SUPPRESSED band -->
+      <div class="suppressed">
+        <div class="sup-head" onclick="this.classList.toggle('exp')">
+          <span class="caret">›</span>
+          <b>1,195 suppressed</b>
+          <span>· deduped, unreachable, test-only or already rotated</span>
+          <span class="why">Nothing here needs action — expand to audit</span>
+        </div>
+        <div class="sup-body">
+          <div class="sup-row" data-f="6" tabindex="0">
+            <div class="pri"><div class="pscore p-low">14</div><div class="plab">Low</div></div>
+            <div class="fnd">
+              <b>Generic API key pattern</b>
+              <div class="loc"><span class="file">tests/fixtures/mock_creds.json</span></div>
+              <div class="meta"><span class="grp"><b>188</b> occurrences</span><span class="scn gitleaks">Gitleaks</span></div>
+            </div>
+            <div class="sig sig-wrap"><span class="chip unreach">Test fixture</span><span class="chip unreach">Unreachable</span></div>
+            <div class="age">—<span class="sub">suppressed</span></div>
+            <div class="racts"><span class="chev">›</span></div>
+          </div>
+          <div class="sup-row" data-f="7" tabindex="0">
+            <div class="pri"><div class="pscore p-low">22</div><div class="plab">Low</div></div>
+            <div class="fnd">
+              <b>libexpat heap overflow — CVE-2024-45491</b>
+              <div class="loc"><span class="file">transitive · not loaded at runtime</span></div>
+              <div class="meta"><span class="grp">dev dependency</span><span class="scn trivy">Trivy</span></div>
+            </div>
+            <div class="sig sig-wrap"><span class="chip unreach">Not reachable</span></div>
+            <div class="age">—<span class="sub">suppressed</span></div>
+            <div class="racts"><span class="chev">›</span></div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ── DRAWER (evidence-first detail) ── -->
+<div class="scrim" onclick="closeDrawer()"></div>
+<aside class="drawer" role="dialog" aria-labelledby="dt" aria-modal="true">
+  <div class="dhd">
+    <div class="tags">
+      <span class="dtag crit">P94 · CRITICAL</span>
+      <span class="dtag scn">GITLEAKS</span>
+      <button class="close" onclick="closeDrawer()" aria-label="Close">×</button>
+    </div>
+    <h2 id="dt">AWS secret access key — live &amp; usable</h2>
+    <div class="id">finding 5fe848ca · rule aws-access-token · fingerprint a41f…9b2</div>
+  </div>
+
+  <div class="dbody">
+
+    <!-- VERDICT: reconciles CVSS vs EPSS into one score -->
+    <div class="verdict">
+      <div class="row1">
+        <div class="big">94</div>
+        <div>
+          <div class="lbl">CyberSigma priority</div>
+          <h3>Fix now — a working credential is exposed</h3>
+        </div>
+      </div>
+      <p class="expl">CVSS rates this <b>9.8</b>, but EPSS wild-exploit probability is near zero — because
+        EPSS scores CVEs, and a leaked key isn't a CVE. What actually matters: the key <b>authenticated
+        successfully 3 minutes ago</b>, it sits on a <b>reachable</b> path, and the repo is <b>public</b>.
+        That combination is why this outranks the other 9.8s in your queue.</p>
+      <div class="factors">
+        <span class="factor">Validity <span class="v up">Live</span></span>
+        <span class="factor">Reachability <span class="v up">On path</span></span>
+        <span class="factor">Exposure <span class="v up">Public</span></span>
+        <span class="factor">EPSS <span class="v down">n/a</span></span>
+        <span class="factor">Blast radius <span class="v up">Prod</span></span>
+      </div>
+    </div>
+
+    <!-- EVIDENCE FIRST -->
+    <div class="sec-h">◆ Evidence</div>
+    <div class="evidence">
+      <div class="ev-file">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="var(--cyan)" stroke-width="2"><path d="M13 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V9z"/><path d="M13 2v7h7"/></svg>
+        <span class="path">services/worker/.env.prod</span>
+        <span class="ln">line 14 · commit 3af91c2</span>
+      </div>
+      <div class="ev-code">  12  DATABASE_URL=postgres://localhost/libradigit
+  13  REDIS_URL=redis://localhost:6379
+<span class="hl">  14  AWS_SECRET_ACCESS_KEY=<span class="redact">wJalrXUt████████████████████bPxRfiCY</span></span>
+  15  AWS_REGION=ap-south-1</div>
+      <div class="validity">
+        <span class="dot"></span>
+        <b>Key still valid</b>
+        <span>· verified against sts:GetCallerIdentity 3 min ago · account 4021·8834·5590</span>
+      </div>
+    </div>
+
+    <!-- DO THIS NEXT — correct primary action for a secret -->
+    <div class="sec-h">◆ Do this next</div>
+    <div class="next">
+      <div class="h">✦ Rotate before you delete</div>
+      <ol>
+        <li>Revoke the exposed key in IAM: <code>aws iam delete-access-key --access-key-id AKIA…F7Q</code> — deleting the file alone leaves the key live.</li>
+        <li>Issue a replacement and store it in your secrets manager, not <code>.env.prod</code>.</li>
+        <li>Purge from history (<code>git filter-repo</code>) — the key stays in every clone until you do.</li>
+        <li>Re-scan to confirm the finding moves to <b>Fixed</b>.</li>
+      </ol>
+    </div>
+
+    <!-- tabs -->
+    <div class="tabs">
+      <button class="on">Summary</button>
+      <button>Reachability path</button>
+      <button>Remediation</button>
+      <button>Raw</button>
+    </div>
+    <p style="font-size:13px;color:var(--tx-2);margin-top:14px;line-height:1.6">
+      A production AWS secret key was committed to <span class="mono" style="font-size:12px;color:var(--cyan)">services/worker/.env.prod</span>
+      and pushed to a public repository. The credential is still active and grants access to the
+      <span class="mono" style="font-size:12px">libradigit-prod</span> account. Anyone reading the repo can assume this
+      identity — treat it as compromised and rotate immediately.
+    </p>
+  </div>
+
+  <div class="dft">
+    <button class="dbtn primary">
+      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><path d="M23 4v6h-6"/><path d="M20.5 15a9 9 0 11-2.1-9.4L23 10"/></svg>
+      Rotate key
+    </button>
+    <button class="dbtn ghost">Create ticket</button>
+    <div class="spacer"></div>
+    <button class="dbtn ghost">Ignore</button>
+  </div>
+</aside>
+
+<script>
+  const scrim = document.querySelector('.scrim');
+  const drawer = document.querySelector('.drawer');
+  function openDrawer(el){
+    document.querySelectorAll('.row,.sup-row').forEach(r=>r.classList.remove('open'));
+    el.classList.add('open');
+    scrim.classList.add('show'); drawer.classList.add('show');
+  }
+  function closeDrawer(){
+    scrim.classList.remove('show'); drawer.classList.remove('show');
+    document.querySelectorAll('.row,.sup-row').forEach(r=>r.classList.remove('open'));
+  }
+  document.querySelectorAll('.row,.sup-row').forEach(r=>{
+    r.addEventListener('click',e=>{ if(e.target.closest('.ha')) return; openDrawer(r); });
+    r.addEventListener('keydown',e=>{ if(e.key==='Enter') openDrawer(r); });
+  });
+  document.addEventListener('keydown',e=>{ if(e.key==='Escape') closeDrawer(); });
+  // drawer tab switch (visual)
+  document.querySelectorAll('.tabs button').forEach(b=>b.addEventListener('click',()=>{
+    document.querySelectorAll('.tabs button').forEach(x=>x.classList.remove('on')); b.classList.add('on');
+  }));
+  // view + sort chips
+  document.querySelectorAll('.views button').forEach(b=>b.addEventListener('click',()=>{
+    document.querySelectorAll('.views button').forEach(x=>x.classList.remove('on')); b.classList.add('on');
+  }));
+</script>
+</html>

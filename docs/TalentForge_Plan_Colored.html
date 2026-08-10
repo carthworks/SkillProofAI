@@ -1,0 +1,536 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>TalentForge POC — Day-by-Day Plan (Jul 13 → Aug 14, 2026)</title>
+<style>
+  :root{
+    --navy:#1f3a63; --navy-dark:#16294a; --week-blue:#1a6fb5;
+    --day-bg:#eaf1f9; --row-alt:#f7fafd; --border:#c9d6e6;
+    --ink:#20262e; --muted:#5a6673;
+    --rohan:#0e5a8a; --karthik:#0f7a5c; --done:#7a4c9e;
+    --chip-red:#c0392b; --chip-green:#1e8e5a; --chip-amber:#b26a00;
+  }
+  *{box-sizing:border-box}
+  body{font-family:"Segoe UI",Calibri,Arial,sans-serif;color:var(--ink);margin:0;padding:28px 34px;background:#fff;font-size:13px;line-height:1.42}
+  h1{color:var(--navy);font-size:22px;margin:0 0 2px}
+  .sub{color:var(--muted);margin:0 0 22px;font-size:13px}
+  .legend{margin:0 0 20px;display:flex;gap:14px;flex-wrap:wrap;font-size:12px}
+  .legend span{display:inline-flex;align-items:center;gap:6px}
+  .dot{width:10px;height:10px;border-radius:2px;display:inline-block}
+  h2.week{color:var(--week-blue);font-size:16.5px;margin:30px 0 8px;font-weight:700}
+  h2.week .tag{font-size:11px;font-weight:700;color:#fff;background:var(--chip-amber);border-radius:3px;padding:2px 7px;vertical-align:2px;margin-left:8px;letter-spacing:.3px}
+  table{width:100%;border-collapse:collapse;table-layout:fixed;margin-bottom:6px}
+  th,td{border:1px solid var(--border);vertical-align:top;padding:9px 11px;word-wrap:break-word}
+  thead th{background:var(--navy);color:#fff;font-size:13px;text-align:left;font-weight:700;border-color:var(--navy-dark)}
+  col.c-day{width:8%} col.c-rohan{width:34%} col.c-karthik{width:34%} col.c-done{width:24%}
+  td.day{background:var(--day-bg);color:var(--navy);font-weight:700;font-size:13px}
+  td.day .date{display:block;font-weight:600;color:var(--muted);font-size:11px;margin-top:3px}
+  tbody tr:nth-child(even) td:not(.day){background:var(--row-alt)}
+  ul{margin:0;padding-left:15px}
+  li{margin:0 0 5px}
+  li:last-child{margin-bottom:0}
+  code{font-family:Consolas,Menlo,monospace;font-size:11.5px;background:#eef2f7;border:1px solid #dbe4ee;border-radius:3px;padding:0 3px;color:#153a5e}
+  td.done{color:#3c2a55}
+  td.done ul{padding-left:14px}
+  td.done li::marker{color:var(--done)}
+  .chip{display:inline-block;font-size:10.5px;font-weight:700;color:#fff;border-radius:3px;padding:1px 6px;letter-spacing:.3px}
+  .chip.red{background:var(--chip-red)} .chip.green{background:var(--chip-green)} .chip.amber{background:var(--chip-amber)} .chip.purple{background:var(--done)}
+  .joint{background:#fff6d9 !important}
+  .footer-note{margin-top:26px;padding:12px 14px;border-left:4px solid var(--navy);background:var(--day-bg);color:var(--navy);font-size:12.5px}
+  @media print{
+    body{padding:12px}
+    h2.week{page-break-after:avoid}
+    table{page-break-inside:auto}
+    tr{page-break-inside:avoid}
+  }
+</style>
+</head>
+<body>
+
+<h1>TalentForge POC — Day-by-Day Execution Plan</h1>
+<p class="sub"><strong>Team:</strong> Rohan (Backend · Sandbox · Infra) &nbsp;·&nbsp; Karthikeyan (Frontend · Tools · Deploy) &nbsp;&nbsp;|&nbsp;&nbsp; <strong>Start:</strong> Mon Jul 13, 2026 &nbsp;→&nbsp; <strong>Launch:</strong> Fri Aug 14, 2026</p>
+<div class="legend">
+  <span><span class="dot" style="background:var(--navy)"></span>Header</span>
+  <span><span class="dot" style="background:var(--day-bg);border:1px solid var(--border)"></span>Day cell</span>
+  <span><span class="dot" style="background:#fff6d9;border:1px solid var(--border)"></span>Joint session</span>
+  <span><span class="chip red">P0</span> critical path</span>
+  <span><span class="chip amber">STRETCH</span> skippable</span>
+</div>
+
+<!-- ================= WEEK 1 ================= -->
+<h2 class="week">WEEK 1 — Foundation, Auth &amp; API Contract (Jul 13–17)</h2>
+<table>
+<colgroup><col class="c-day"><col class="c-rohan"><col class="c-karthik"><col class="c-done"></colgroup>
+<thead><tr><th>Day</th><th>Rohan — Backend / Sandbox / Infra</th><th>Karthikeyan — Frontend / Tools</th><th>Done When</th></tr></thead>
+<tbody>
+<tr>
+  <td class="day">Day 1<span class="date">Mon Jul 13</span></td>
+  <td><ul>
+    <li>Init monorepo: <code>npm init -w backend -w frontend -w worker</code></li>
+    <li>Scaffold <code>backend/</code>: Express + TypeScript (<code>tsx</code>), folders <code>src/routes</code>, <code>src/services</code>, <code>src/middleware</code></li>
+    <li><code>docker-compose.yml</code>: postgres:16-alpine, redis:7-alpine, minio (S3-compatible)</li>
+    <li><code>schema.prisma</code>: User, Problem, Submission, Badge, PsychProfile, Review → <code>prisma migrate dev</code></li>
+  </ul></td>
+  <td><ul>
+    <li>Scaffold <code>frontend/</code>: Vite + React 18 + TS</li>
+    <li>Install tailwindcss, @tanstack/react-query, react-router-dom, socket.io-client</li>
+    <li>Design tokens in <code>tailwind.config.js</code> (brand palette, Inter font)</li>
+    <li>Build <code>AppShell.tsx</code> (sidebar + topbar) + Login/Register UI (react-hook-form + zod)</li>
+  </ul></td>
+  <td class="done"><ul>
+    <li><code>docker compose up</code> boots PG + Redis + MinIO</li>
+    <li>Tables visible in <code>psql \dt</code></li>
+    <li>Shell + auth pages render</li>
+  </ul></td>
+</tr>
+<tr>
+  <td class="day">Day 2<span class="date">Tue Jul 14</span></td>
+  <td><ul>
+    <li><code>routes/auth.ts</code>: register (bcrypt ×12), login → JWT 15m + refresh in Redis <code>SET refresh:{id} EX 604800</code></li>
+    <li><code>GET /auth/me</code> + <code>requireAuth</code> middleware</li>
+    <li>Google OAuth via passport-google-oauth20</li>
+    <li>zod <code>validate(schema)</code> on all bodies</li>
+  </ul></td>
+  <td><ul>
+    <li>Axios instance with JWT interceptor + auto-refresh on 401</li>
+    <li>MSW mock server (<code>src/mocks/handlers.ts</code>) for all planned endpoints</li>
+    <li>Wire auth forms → token storage</li>
+    <li><code>RequireAuth.tsx</code> protected-route wrapper</li>
+  </ul></td>
+  <td class="done"><ul>
+    <li>Register → login → <code>/auth/me</code> works end-to-end</li>
+    <li>Google OAuth round-trip OK</li>
+    <li>UI runs fully on mocks when backend is down</li>
+  </ul></td>
+</tr>
+<tr>
+  <td class="day joint">Day 3<span class="date">Wed Jul 15</span></td>
+  <td class="joint"><ul>
+    <li><strong>Joint 2h: freeze <code>openapi.yaml</code></strong> (~25 endpoints) + socket events: <code>grading:queued/running/complete/failed</code></li>
+    <li><code>services/s3.ts</code>: presigned PUT/GET (@aws-sdk/client-s3 → MinIO local, S3 prod)</li>
+    <li>Problem CRUD: <code>GET /problems?tier=</code>, <code>GET /problems/:slug</code> (hidden test cases stripped via Prisma select)</li>
+  </ul></td>
+  <td class="joint"><ul>
+    <li><strong>Joint 2h: contract freeze</strong> — regenerate MSW mocks from spec</li>
+    <li>Integrate <code>@monaco-editor/react</code> → <code>CodeEditor.tsx</code></li>
+    <li>Language selector (py / js / java) loads boilerplate per problem</li>
+    <li>Theme toggle, font-size, <code>Ctrl+Enter</code> = run</li>
+  </ul></td>
+  <td class="done"><ul>
+    <li><code>openapi.yaml</code> committed — both build against it</li>
+    <li>Monaco highlights all 3 languages</li>
+    <li>Boilerplate loads per problem</li>
+  </ul></td>
+</tr>
+<tr>
+  <td class="day">Day 4<span class="date">Thu Jul 16</span></td>
+  <td><ul>
+    <li><code>prisma/seed.ts</code>: 3 problems (Two Sum, LRU Cache, Rate Limiter) with 8–10 hidden test cases each</li>
+    <li>BullMQ queue <code>grading</code>; <code>POST /submissions</code> → S3 upload → enqueue → <code>202 {submissionId}</code></li>
+    <li>Worker skeleton (<code>concurrency: 4</code>) emitting socket events via Redis adapter</li>
+  </ul></td>
+  <td><ul>
+    <li>Problem Board: card grid, tier chips, difficulty filter</li>
+    <li>Problem Detail: react-markdown statement, constraints, examples</li>
+    <li>Resizable split layout (statement | Monaco) via react-resizable-panels</li>
+  </ul></td>
+  <td class="done"><ul>
+    <li>Seeded problems visible from real API</li>
+    <li>Submit → job picked up → dummy <code>grading:complete</code> received in browser</li>
+  </ul></td>
+</tr>
+<tr>
+  <td class="day">Day 5<span class="date">Fri Jul 17</span></td>
+  <td><ul>
+    <li>GitHub Actions <code>ci.yml</code>: eslint + typecheck + prisma validate + build</li>
+    <li>Provision EC2 t3.medium; <code>docker-compose.prod.yml</code></li>
+    <li>Caddyfile: auto-HTTPS <code>staging.talentforge.in</code>, proxy <code>/api</code> + <code>/socket.io</code></li>
+  </ul></td>
+  <td><ul>
+    <li>Wire auth flow against staging</li>
+    <li>Toasts (sonner), error boundary, 404 page</li>
+    <li>Loading skeletons; CI deploys frontend build to staging</li>
+  </ul></td>
+  <td class="done"><ul>
+    <li><span class="chip green">WEEK 1 EXIT</span> register → login → browse → editor, all green on staging</li>
+    <li>CI green on <code>main</code>; one-command deploy</li>
+  </ul></td>
+</tr>
+</tbody>
+</table>
+
+<!-- ================= WEEK 2 ================= -->
+<h2 class="week">WEEK 2 — Sandbox Execution &amp; Auto-Grading (Jul 20–24) <span class="tag">CRITICAL PATH</span></h2>
+<table>
+<colgroup><col class="c-day"><col class="c-rohan"><col class="c-karthik"><col class="c-done"></colgroup>
+<thead><tr><th>Day</th><th>Rohan — Backend / Sandbox / Infra</th><th>Karthikeyan — Frontend / Tools</th><th>Done When</th></tr></thead>
+<tbody>
+<tr>
+  <td class="day">Day 6<span class="date">Mon Jul 20</span></td>
+  <td><ul>
+    <li>Runner images: <code>Dockerfile.python</code> (3.11-slim + pylint), <code>Dockerfile.node</code> (18-alpine + eslint), <code>Dockerfile.java</code> (temurin:17 + checkstyle)</li>
+    <li>Non-root user <code>runner</code>, entrypoint <code>run.sh</code></li>
+    <li>dockerode HostConfig: <code>NetworkMode:'none'</code>, <code>Memory:256MB</code>, <code>ReadonlyRootfs:true</code>, tmpfs <code>/tmp 50m</code>, <code>PidsLimit:64</code></li>
+    <li>30s hard kill timer → status TIMEOUT</li>
+  </ul></td>
+  <td><ul>
+    <li>Submit UX: button → “Queued…” spinner → live status chips (Queued → Running → Graded)</li>
+    <li><code>useGradingSocket(id)</code> hook: room <code>submission:{id}</code>, updates TanStack cache</li>
+    <li><code>ResultsPanel.tsx</code> collapsible shell under editor</li>
+  </ul></td>
+  <td class="done"><ul>
+    <li>Hello-world runs in all 3 languages</li>
+    <li><code>curl</code> inside container fails (network off)</li>
+    <li>Infinite loop killed at 30s → TIMEOUT</li>
+  </ul></td>
+</tr>
+<tr>
+  <td class="day">Day 7<span class="date">Tue Jul 21</span></td>
+  <td><ul>
+    <li><code>grader/correctness.ts</code>: pipe stdin per case, capture stdout/stderr/exit, weighted pass % → 0–100</li>
+    <li>Per-case results persisted to <code>Submission.scores.cases[]</code></li>
+    <li>Java: <code>javac</code> compile step; errors → COMPILE_ERROR + stderr</li>
+  </ul></td>
+  <td><ul>
+    <li>Test-case table: pass/fail icons, expected-vs-actual diff (react-diff-viewer), time + memory per case</li>
+    <li>Animated SVG score ring (0→score)</li>
+    <li>State UIs: COMPILE_ERROR (mono stderr block), TIMEOUT, OOM</li>
+  </ul></td>
+  <td class="done"><ul>
+    <li>Correct Two Sum = 100 in all 3 langs</li>
+    <li>Wrong solution shows exact failing cases + diff</li>
+    <li>Compile errors readable</li>
+  </ul></td>
+</tr>
+<tr>
+  <td class="day">Day 8<span class="date">Wed Jul 22</span></td>
+  <td><ul>
+    <li><code>grader/complexity.ts</code>: run at n / 2n / 4n → fit ratio → classify O(n)/O(n log n)/O(n²) vs <code>expectedComplexity</code></li>
+    <li><code>grader/style.ts</code>: pylint / eslint / checkstyle in-container → 0–100</li>
+    <li>Composite <code>0.6·correctness + 0.3·complexity + 0.1·style</code>; emit in <code>grading:complete</code></li>
+  </ul></td>
+  <td><ul>
+    <li>Feedback panel: 3 score bars + composite</li>
+    <li>LLM feedback formatter: <code>POST /feedback/format</code> (Claude API proxy) → 3 coaching bullets, typing effect</li>
+    <li>Feature flag <code>VITE_FF_LLM_FEEDBACK</code></li>
+  </ul></td>
+  <td class="done"><ul>
+    <li>O(n²) scores lower than O(n) on complexity</li>
+    <li>Style violations reduce score</li>
+    <li>LLM bullets in &lt;3s or flag off cleanly</li>
+  </ul></td>
+</tr>
+<tr>
+  <td class="day">Day 9<span class="date">Thu Jul 23</span></td>
+  <td><ul>
+    <li><code>grader/precheck.ts</code> blocklist: py <code>subprocess|os.system|eval(</code>, js <code>child_process|fs</code>, java <code>Runtime.getRuntime|ProcessBuilder</code> → status BLOCKED pre-run</li>
+    <li>Graceful failures: queue never stalls; tuned <code>stalledInterval</code></li>
+    <li>Retry: infra errors ×2; user errors never</li>
+  </ul></td>
+  <td><ul>
+    <li>Submission History page: attempts table (date, lang, score, status) → past-result detail</li>
+    <li>Score trend sparkline (Recharts LineChart)</li>
+    <li>Resubmit cooldown chip via server <code>nextAllowedAt</code></li>
+  </ul></td>
+  <td class="done"><ul>
+    <li>Fork bomb / fs read / net call rejected pre-execution</li>
+    <li>Worker kill mid-job → recovers, no zombie containers</li>
+    <li>History paginates correctly</li>
+  </ul></td>
+</tr>
+<tr>
+  <td class="day joint">Day 10<span class="date">Fri Jul 24</span></td>
+  <td class="joint"><ul>
+    <li><strong>Joint E2E:</strong> 10 canned solutions × 3 languages (correct / wrong / slow / malicious / infinite) — fix all</li>
+    <li>artillery load test: 20 concurrent submissions → p95 &lt; 5s; tune concurrency, pre-pull images</li>
+    <li>Sentry (@sentry/node) in backend + worker</li>
+  </ul></td>
+  <td class="joint"><ul>
+    <li><strong>Joint E2E</strong> from browser; fix top 10 UX papercuts</li>
+    <li>Sentry React + session replay</li>
+    <li>Socket disconnect → auto-reconnect + 5s poll fallback</li>
+  </ul></td>
+  <td class="done"><ul>
+    <li><span class="chip green">WEEK 2 EXIT</span> submit → live score &lt;5s p95, 3 langs, on staging</li>
+    <li>20 concurrent, 0 failures</li>
+    <li>Sentry captures test errors from both apps</li>
+  </ul></td>
+</tr>
+</tbody>
+</table>
+
+<!-- ================= WEEK 3 ================= -->
+<h2 class="week">WEEK 3 — Badges, Psychometric, Reviewer &amp; Employer Portal (Jul 27–31)</h2>
+<table>
+<colgroup><col class="c-day"><col class="c-rohan"><col class="c-karthik"><col class="c-done"></colgroup>
+<thead><tr><th>Day</th><th>Rohan — Backend / Sandbox / Infra</th><th>Karthikeyan — Frontend / Tools</th><th>Done When</th></tr></thead>
+<tbody>
+<tr>
+  <td class="day">Day 11<span class="date">Mon Jul 27</span></td>
+  <td><ul>
+    <li><code>services/badge.ts</code>: score ≥75 → auto-create Badge (uuid <code>verifyId</code>, status AI_VERIFIED)</li>
+    <li>Public <code>GET /verify/:verifyId</code> (no auth)</li>
+    <li>Certificate: pdf-lib A4 + QR (qrcode) → S3 presigned download</li>
+  </ul></td>
+  <td><ul>
+    <li>Badge celebration modal (canvas-confetti) on score ≥75</li>
+    <li>Profile badge gallery: cards with status chip (AI / Expert verified)</li>
+    <li>Public <code>/verify/:id</code> page with OG tags + Download Certificate</li>
+  </ul></td>
+  <td class="done"><ul>
+    <li>Score 80 → badge in gallery</li>
+    <li>Verify URL opens in incognito</li>
+    <li>PDF certificate QR resolves</li>
+  </ul></td>
+</tr>
+<tr>
+  <td class="day">Day 12<span class="date">Tue Jul 28</span></td>
+  <td><ul>
+    <li>Seed 40-item bank (30 Big-Five-lite Likert + 10 timed logic MCQ)</li>
+    <li><code>POST /psychometric/start</code> / <code>/submit</code> → traits: Logical 25 · Detail 20 · Learning 20 · Persistence 20 · Communication 15</li>
+    <li>Gate problems list until profile exists</li>
+  </ul></td>
+  <td><ul>
+    <li>Assessment UI: 15-min countdown, Likert + timed MCQs, progress bar</li>
+    <li>Autosave answers to sessionStorage</li>
+    <li>Results: Recharts RadarChart of 5 traits + interpretation copy</li>
+  </ul></td>
+  <td class="done"><ul>
+    <li>New user routed to assessment first</li>
+    <li>Radar renders after submit</li>
+    <li>Refresh mid-test restores answers</li>
+  </ul></td>
+</tr>
+<tr>
+  <td class="day">Day 13<span class="date">Wed Jul 29</span></td>
+  <td><ul>
+    <li>RBAC <code>requireRole('REVIEWER')</code>; seed reviewer account</li>
+    <li><code>GET /reviews/queue</code> (oldest AI_VERIFIED first); <code>POST /reviews/:id</code> {stars, comment, APPROVE/REJECT}</li>
+    <li>APPROVE → EXPERT_VERIFIED; REJECT → revoke + notify (notification table)</li>
+  </ul></td>
+  <td><ul>
+    <li>Reviewer portal: queue list, read-only Monaco code viewer, star rating, comment, Approve/Reject</li>
+    <li>Student: notification bell (unread count), badge chip flips to Expert-verified, expert comment on result page</li>
+  </ul></td>
+  <td class="done"><ul>
+    <li>Approve flips badge live</li>
+    <li>Reject shows reason to student</li>
+    <li>Queue oldest-first, empties correctly</li>
+  </ul></td>
+</tr>
+<tr>
+  <td class="day">Day 14<span class="date">Thu Jul 30</span></td>
+  <td><ul>
+    <li><code>GET /candidates?minScore=&amp;badge=&amp;language=</code> with PG indexes on Badge.status, Submission.totalScore</li>
+    <li>Shortlist endpoints; code-sample access only if <code>profilePublic=true</code></li>
+    <li>express-rate-limit + Redis: 100 req / 15 min on public routes</li>
+  </ul></td>
+  <td><ul>
+    <li>Employer registration flow + Discover page: TanStack Table (sortable score, badge toggle, min-score slider, language filter)</li>
+    <li>Candidate drawer: scores, badges, psych radar, best code sample, Shortlist button</li>
+    <li>Shortlist page with remove</li>
+  </ul></td>
+  <td class="done"><ul>
+    <li>Filter “score &gt; 80 + expert-verified” returns correct list</li>
+    <li>Shortlist persists</li>
+    <li>Abuse test hits 429</li>
+  </ul></td>
+</tr>
+<tr>
+  <td class="day">Day 15<span class="date">Fri Jul 31</span></td>
+  <td><ul>
+    <li>Seed to 8 problems incl. flagship <strong>“Build a Load Balancer”</strong> (10 hidden cases: round-robin, weighted, health-check)</li>
+    <li>Nightly cron: <code>pg_dump | gzip | aws s3 cp</code> (14-day retention)</li>
+    <li>Split envs: staging + <code>app.talentforge.in</code> prod</li>
+  </ul></td>
+  <td><ul>
+    <li>LinkedIn share: OG image per badge + prefilled post</li>
+    <li>Landing page v1: hero, 3-step how-it-works, badge showcase, employer CTA</li>
+    <li>Onboarding tour (driver.js, 4 steps)</li>
+  </ul></td>
+  <td class="done"><ul>
+    <li><span class="chip green">WEEK 3 EXIT</span> full loop: register → psych → solve → badge → verify → employer shortlist</li>
+    <li>8 problems live; prod boots clean</li>
+  </ul></td>
+</tr>
+</tbody>
+</table>
+
+<!-- ================= WEEK 4 ================= -->
+<h2 class="week">WEEK 4 — Hardening, Beta &amp; Blockchain Stretch (Aug 3–7)</h2>
+<table>
+<colgroup><col class="c-day"><col class="c-rohan"><col class="c-karthik"><col class="c-done"></colgroup>
+<thead><tr><th>Day</th><th>Rohan — Backend / Sandbox / Infra</th><th>Karthikeyan — Frontend / Tools</th><th>Done When</th></tr></thead>
+<tbody>
+<tr>
+  <td class="day">Day 16<span class="date">Mon Aug 3</span></td>
+  <td><ul>
+    <li>helmet, strict CORS allowlist, zod audit on 100% endpoints</li>
+    <li>JWT rotation check; cookies <code>httpOnly · secure · sameSite=strict</code></li>
+    <li><code>npm audit fix</code>; manual SQLi/XSS probes on search + comments</li>
+  </ul></td>
+  <td><ul>
+    <li>Mobile pass: tables → cards &lt;768px; editor read-only on mobile + “solve on desktop” banner</li>
+    <li>Sweep all routes: empty / error / loading states checklist</li>
+  </ul></td>
+  <td class="done"><ul>
+    <li>ZAP baseline scan: no highs</li>
+    <li>Usable at 375px width</li>
+    <li>No blank screens on error</li>
+  </ul></td>
+</tr>
+<tr>
+  <td class="day">Day 17<span class="date">Tue Aug 4</span></td>
+  <td><ul>
+    <li><span class="chip red">BETA LAUNCH</span> invite 15–25 students</li>
+    <li>Live monitor: Sentry, <code>docker stats</code>, PG slow-query log</li>
+    <li>Same-day backend hotfixes + missing indexes</li>
+  </ul></td>
+  <td><ul>
+    <li>Feedback channel (WhatsApp/Discord) + in-app feedback modal → <code>POST /feedback</code></li>
+    <li>Same-day UI hotfixes; every report → GitHub issue (<code>beta</code> label)</li>
+  </ul></td>
+  <td class="done"><ul>
+    <li>≥15 registered, ≥10 graded submissions</li>
+    <li>0 open P1s end of day</li>
+  </ul></td>
+</tr>
+<tr>
+  <td class="day joint">Day 18<span class="date">Wed Aug 5</span></td>
+  <td class="joint"><ul>
+    <li>k6: 100 VUs (browse + submit mix) → fix bottlenecks</li>
+    <li>Compose <code>restart:always</code>, Redis AOF, disk-usage alert</li>
+    <li>Fix top-5 backend beta issues</li>
+  </ul></td>
+  <td class="joint"><ul>
+    <li><strong>Joint 1h feedback triage</strong> → ranked fixes; close top-5 UX issues</li>
+    <li>Lighthouse: perf &gt; 90, LCP &lt; 1.5s (React.lazy code-split, font preload)</li>
+  </ul></td>
+  <td class="done"><ul>
+    <li>k6 100 VUs: error &lt;1%, API p95 &lt;200ms</li>
+    <li>Lighthouse ≥90 on Landing + Problems</li>
+    <li>Beta top-10 list closed</li>
+  </ul></td>
+</tr>
+<tr>
+  <td class="day">Day 19<span class="date">Thu Aug 6</span></td>
+  <td><ul>
+    <li><span class="chip amber">STRETCH</span> Hardhat + OpenZeppelin <code>TalentForgeBadge.sol</code> (ERC721URIStorage, onlyOwner mint)</li>
+    <li>Deploy: <code>npx hardhat run scripts/deploy.ts --network amoy</code></li>
+    <li><code>POST /badges/:id/mint</code> server-side signer (ethers.Wallet) → store txHash + tokenId</li>
+    <li><strong>If behind: SKIP — DB badges ship</strong></li>
+  </ul></td>
+  <td><ul>
+    <li><span class="chip amber">STRETCH</span> “Mint on-chain” button → pending → success with PolygonScan link <code>amoy.polygonscan.com/tx/{hash}</code></li>
+    <li>Hidden when <code>VITE_FF_CHAIN=false</code></li>
+  </ul></td>
+  <td class="done"><ul>
+    <li>Badge mints on Amoy &amp; scan link resolves — <em>or</em> flag off with zero side effects</li>
+  </ul></td>
+</tr>
+<tr>
+  <td class="day joint">Day 20<span class="date">Fri Aug 7</span></td>
+  <td class="joint"><ul>
+    <li><code>RUNBOOK.md</code>: queue stalled / DB down / sandbox breach / rollback</li>
+    <li>Backup <strong>restore drill</strong> on scratch DB</li>
+    <li><strong>Joint go/no-go review</strong></li>
+  </ul></td>
+  <td class="joint"><ul>
+    <li>Copy edit sweep + FAQ page</li>
+    <li>2-min demo video; employer one-pager PDF</li>
+    <li><strong>Joint go/no-go review</strong></li>
+  </ul></td>
+  <td class="done"><ul>
+    <li><span class="chip green">WEEK 4 EXIT</span> restore drill OK, runbook committed, go/no-go = GO, 0 P1/P2</li>
+  </ul></td>
+</tr>
+</tbody>
+</table>
+
+<!-- ================= LAUNCH WEEK ================= -->
+<h2 class="week">LAUNCH WEEK — Go Live (Aug 10–14) <span class="tag" style="background:var(--chip-green)">LAUNCH</span></h2>
+<table>
+<colgroup><col class="c-day"><col class="c-rohan"><col class="c-karthik"><col class="c-done"></colgroup>
+<thead><tr><th>Day</th><th>Rohan — Backend / Infra</th><th>Karthikeyan — Frontend / Comms</th><th>Done When</th></tr></thead>
+<tbody>
+<tr>
+  <td class="day">Day 21<span class="date">Mon Aug 10</span></td>
+  <td><ul>
+    <li><span class="chip red">CODE FREEZE</span> bugfix-only policy</li>
+    <li>Full prod regression: auth, submit ×3 langs, badge, verify, employer</li>
+    <li>DNS cutover + SSL check <code>app.talentforge.in</code></li>
+  </ul></td>
+  <td><ul>
+    <li>Prod regression on Chrome / Firefox / Safari + 2 phones</li>
+    <li>OG previews validated (LinkedIn Post Inspector)</li>
+  </ul></td>
+  <td class="done"><ul>
+    <li>Regression checklist 100% green on production</li>
+  </ul></td>
+</tr>
+<tr>
+  <td class="day">Day 22<span class="date">Tue Aug 11</span></td>
+  <td><ul>
+    <li><span class="chip amber">SOFT LAUNCH</span> ~50 invited students</li>
+    <li>Watch Sentry + BullMQ queue depth all day</li>
+  </ul></td>
+  <td><ul>
+    <li>Send invites; monitor first real sessions (session replay)</li>
+    <li>Same-day fixes for onboarding friction</li>
+  </ul></td>
+  <td class="done"><ul>
+    <li>≥30 real signups, ≥15 graded submissions, 0 P1s</li>
+  </ul></td>
+</tr>
+<tr>
+  <td class="day">Day 23<span class="date">Wed Aug 12</span></td>
+  <td><ul>
+    <li>Fix soft-launch findings</li>
+    <li>UptimeRobot monitors: <code>/health</code>, frontend, verify URL</li>
+  </ul></td>
+  <td><ul>
+    <li>Employer outreach: one-pager to 5–10 HR contacts; assist account creation</li>
+    <li>Collect 2–3 student quotes for launch post</li>
+  </ul></td>
+  <td class="done"><ul>
+    <li>≥3 employer accounts, ≥1 shortlist made</li>
+  </ul></td>
+</tr>
+<tr>
+  <td class="day">Day 24<span class="date">Thu Aug 13</span></td>
+  <td><ul>
+    <li>Final DB backup + snapshot; alert thresholds confirmed</li>
+    <li>On-call plan for launch day agreed</li>
+  </ul></td>
+  <td><ul>
+    <li>Launch assets final: LinkedIn founder post, college groups, Discord announcement, demo video pinned</li>
+  </ul></td>
+  <td class="done"><ul>
+    <li>Posts drafted &amp; scheduled; backups verified</li>
+  </ul></td>
+</tr>
+<tr>
+  <td class="day">Day 25<span class="date">Fri Aug 14 🚀</span></td>
+  <td><ul>
+    <li><span class="chip green">PUBLIC LAUNCH</span> on-call all day: grading success rate, uptime, queue</li>
+    <li>Evening: metrics snapshot for investor / customer deck</li>
+  </ul></td>
+  <td><ul>
+    <li>Publish posts 10:00 IST; respond in channels; hotfix UI</li>
+    <li>Evening: “first badges earned” follow-up post</li>
+  </ul></td>
+  <td class="done"><ul>
+    <li><strong>Targets:</strong> 100+ signups · 30+ submissions · 15+ badges · 3–5 employers · 1+ shortlist · 99%+ uptime · grading p95 &lt;5s</li>
+  </ul></td>
+</tr>
+</tbody>
+</table>
+
+<div class="footer-note">
+  <strong>Daily rhythm:</strong> 9:30 AM IST standup (15 min) · all work via PRs, cross-reviewed within 12h · Friday 4 PM demo + retro · staging auto-deploys on merge to <code>main</code>, prod deploys manual &amp; tagged. &nbsp;<strong>Rule of the month:</strong> ECE, tiers, matching engine, MOSS and payments are post-launch — say no until Aug 15.
+</div>
+
+</body>
+</html>

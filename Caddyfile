@@ -1,0 +1,28 @@
+staging.talentforge.in {
+    root * /usr/share/caddy
+    file_server
+    try_files {path} /index.html
+
+    handle /api/* {
+        reverse_proxy backend:5000
+    }
+    
+    handle /socket.io/* {
+        reverse_proxy backend:5000
+    }
+}
+
+# Uncomment for localhost testing
+# localhost {
+#     root * /usr/share/caddy
+#     file_server
+#     try_files {path} /index.html
+# 
+#     handle /api/* {
+#         reverse_proxy backend:5000
+#     }
+#     
+#     handle /socket.io/* {
+#         reverse_proxy backend:5000
+#     }
+# }
