@@ -14,7 +14,19 @@
  *  10. Emit grading:complete over Socket.IO so the frontend updates in real-time.
  */
 
-import 'dotenv/config';
+import dotenv from 'dotenv';
+import path from 'path';
+
+// Load environment variables with fallback paths
+dotenv.config();
+dotenv.config({ path: path.resolve(__dirname, '../.env') });
+dotenv.config({ path: path.resolve(__dirname, '../../.env') });
+
+// Safe dev fallback for DATABASE_URL if undefined
+if (!process.env.DATABASE_URL) {
+  process.env.DATABASE_URL = 'postgresql://talentforge:talentforge_dev_secret@localhost:5439/talentforge?schema=public';
+}
+
 import { Worker, Job, UnrecoverableError, Queue } from 'bullmq';
 import IORedis from 'ioredis';
 import { Emitter } from '@socket.io/redis-emitter';

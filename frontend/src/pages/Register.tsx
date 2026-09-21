@@ -9,7 +9,7 @@ export default function RegisterPage() {
       display: 'flex',
       flexDirection: 'column',
       alignItems: 'center',
-      justify: 'center',
+      justifyContent: 'center',
       padding: '24px 16px',
       fontFamily: 'Inter, sans-serif'
     }}>

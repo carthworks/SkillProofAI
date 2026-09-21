@@ -23,7 +23,7 @@ import {
 } from '../services/api';
 import { useTheme } from '../context/ThemeContext';
 import { useGradingSocket } from '../hooks/useGradingSocket';
-import ResultsPanel from '../components/ResultsPanel';
+import ExecutionModal from '../components/ExecutionModal';
 import BadgeCelebrationModal from '../components/BadgeCelebrationModal';
 
 const CODE_TEMPLATES: Record<string, string> = {
@@ -87,6 +87,7 @@ export default function ProblemDetail() {
   const [submissionId, setSubmissionId] = useState<string | null>(null);
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [showCelebrationModal, setShowCelebrationModal] = useState(false);
+  const [isModalOpen, setIsModalOpen] = useState(false);
   const [expertReview, setExpertReview] = useState<any>(null);
 
   const { status, result, logs, resetGradingState } = useGradingSocket(submissionId);
@@ -128,6 +129,7 @@ export default function ProblemDetail() {
     try {
       setIsSubmitting(true);
       setShowCelebrationModal(false);
+      setIsModalOpen(true);
       resetGradingState();
 
       // Submit solution directly to backend API
@@ -337,66 +339,61 @@ export default function ProblemDetail() {
             <GripVertical className="h-4 w-4 text-slate-600 group-hover:text-brand-400" />
           </PanelResizeHandle>
 
-          {/* Right Panel: Monaco Editor & Execution Terminal split vertically */}
-          <Panel defaultSize={55} minSize={30} className="flex flex-col bg-slate-950 overflow-hidden">
-            <PanelGroup direction="vertical">
-              {/* Top: Editor Area */}
-              <Panel defaultSize={55} minSize={20} className="flex flex-col relative bg-slate-950">
-                {/* Mobile Read-Only Banner */}
-                <div className="md:hidden absolute inset-x-0 top-0 z-10 bg-amber-500/10 backdrop-blur-md border-b border-amber-500/30 p-2 flex items-center justify-center gap-2">
-                  <AlertTriangle className="h-4 w-4 text-amber-500" />
-                  <span className="text-[10px] font-bold text-amber-500 uppercase tracking-wider">Mobile View: Read-Only Mode</span>
+          {/* Right Panel: Monaco Editor */}
+          <Panel defaultSize={55} minSize={30} className="flex flex-col bg-slate-950 overflow-hidden relative">
+            {/* Mobile Read-Only Banner */}
+            <div className="md:hidden absolute inset-x-0 top-0 z-10 bg-amber-500/10 backdrop-blur-md border-b border-amber-500/30 p-2 flex items-center justify-center gap-2">
+              <AlertTriangle className="h-4 w-4 text-amber-500" />
+              <span className="text-[10px] font-bold text-amber-500 uppercase tracking-wider">Mobile View: Read-Only Mode</span>
+            </div>
+            <Suspense
+              fallback={
+                <div className="flex h-full items-center justify-center bg-slate-950">
+                  <div className="flex flex-col items-center gap-2">
+                    <div className="h-6 w-6 animate-spin rounded-full border-2 border-brand-500 border-t-transparent" />
+                    <p className="text-xs text-slate-500">Loading editor...</p>
+                  </div>
                 </div>
-                <Suspense
-                  fallback={
-                    <div className="flex h-full items-center justify-center bg-slate-950">
-                      <div className="flex flex-col items-center gap-2">
-                        <div className="h-6 w-6 animate-spin rounded-full border-2 border-brand-500 border-t-transparent" />
-                        <p className="text-xs text-slate-500">Loading editor...</p>
-                      </div>
-                    </div>
-                  }
-                >
-                  <Editor
-                    height="100%"
-                    language={language === 'python' ? 'python' : language === 'javascript' ? 'javascript' : 'java'}
-                    value={code}
-                    onChange={(val) => setCode(val || '')}
-                    theme="vs-dark"
-                    options={{
-                      fontSize: 13,
-                      fontFamily: 'Fira Code, JetBrains Mono, monospace',
-                      minimap: { enabled: false },
-                      scrollBeyondLastLine: false,
-                      automaticLayout: true,
-                      padding: { top: 12, bottom: 12 },
-                      lineNumbersMinChars: 3,
-                    }}
-                  />
-                </Suspense>
-              </Panel>
-
-              {/* Draggable Vertical Split Handle */}
-              <PanelResizeHandle className="h-2 bg-slate-950 hover:bg-emerald-500/50 flex items-center justify-center transition group cursor-row-resize border-y border-slate-800">
-                <div className="w-10 h-1 bg-slate-700 rounded-full group-hover:bg-emerald-400" />
-              </PanelResizeHandle>
-
-              {/* Bottom: Prominent Execution Terminal & Score Proof */}
-              <Panel defaultSize={45} minSize={15} className="flex flex-col bg-slate-900 overflow-hidden">
-                {showCelebrationModal && (
-                  <BadgeCelebrationModal
-                    onClose={() => setShowCelebrationModal(false)}
-                    badgeTitle={`${problem.title} Verified Badge`}
-                    score={result?.total ?? (result as any)?.scores?.total ?? 98}
-                    badgeId={result?.badgeId || undefined}
-                  />
-                )}
-                <ResultsPanel status={status} result={result} logs={logs} expertReview={expertReview} />
-              </Panel>
-            </PanelGroup>
+              }
+            >
+              <Editor
+                height="100%"
+                language={language === 'python' ? 'python' : language === 'javascript' ? 'javascript' : 'java'}
+                value={code}
+                onChange={(val) => setCode(val || '')}
+                theme="vs-dark"
+                options={{
+                  fontSize: 13,
+                  fontFamily: 'Fira Code, JetBrains Mono, monospace',
+                  minimap: { enabled: false },
+                  scrollBeyondLastLine: false,
+                  automaticLayout: true,
+                  padding: { top: 12, bottom: 12 },
+                  lineNumbersMinChars: 3,
+                }}
+              />
+            </Suspense>
           </Panel>
         </PanelGroup>
       </div>
+
+      {/* Global Modals */}
+      {showCelebrationModal && (
+        <BadgeCelebrationModal
+          onClose={() => setShowCelebrationModal(false)}
+          badgeTitle={`${problem.title} Verified Badge`}
+          score={result?.total ?? (result as any)?.scores?.total ?? 98}
+          badgeId={result?.badgeId || undefined}
+        />
+      )}
+      <ExecutionModal
+        isOpen={isModalOpen}
+        onClose={() => setIsModalOpen(false)}
+        status={status}
+        result={result}
+        logs={logs}
+        expertReview={expertReview}
+      />
     </div>
   );
 }

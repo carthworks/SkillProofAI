@@ -142,6 +142,7 @@ export default function AppShell() {
     {
       section: 'MAIN',
       items: [
+        { name: 'Admin Portal', path: '/admin', roles: ['ADMIN'], icon: <Shield className="h-5 w-5 text-rose-500" /> },
         { name: 'Dashboard', path: '/dashboard', roles: ['STUDENT', 'ADMIN'], icon: <LayoutDashboard className="h-5 w-5" /> },
         { name: 'Problems', path: '/problems', roles: ['STUDENT', 'ADMIN'], icon: <Code2 className="h-5 w-5" /> },
         { name: 'Assessment', path: '/assessment', roles: ['STUDENT', 'ADMIN'], icon: <BrainCircuit className="h-5 w-5" /> },

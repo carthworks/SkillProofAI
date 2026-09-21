@@ -31,9 +31,9 @@ function getRoleHome(email: string): string {
 
 const DEMO_CREDS = [
   { role: 'Student', email: 'student@college.edu', password: 'password123', color: '#059669' },
-  { role: 'Reviewer', email: 'reviewer@talentforge.in', password: 'Reviewer123!', color: '#4F46E5' },
+  { role: 'Reviewer', email: 'reviewer@talentforge.in', password: 'password123', color: '#4F46E5' },
   { role: 'Employer', email: 'employer@talentforge.in', password: 'password123', color: '#F59E0B' },
-  { role: 'Admin', email: 'admin@talentforge.in', password: 'Admin123!', color: '#EF4444' },
+  { role: 'Admin', email: 'admin@talentforge.in', password: 'password123', color: '#EF4444' },
 ];
 
 export default function Login() {

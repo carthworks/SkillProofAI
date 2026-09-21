@@ -49,6 +49,7 @@ export interface CandidateData {
   resumeUrl?: string;
   skills?: any[];
   githubScore?: number;
+  matchPercent?: number;
   scoreBreakdown?: {
     profileStrength: number;
     githubScore: number;
@@ -70,6 +71,7 @@ export default function CandidateDrawer({
   candidate,
   onClose,
   onToggleShortlist,
+  onStageChange,
 }: CandidateDrawerProps) {
   const [isInterviewModalOpen, setIsInterviewModalOpen] = useState(false);
   const [schedulingLink, setSchedulingLink] = useState(() => {
@@ -145,7 +147,7 @@ export default function CandidateDrawer({
             <div className="flex items-center gap-2">
               <button
                 type="button"
-                onClick={() => onToggleShortlist(candidate.id)}
+                onClick={() => onToggleShortlist?.(candidate.id)}
                 className={`inline-flex items-center gap-1.5 rounded-xl px-4 py-2 text-xs font-bold transition shadow-md ${
                   candidate.isShortlisted
                     ? 'bg-amber-500 text-slate-950 hover:bg-amber-400'

@@ -232,7 +232,7 @@ export default function Home() {
 
             {/* Badge Card */}
             <div style={{ position: 'relative' }}>
-              <div className="seal" style={{ position: 'absolute', top: -24, left: -16, zIndex: 20, width: 96, height: 96, borderRadius: '50%', background: '#fff', border: '1px solid #E7E9E5', display: 'grid', placeItems: 'center' }} className="soft seal">
+              <div className="seal soft" style={{ position: 'absolute', top: -24, left: -16, zIndex: 20, width: 96, height: 96, borderRadius: '50%', background: '#fff', border: '1px solid #E7E9E5', display: 'grid', placeItems: 'center' }}>
                 <svg viewBox="0 0 200 200" width="82" height="82">
                   <defs><path id="ring" d="M100,100 m-72,0 a72,72 0 1,1 144,0 a72,72 0 1,1 -144,0"/></defs>
                   <circle cx="100" cy="100" r="90" fill="#E7F7F0"/>
@@ -484,7 +484,7 @@ export default function Home() {
                 ))}
               </div>
 
-              <div style={{ marginTop: 24, paddingTop: 18, borderTop: '1px solid #334155', display: 'flex', alignItems: 'center', justifyBetween: 'space-between', flexWrap: 'wrap', gap: 12, fontSize: 12, color: '#94A3B8', fontFamily: 'JetBrains Mono,monospace' }}>
+              <div style={{ marginTop: 24, paddingTop: 18, borderTop: '1px solid #334155', display: 'flex', alignItems: 'center', justifyContent: 'space-between', flexWrap: 'wrap', gap: 12, fontSize: 12, color: '#94A3B8', fontFamily: 'JetBrains Mono,monospace' }}>
                 <span>💡 Recruiter Tooltip: Hover any candidate's score on the Employer Discover page to view their exact 4-part breakdown.</span>
               </div>
             </div>
@@ -508,7 +508,7 @@ export default function Home() {
           <div className="grid md:grid-cols-3 gap-5" style={{ marginTop: 40 }}>
             {/* Badge 1 – Expert Verified */}
             <div className="card soft" style={{ padding: 24, position: 'relative', borderColor: 'rgba(16,185,129,.3)' }}>
-              <div className="seal" style={{ position: 'absolute', top: -20, right: -16, width: 64, height: 64, borderRadius: '50%', background: '#fff', border: '1px solid #E7E9E5', display: 'grid', placeItems: 'center' }} className="soft-sm seal">
+              <div className="seal soft-sm" style={{ position: 'absolute', top: -20, right: -16, width: 64, height: 64, borderRadius: '50%', background: '#fff', border: '1px solid #E7E9E5', display: 'grid', placeItems: 'center' }}>
                 <svg viewBox="0 0 200 200" width="52" height="52"><circle cx="100" cy="100" r="92" fill="#E7F7F0"/><text x="100" y="88" textAnchor="middle" fontFamily="Plus Jakarta Sans,sans-serif" fontWeight="800" fontSize="34" fill="#059669">98</text><text x="100" y="126" textAnchor="middle" fontFamily="JetBrains Mono,monospace" fontSize="17" letterSpacing="1" fill="#059669">/100</text></svg>
               </div>
               <div style={{ display: 'inline-flex', alignItems: 'center', gap: 6, fontSize: 11, fontFamily: 'JetBrains Mono,monospace', fontWeight: 600, color: '#059669', background: '#E7F7F0', padding: '4px 10px', borderRadius: 6 }}>◆ EXPERT VERIFIED</div>
@@ -619,15 +619,17 @@ export default function Home() {
               <li><a href="#badges" style={{ color: 'inherit', textDecoration: 'none' }} className="hover:text-[#111826]">Badge gallery</a></li>
               <li><Link to="/problems" style={{ color: 'inherit', textDecoration: 'none' }}>Problem board</Link></li>
               <li><Link to="/leaderboard" style={{ color: 'inherit', textDecoration: 'none' }}>Leaderboard</Link></li>
+              <li><Link to="/pricing" style={{ color: 'inherit', textDecoration: 'none' }}>Pricing</Link></li>
             </ul>
           </div>
           <div>
-            <div className="eyebrow" style={{ color: '#9AA3AF', marginBottom: 12 }}>Sign in as</div>
+            <div className="eyebrow" style={{ color: '#9AA3AF', marginBottom: 12 }}>Company & Trust</div>
             <ul style={{ listStyle: 'none', padding: 0, margin: 0, display: 'flex', flexDirection: 'column', gap: 8, fontSize: 13, color: '#4B5563' }}>
-              <li><Link to="/login" style={{ color: 'inherit', textDecoration: 'none' }}>Student</Link></li>
-              <li><Link to="/login" style={{ color: 'inherit', textDecoration: 'none' }}>Reviewer</Link></li>
-              <li><Link to="/login" style={{ color: 'inherit', textDecoration: 'none' }}>Employer</Link></li>
-              <li><Link to="/login" style={{ color: 'inherit', textDecoration: 'none' }}>Admin</Link></li>
+              <li><Link to="/about" style={{ color: 'inherit', textDecoration: 'none' }}>About us</Link></li>
+              <li><Link to="/contact" style={{ color: 'inherit', textDecoration: 'none' }}>Contact & Support</Link></li>
+              <li><Link to="/privacy" style={{ color: 'inherit', textDecoration: 'none' }}>Privacy Policy</Link></li>
+              <li><Link to="/terms" style={{ color: 'inherit', textDecoration: 'none' }}>Terms of Service</Link></li>
+              <li><Link to="/refund" style={{ color: 'inherit', textDecoration: 'none' }}>Cancellation & Refund</Link></li>
             </ul>
           </div>
           <div>
@@ -636,14 +638,17 @@ export default function Home() {
               <li><Link to="/guide" style={{ color: 'inherit', textDecoration: 'none' }}>Platform guide</Link></li>
               <li><a href="#faq" style={{ color: 'inherit', textDecoration: 'none' }}>FAQ</a></li>
               <li><Link to="/verify" style={{ color: 'inherit', textDecoration: 'none' }}>Verify a badge</Link></li>
+              <li><Link to="/login" style={{ color: 'inherit', textDecoration: 'none' }}>Sign in</Link></li>
             </ul>
           </div>
         </div>
         <div style={{ borderTop: '1px solid #E7E9E5' }}>
           <div className="max-w-6xl mx-auto px-5" style={{ paddingTop: 20, paddingBottom: 20, display: 'flex', flexWrap: 'wrap', alignItems: 'center', gap: 12, fontSize: 12, fontFamily: 'JetBrains Mono,monospace', color: '#9AA3AF' }}>
             <span>© 2026 SkillProofAI</span><span>·</span>
-            <a href="#" style={{ color: 'inherit', textDecoration: 'none' }}>Privacy</a><span>·</span>
-            <a href="#" style={{ color: 'inherit', textDecoration: 'none' }}>Terms</a>
+            <Link to="/privacy" style={{ color: 'inherit', textDecoration: 'none' }}>Privacy</Link><span>·</span>
+            <Link to="/terms" style={{ color: 'inherit', textDecoration: 'none' }}>Terms</Link><span>·</span>
+            <Link to="/refund" style={{ color: 'inherit', textDecoration: 'none' }}>Refunds</Link><span>·</span>
+            <Link to="/contact" style={{ color: 'inherit', textDecoration: 'none' }}>Contact</Link>
             <span style={{ marginLeft: 'auto', display: 'flex', alignItems: 'center', gap: 8, color: '#059669' }}>◆ Badges verifiable on Polygon</span>
           </div>
         </div>

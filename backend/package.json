@@ -7,7 +7,9 @@
     "build": "tsc -p tsconfig.json",
     "start": "node dist/app.js",
     "seed": "tsx prisma/seed.ts",
-    "export-ai-problems": "tsx prisma/export-ai-problems.ts"
+    "export-ai-problems": "tsx prisma/export-ai-problems.ts",
+    "prisma:generate": "prisma generate",
+    "postinstall": "prisma generate"
   },
   "dependencies": {
     "@aws-sdk/client-s3": "^3.554.0",

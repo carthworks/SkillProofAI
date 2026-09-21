@@ -70,7 +70,7 @@ async function main() {
   });
 
   console.log('🛡️ Seeding Reviewer Account...');
-  const reviewerPassword = await bcrypt.hash('Reviewer123!', 12);
+  const reviewerPassword = await bcrypt.hash('password123', 12);
   await prisma.user.upsert({
     where: { email: 'reviewer@talentforge.in' },
     update: { password: reviewerPassword, role: 'REVIEWER' },
@@ -102,7 +102,7 @@ async function main() {
   });
 
   console.log('👑 Seeding Admin Account...');
-  const adminPassword = await bcrypt.hash('Admin123!', 12);
+  const adminPassword = await bcrypt.hash('password123', 12);
   await prisma.user.upsert({
     where: { email: 'admin@talentforge.in' },
     update: { password: adminPassword, role: 'ADMIN' },

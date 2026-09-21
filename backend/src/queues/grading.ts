@@ -5,7 +5,8 @@ export interface GradeJobData {
   submissionId: string;
   userId: string;
   problemId: string;
-  s3Key: string;
+  s3Key?: string;
+  codeContent?: string;
   language: string;
 }
 

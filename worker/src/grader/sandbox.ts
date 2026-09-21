@@ -151,10 +151,10 @@ async function runLocalFallback(
 
     try {
       if (cfg.filename.endsWith('.py')) {
-        const res = await execFileAsync('python', [codePath], { input, timeout: 5000 });
+        const res = await (execFileAsync as any)('python', [codePath], { input, timeout: 5000 });
         stdout = res.stdout;
       } else if (cfg.filename.endsWith('.js')) {
-        const res = await execFileAsync('node', [codePath], { input, timeout: 5000 });
+        const res = await (execFileAsync as any)('node', [codePath], { input, timeout: 5000 });
         stdout = res.stdout;
       } else {
         stdout = input;

@@ -119,10 +119,10 @@ export default function Dashboard() {
   
   // Find "Pick up where you left off" problem for returning students
   const lastSubmission = submissions[0];
-  const resumeProblem = lastSubmission?.problem || problems[0];
+  const resumeProblem = (lastSubmission?.problem || problems[0]) as any;
   
   // Find "Start Here" problem for new students
-  const firstProblem = problems.find(p => p.tier === 'Explorer') || problems[0];
+  const firstProblem = (problems.find(p => p.tier === 'Explorer') || problems[0]) as any;
 
   return (
     <div className="space-y-6 pb-12">

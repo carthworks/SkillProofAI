@@ -25,9 +25,17 @@ const AuthCallback = lazy(() => import('./pages/AuthCallback'));
 const VerifyBadge = lazy(() => import('./pages/VerifyBadge'));
 const Settings = lazy(() => import('./pages/Settings'));
 const EmployerOnboarding = lazy(() => import('./pages/EmployerOnboarding'));
+const About = lazy(() => import('./pages/About'));
+const Contact = lazy(() => import('./pages/Contact'));
+const Privacy = lazy(() => import('./pages/Privacy'));
+const Terms = lazy(() => import('./pages/Terms'));
+const Refund = lazy(() => import('./pages/Refund'));
+const Pricing = lazy(() => import('./pages/Pricing'));
 import RequireAuth from './components/RequireAuth';
 import RequireRole from './components/RequireRole';
 import ErrorBoundary from './components/ErrorBoundary';
+import ConsoleSignature from './components/ConsoleSignature';
+import CookieConsent from './components/CookieConsent';
 import { AuthProvider } from './context/AuthContext';
 import { ThemeProvider } from './context/ThemeContext';
 
@@ -36,6 +44,8 @@ function App() {
     <ErrorBoundary>
       <ThemeProvider>
         <AuthProvider>
+          <ConsoleSignature />
+          <CookieConsent />
           <Toaster position="top-right" richColors closeButton />
           <Suspense fallback={
             <div className="flex h-screen w-full items-center justify-center bg-slate-50 dark:bg-slate-950">
@@ -51,6 +61,12 @@ function App() {
             <Route path="/verify/:id" element={<VerifyBadge />} />
             <Route path="/p/:id" element={<PublicProfile />} />
             <Route path="/" element={<Home />} />
+            <Route path="/about" element={<About />} />
+            <Route path="/contact" element={<Contact />} />
+            <Route path="/privacy" element={<Privacy />} />
+            <Route path="/terms" element={<Terms />} />
+            <Route path="/refund" element={<Refund />} />
+            <Route path="/pricing" element={<Pricing />} />
             <Route path="/login" element={<LoginPage />} />
             <Route path="/register" element={<RegisterPage />} />
 

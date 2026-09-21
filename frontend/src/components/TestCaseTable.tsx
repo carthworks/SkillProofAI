@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, Fragment } from 'react';
 import {
   CheckCircle2,
   XCircle,
@@ -62,8 +62,8 @@ export default function TestCaseTable({ testCases }: TestCaseTableProps) {
               const isExpanded = expandedDiffId === tc.id;
 
               return (
-                <tbody key={tc.id} className="group">
-                  <tr className="hover:bg-slate-800/40 transition">
+                <Fragment key={tc.id}>
+                  <tr className="hover:bg-slate-800/40 transition group">
                     <td className="py-3 px-4 font-mono text-slate-500 text-center font-bold">
                       {index + 1}
                     </td>
@@ -118,7 +118,7 @@ export default function TestCaseTable({ testCases }: TestCaseTableProps) {
 
                   {/* Expandable Expected vs. Actual Diff Container */}
                   {isExpanded && (
-                    <tr>
+                    <tr className="group">
                       <td colSpan={5} className="bg-slate-950 p-4 border-t border-slate-800">
                         <div className="space-y-3">
                           <div className="flex items-center justify-between text-[11px] font-bold text-slate-400">
@@ -164,7 +164,7 @@ export default function TestCaseTable({ testCases }: TestCaseTableProps) {
                       </td>
                     </tr>
                   )}
-                </tbody>
+                </Fragment>
               );
             })}
           </tbody>

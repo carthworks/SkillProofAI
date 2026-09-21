@@ -1,5 +1,6 @@
 import { Request, Response, NextFunction } from 'express';
 import { AnyZodObject, ZodError } from 'zod';
+import { sendError } from '../utils/apiResponse';
 
 export const validate = (schema: AnyZodObject) => {
   return async (req: Request, res: Response, next: NextFunction) => {
@@ -12,15 +13,13 @@ export const validate = (schema: AnyZodObject) => {
       return next();
     } catch (error) {
       if (error instanceof ZodError) {
-        return res.status(400).json({
-          error: 'Validation failed',
-          details: error.errors.map((e) => ({
-            field: e.path.slice(1).join('.'), // slice off 'body' or 'query'
-            message: e.message,
-          })),
-        });
+        const details = error.errors.map((e) => ({
+          field: e.path.filter((p) => p !== 'body' && p !== 'query' && p !== 'params').join('.') || undefined,
+          message: e.message,
+        }));
+        return sendError(res, 400, 'VALIDATION_ERROR', 'Request validation failed', details, req);
       }
-      return res.status(500).json({ error: 'Internal server error during validation' });
+      return sendError(res, 500, 'INTERNAL_SERVER_ERROR', 'Internal error during validation', undefined, req);
     }
   };
 };

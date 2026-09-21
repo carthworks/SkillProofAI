@@ -1,6 +1,7 @@
 import { z } from 'zod';
 import { getAIAdapter } from './ai/aiAdapterFactory';
 import { AIMessage } from './ai/aiAdapter.interface';
+import { MockAdapter } from './ai/adapters/mockAdapter';
 import redis from './redis';
 import crypto from 'crypto';
 

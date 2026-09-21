@@ -1,0 +1,10 @@
+# SkillProofAI Robots.txt
+User-agent: *
+Allow: /
+Disallow: /admin
+Disallow: /dashboard
+Disallow: /reviewer
+Disallow: /settings
+Disallow: /api/
+
+Sitemap: https://app.talentforge.in/sitemap.xml

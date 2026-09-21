@@ -210,6 +210,17 @@ export default function Register() {
             )}
           </div>
 
+          <p className="text-[11px] text-slate-500 dark:text-slate-400 text-center leading-relaxed">
+            By creating an account, you agree to our{' '}
+            <Link to="/terms" className="text-indigo-600 dark:text-indigo-400 font-semibold underline">
+              Terms of Service
+            </Link>{' '}
+            and{' '}
+            <Link to="/privacy" className="text-indigo-600 dark:text-indigo-400 font-semibold underline">
+              Privacy Policy
+            </Link>.
+          </p>
+
           <button
             type="submit"
             disabled={isSubmitting}
@@ -290,6 +301,17 @@ export default function Register() {
               <p className="mt-1 text-xs text-red-500">{employerForm.formState.errors.password.message}</p>
             )}
           </div>
+
+          <p className="text-[11px] text-slate-500 dark:text-slate-400 text-center leading-relaxed">
+            By creating an account, you agree to our{' '}
+            <Link to="/terms" className="text-indigo-600 dark:text-indigo-400 font-semibold underline">
+              Terms of Service
+            </Link>{' '}
+            and{' '}
+            <Link to="/privacy" className="text-indigo-600 dark:text-indigo-400 font-semibold underline">
+              Privacy Policy
+            </Link>.
+          </p>
 
           <button
             type="submit"

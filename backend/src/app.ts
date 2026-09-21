@@ -1,5 +1,16 @@
-import 'dotenv/config';
+import dotenv from 'dotenv';
 import path from 'path';
+
+// Load environment variables with fallback paths
+dotenv.config();
+dotenv.config({ path: path.resolve(__dirname, '../.env') });
+dotenv.config({ path: path.resolve(__dirname, '../../.env') });
+
+// Safe dev fallback for DATABASE_URL if undefined
+if (!process.env.DATABASE_URL) {
+  process.env.DATABASE_URL = 'postgresql://talentforge:talentforge_dev_secret@localhost:5439/talentforge?schema=public';
+}
+
 import cors from 'cors';
 import express from 'express';
 import helmet from 'helmet';
@@ -23,6 +34,9 @@ import lmsRoutes from './routes/lms';
 import publicRoutes from './routes/public';
 import { publicApiRateLimiter } from './middleware/rateLimiter';
 import { AIAdapterFactory } from './services/ai/aiAdapterFactory';
+import { requestIdMiddleware } from './middleware/requestId';
+import { errorHandler } from './middleware/errorHandler';
+import { sendError } from './utils/apiResponse';
 
 // Sentry Observability Setup
 if (process.env.SENTRY_DSN) {
@@ -48,6 +62,7 @@ if (process.env.SENTRY_DSN) {
 }
 
 app.use(helmet());
+app.use(requestIdMiddleware);
 
 // CORS allowlist
 const allowedOrigins = [
@@ -96,6 +111,14 @@ app.use('/internal',     internalRoutes);   // worker-only internal endpoints
 
 // Serve uploaded files (resumes, etc.) as static assets
 app.use('/uploads', express.static(path.join(__dirname, '../uploads')));
+
+// 404 handler for unmatched API routes
+app.use('/api/*', (req, res) => {
+  sendError(res, 404, 'NOT_FOUND', `Route ${req.method} ${req.originalUrl} not found`, undefined, req);
+});
+
+// Centralized REST API Error Handler
+app.use(errorHandler);
 
 app.get(['/health', '/api/health'], (req, res) => {
   let aiProvider = 'Unknown';

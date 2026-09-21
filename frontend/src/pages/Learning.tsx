@@ -37,7 +37,7 @@ export default function Learning() {
   const [retestLoading, setRetestLoading] = useState(false);
   const [domainFilter, setDomainFilter] = useState('all');
   const [tierFilter, setTierFilter] = useState('all');
-  const intervalRef = useRef<NodeJS.Timeout | null>(null);
+  const intervalRef = useRef<any>(null);
   const navigate = useNavigate();
   const [searchParams] = useSearchParams();
   const returnSlug = searchParams.get('from'); // e.g. /learning?from=lru-cache&domain=cse&tier=Builder

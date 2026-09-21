@@ -11,6 +11,7 @@ import { calculateGithubScore } from '../services/githubScoreService';
 import { userNotifications } from './reviewer';
 import { computeAndSaveAggregateScore } from '../services/aggregateScore';
 import { checkAndAwardBadge } from '../services/badgeService';
+import { getUploadUrl } from '../services/s3';
 
 const router = Router();
 const prisma = new PrismaClient();
@@ -1105,7 +1106,7 @@ router.get('/submissions', requireAuth, async (req: AuthenticatedRequest, res) =
 
     return res.json({
       data: submissions,
-      meta: { total, page, limit, pages: Math.ceil((total || 0) / limit) || 1 },
+      meta: { total: Number(total || 0), page, limit, pages: Math.ceil(Number(total || 0) / limit) || 1 },
     });
   } catch (err) {
     console.error('Submissions list error:', err);

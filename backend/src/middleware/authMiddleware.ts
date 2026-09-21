@@ -1,6 +1,7 @@
 import { Request, Response, NextFunction } from 'express';
 import jwt from 'jsonwebtoken';
 import { PrismaClient } from '@prisma/client';
+import { sendError } from '../utils/apiResponse';
 
 const prisma = new PrismaClient();
 
@@ -25,7 +26,7 @@ export function authMiddleware(req: Request, res: Response, next: NextFunction) 
       req.user = { userId: 'usr-1', id: 'usr-1', role: 'STUDENT' };
       return next();
     }
-    return res.status(401).json({ error: 'Unauthorized' });
+    return sendError(res, 401, 'UNAUTHORIZED', 'Missing or invalid authentication token', undefined, req);
   }
 
   const token = authHeader.replace('Bearer ', '').trim();
@@ -34,7 +35,7 @@ export function authMiddleware(req: Request, res: Response, next: NextFunction) 
       req.user = { userId: 'usr-1', id: 'usr-1', role: 'STUDENT' };
       return next();
     }
-    return res.status(401).json({ error: 'Unauthorized' });
+    return sendError(res, 401, 'UNAUTHORIZED', 'Missing or invalid authentication token', undefined, req);
   }
 
   try {
@@ -51,7 +52,7 @@ export function authMiddleware(req: Request, res: Response, next: NextFunction) 
       req.user = { userId: 'usr-1', id: 'usr-1', role: 'STUDENT' };
       return next();
     }
-    return res.status(401).json({ error: 'Unauthorized' });
+    return sendError(res, 401, 'UNAUTHORIZED', 'Authentication token is invalid or expired', undefined, req);
   }
 }
 
@@ -91,12 +92,17 @@ export function requireRole(...allowedRoles: string[]) {
         return next();
       }
 
-      return res.status(403).json({
-        error: `Forbidden: Access requires ${allowedRoles.join(' or ')} role.`,
-      });
+      return sendError(
+        res,
+        403,
+        'FORBIDDEN',
+        `Access requires ${allowedRoles.join(' or ')} role.`,
+        undefined,
+        req
+      );
     } catch (err) {
       console.error('[RBAC] requireRole middleware error:', err);
-      return res.status(500).json({ error: 'Internal server error' });
+      return sendError(res, 500, 'INTERNAL_SERVER_ERROR', 'Internal authorization error', undefined, req);
     }
   };
 }

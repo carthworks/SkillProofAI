@@ -326,11 +326,8 @@ export async function submitSolution(problemId: string, code: string, language: 
     });
     return response.data;
   } catch (err) {
-    console.warn('Backend submit endpoint unavailable, using mock submission response');
-    return {
-      submissionId: 'mock-sub-' + Date.now(),
-      status: 'queued',
-    };
+    console.error('Backend submit endpoint failed:', err);
+    throw err;
   }
 }
 
