@@ -6,15 +6,37 @@ SkillProofAI is a performance-verified talent marketplace for engineering studen
 
 ---
 
+## 📸 Platform Preview & Screenshots
+
+<div align="center">
+
+### 🛡️ Verified Badges & Candidate Skill Matrix
+![SkillProofAI Platform Overview](docs/screenshots/landing_hero_showcase.jpg)
+
+### 💻 Monaco Code Editor & Real-time Docker Autograder
+![Monaco Code Sandbox & Autograder](docs/screenshots/code_sandbox_editor.jpg)
+
+### 🏢 Employer Talent Discovery & 4-Part Composite Radar
+![Employer Talent Discovery & Smart Match](docs/screenshots/employer_talent_discovery.jpg)
+
+### 🏛️ High-Level System Architecture
+![SkillProofAI Architecture](docs/blockdiagram01.png)
+
+</div>
+
+---
+
 ## 🔑 Login Credentials (All Roles)
 
-| Role | Email | Password |
-| :--- | :--- | :--- |
-| **Student (CSE)** | `tkarthikeyan@gmail.com` | `password123` |
-| **Student (ECE)** | `student@college.edu` | `password123` |
-| **Senior Reviewer** | `reviewer@talentforge.in` | `Reviewer123!` |
-| **Employer / Recruiter** | `employer@talentforge.in` | `password123` |
-| **System Admin** | `admin@talentforge.in` | `Admin123!` |
+> **Tip**: The `/login` page includes one-click **Quick Demo Login** buttons for all 4 roles pre-filled with `password123`.
+
+| Role | Email | Password | Primary Route |
+| :--- | :--- | :--- | :--- |
+| **Student (CSE)** | `tkarthikeyan@gmail.com` | `password123` | `/dashboard` |
+| **Student (ECE)** | `student@college.edu` | `password123` | `/dashboard` |
+| **Senior Reviewer** | `reviewer@talentforge.in` | `password123` *(or `Reviewer123!`)* | `/reviewer` |
+| **Employer / Recruiter** | `employer@talentforge.in` | `password123` | `/discover` |
+| **System Admin** | `admin@talentforge.in` | `password123` *(or `Admin123!`)* | `/admin` |
 
 ---
 
@@ -336,8 +358,21 @@ User submits code
 
 ---
 
-## 🆕 Recent Updates (v1.1)
+## 🆕 Recent Updates
 
+### 🚀 v1.2 Updates — Trust, Compliance & Architecture Hardening
+| Feature / Upgrade | Description |
+| :--- | :--- |
+| **Developer Console Signature** | Injects styled branding, author coordinates (Karthikeyan T `@carthworks`), Apache-2.0 license, and interactive `window.SkillProofAI.help()` inspection helpers directly in the DevTools console. |
+| **Web Trust & Legal Suite** | Six dedicated legal pages: `/about`, `/contact`, `/privacy`, `/terms`, `/refund`, and `/pricing` with transparent candidate & employer tiers. |
+| **Cookie Consent Banner** | GDPR/ePrivacy compliant banner with essential vs. analytics choices and localStorage persistence. |
+| **Account Agreement Consent** | Mandatory Terms of Service & Privacy Policy acknowledgment on both Candidate and Recruiter sign-up forms. |
+| **REST API Standardization** | Distributed `X-Request-Id` trace IDs, structured error payloads (`{ error: { code, message, details, requestId } }`), and centralized production error handling. |
+| **Admin Portal & Auto-Provisioning** | Dedicated `/admin` view with sidebar integration and auto-provisioning for `admin@talentforge.in` on first login. |
+| **Automated Environment Setup** | Automated `.env` generation from `.env.example` via `run-app.bat` and development fallbacks for `DATABASE_URL` preventing Prisma initialization issues. |
+| **Production SEO & Social Meta** | Brand SVG favicon (`/favicon.svg`), `robots.txt`, `sitemap.xml`, and dynamic Open Graph & Twitter Cards across all public routes. |
+
+### 📦 v1.1 Updates — Portfolio & Recruiter Tools
 | Feature | Description |
 | :--- | :--- |
 | **Public Portfolio Page** | `/p/:id` — shareable, print-optimized public profile with verified skills, AI recommendation, badges, and resume data |
