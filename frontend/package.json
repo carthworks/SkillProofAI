@@ -4,7 +4,7 @@
   "private": true,
   "type": "module",
   "engines": {
-    "node": ">=22.16.0"
+    "node": "22.x"
   },
   "scripts": {
     "dev": "vite",
@@ -47,6 +47,7 @@
     "prettier": "^3.6.2",
     "tailwindcss": "^3.4.4",
     "typescript": "^5.8.3",
+    "typescript-eslint": "^8.70.1",
     "vite": "^8.1.4"
   }
 }

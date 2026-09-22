@@ -1,9 +1,7 @@
 import { Request, Response, NextFunction } from 'express';
 import jwt from 'jsonwebtoken';
-import { PrismaClient } from '@prisma/client';
+import { prisma } from '../db';
 import { sendError } from '../utils/apiResponse';
-
-const prisma = new PrismaClient();
 
 declare global {
   namespace Express {
@@ -68,9 +66,9 @@ export function requireRole(...allowedRoles: string[]) {
     try {
       const userId = req.user?.userId || req.user?.id;
 
-      // Allow dev bypass for standalone POC testing if no JWT auth header present
+      // Authentication required before checking role
       if (!userId) {
-        return next();
+        return sendError(res, 401, 'UNAUTHORIZED', 'Authentication required', undefined, req);
       }
 
       // Check role directly on JWT payload if present

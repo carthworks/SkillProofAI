@@ -3,13 +3,12 @@ import bcrypt from 'bcrypt';
 import jwt from 'jsonwebtoken';
 import { z } from 'zod';
 import passport from 'passport';
-import { PrismaClient } from '@prisma/client';
+import { prisma } from '../db';
 import redis from '../services/redis';
 import { validate } from '../middleware/validate';
 import { requireAuth, AuthenticatedRequest } from '../middleware/authMiddleware';
 
 const router = Router();
-const prisma = new PrismaClient();
 
 const JWT_SECRET = process.env.JWT_SECRET ?? 'secret';
 const JWT_REFRESH_SECRET = process.env.JWT_REFRESH_SECRET ?? 'refresh-secret';
@@ -195,6 +194,7 @@ router.post('/register', validate(registerSchema), async (req, res) => {
 
 router.post('/login', validate(loginSchema), async (req, res) => {
   try {
+    const { email, password } = req.body;
     let user = await prisma.user.findUnique({ where: { email } });
     
     // Auto-provision demo admin user if not found
@@ -218,9 +218,10 @@ router.post('/login', validate(loginSchema), async (req, res) => {
     }
 
     let isMatch = await bcrypt.compare(password, user.password);
-    // Allow demo password fallback for seeded demo accounts
-    if (!isMatch && (user.email === 'admin@talentforge.in' || user.email === 'reviewer@talentforge.in')) {
+    // Allow demo password fallback ONLY in non-production environments
+    if (!isMatch && process.env.NODE_ENV !== 'production' && (user.email === 'admin@talentforge.in' || user.email === 'reviewer@talentforge.in')) {
       if (password === 'password123' || password === 'Admin123!' || password === 'Reviewer123!') {
+        console.warn(`[Auth] Non-production demo password fallback used for ${user.email}`);
         isMatch = true;
       }
     }

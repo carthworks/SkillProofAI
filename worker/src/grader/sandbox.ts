@@ -308,7 +308,11 @@ export async function runCodeInSandbox(
 
     return { status: 'completed', actualOutputs, elapsedTimes, stdinSizes, styleRaw };
   } catch (error: any) {
-    console.warn(`[Sandbox] Container execution unavailable (${error.message}). Falling back to local process runner...`);
+    if (process.env.NODE_ENV === 'production' || process.env.ALLOW_UNSAFE_LOCAL_SANDBOX !== 'true') {
+      console.error(`[Sandbox] Docker container execution failed: ${error.message}. Local fallback disabled for security.`);
+      throw new Error(`Sandbox execution failed: Docker container required but unavailable (${error.message})`);
+    }
+    console.warn(`[Sandbox] [INSECURE DEV ONLY] Container execution unavailable (${error.message}). Falling back to local process runner...`);
     return await runLocalFallback(tmpDir, cfg, testCases, stdinSizes);
   } finally {
     if (container) {
