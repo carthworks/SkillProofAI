@@ -32,7 +32,6 @@ import {
   Cpu,
 } from 'lucide-react';
 import { useEffect, useState, useRef, DragEvent, ChangeEvent } from 'react';
-import { ResponsiveContainer, RadarChart, PolarGrid, PolarAngleAxis, Radar, Tooltip as RechartsTooltip } from 'recharts';
 import { toast } from 'sonner';
 import { Link } from 'react-router-dom';
 import BadgeCard, { BadgeData } from '../components/BadgeCard';
